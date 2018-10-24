@@ -44,7 +44,7 @@ private:
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
-	int *map;
+	char *map;
 
 };
 
