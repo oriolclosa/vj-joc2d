@@ -84,6 +84,7 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 			map->render();
+			spritemap->render();
 			player->render();
 			break;
 	}

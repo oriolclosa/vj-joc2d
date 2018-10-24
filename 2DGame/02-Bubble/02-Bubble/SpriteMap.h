@@ -16,6 +16,9 @@ public:
 	SpriteMap(const char *map, const glm::vec2 &minCoords, ShaderProgram &program);
 	~SpriteMap();
 
+	void render() const;
+	void free();
+
 private:
 	char *map;
 };

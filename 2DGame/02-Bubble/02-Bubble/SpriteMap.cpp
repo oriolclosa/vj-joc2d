@@ -22,3 +22,8 @@ SpriteMap::~SpriteMap()
 	if (map != NULL)
 		delete map;
 }
+
+void SpriteMap::render() const
+{
+	
+}
