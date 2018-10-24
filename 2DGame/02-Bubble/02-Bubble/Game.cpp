@@ -22,8 +22,12 @@ void Game::render() {
 }
 
 void Game::keyPressed(int key) {
-	if(key == 27) // Escape code
+	if (key == 27) // Escape code
 		bPlay = false;
+	else if (key >= 48 && key <=49){
+		render_scene = key-48;
+		scene.render();
+	}
 	keys[key] = true;
 }
 
@@ -54,6 +58,10 @@ bool Game::getKey(int key) const {
 
 bool Game::getSpecialKey(int key) const {
 	return specialKeys[key];
+}
+
+void Game::setRenderScene(int scene) {
+	render_scene = scene;
 }
 
 int Game::getRenderScene() {

@@ -5,8 +5,8 @@
 #include "Scene.h"
 
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 1138
+#define SCREEN_HEIGHT 640
 
 
 // Game is a singleton (a class with a single instance) that represents our whole application
@@ -39,6 +39,7 @@ public:
 	
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
+	void setRenderScene(int scene);
 	int getRenderScene();
 
 private:
