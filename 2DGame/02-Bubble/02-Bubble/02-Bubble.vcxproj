@@ -19,6 +19,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteMap.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedQuad.h" />
@@ -33,6 +34,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteMap.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedQuad.cpp" />
@@ -87,7 +89,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug;..\..\..\libs\freeglut\lib;..\..\..\libs\glew-1.13.0\lib\Release\Win32;C:\Users\Oriol Closa\Documents\Universitat\7è quad\VJ\2D\vj-joc2d\libs\freetype-2.3.5-1-bin\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug;..\..\..\libs\freeglut\lib;..\..\..\libs\glew-1.13.0\lib\Release\Win32;..\..\..\libs\freetype-2.3.5-1-bin\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SOIL.lib;glew32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
