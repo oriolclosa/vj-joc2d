@@ -5,22 +5,20 @@
 #include "Scene.h"
 
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 
 
 // Game is a singleton (a class with a single instance) that represents our whole application
 
 
-class Game
-{
+class Game {
 
 public:
 	Game() {}
 	
 	
-	static Game &instance()
-	{
+	static Game &instance() {
 		static Game G;
 	
 		return G;
@@ -41,12 +39,14 @@ public:
 	
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
+	int getRenderScene();
 
 private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
+	int render_scene;
 
 };
 

@@ -5,6 +5,7 @@
 #include "Game.h"
 
 
+
 #define SCREEN_X 32
 #define SCREEN_Y 16
 
@@ -12,14 +13,12 @@
 #define INIT_PLAYER_Y_TILES 25
 
 
-Scene::Scene()
-{
+Scene::Scene() {
 	map = NULL;
 	player = NULL;
 }
 
-Scene::~Scene()
-{
+Scene::~Scene() {
 	if(map != NULL)
 		delete map;
 	if(player != NULL)
@@ -27,9 +26,24 @@ Scene::~Scene()
 }
 
 
-void Scene::init()
-{
+void Scene::init() {
 	initShaders();
+
+	// Menu
+	glm::vec2 geom[2];
+	glm::vec2 texCoords[2];
+	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
+	texQuad[0] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	texs[0].loadFromFile("images/wp_placeholder_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texs[0].setMagFilter(GL_NEAREST);
+	// Select which font you want to use
+	if(!text.init("fonts/OpenSans-Regular.ttf"))
+		if(!text.init("fonts/OpenSans-Bold.ttf"))
+			if(!text.init("fonts/DroidSerif.ttf"))
+				cout << "Could not load font!!!" << endl;
+	
+	// Exemple
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -39,28 +53,41 @@ void Scene::init()
 	currentTime = 0.0f;
 }
 
-void Scene::update(int deltaTime)
-{
+void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	player->update(deltaTime);
 }
 
-void Scene::render()
-{
+void Scene::render() {
 	glm::mat4 modelview;
+	// TODO: crear metodes per cada scena
+	switch(Game::instance().getRenderScene()) {
+		case 0:
+			// Menu
+			texProgram.use();
+			texProgram.setUniformMatrix4f("projection", projection);
+			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 
-	texProgram.use();
-	texProgram.setUniformMatrix4f("projection", projection);
-	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	texProgram.setUniformMatrix4f("modelview", modelview);
-	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	map->render();
-	player->render();
+			modelview = glm::mat4(1.0f);
+			texProgram.setUniformMatrix4f("modelview", modelview);
+			texQuad[0]->render(texs[0]);
+			text.render("Yo k se no soy 100tifico", glm::vec2(16, 48), 32, glm::vec4(1, 1, 1, 1));
+			break;
+		case 1:
+			//Exemple
+			texProgram.use();
+			texProgram.setUniformMatrix4f("projection", projection);
+			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			texProgram.setUniformMatrix4f("modelview", modelview);
+			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+			map->render();
+			player->render();
+			break;
+	}
 }
 
-void Scene::initShaders()
-{
+void Scene::initShaders() {
 	Shader vShader, fShader;
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
