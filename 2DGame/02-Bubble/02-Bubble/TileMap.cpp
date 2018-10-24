@@ -32,6 +32,13 @@ char *TileMap::getMap() {
 	return map;
 }
 
+glm::ivec2 TileMap::getMapSize() {
+	return mapSize;
+}
+
+glm::ivec2 TileMap::getTilesheetSize() {
+	return tilesheetSize;
+}
 
 void TileMap::render() const
 {

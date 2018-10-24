@@ -5,22 +5,24 @@
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include "ShaderProgram.h"
+#include "Sprite.h"
 
 
 class SpriteMap
 {
 
 public:
-	static SpriteMap *createSpriteMap(const char *map, const glm::vec2 &minCoords, ShaderProgram &program);
+	static SpriteMap *createSpriteMap(const char *map, const glm::ivec2 mapSize, const glm::ivec2 tilesheetSize, const glm::vec2 &minCoords, ShaderProgram &program);
 
-	SpriteMap(const char *map, const glm::vec2 &minCoords, ShaderProgram &program);
+	SpriteMap(const char *map, const glm::ivec2 mapSize, const glm::ivec2 tilesheetSize, const glm::vec2 &minCoords, ShaderProgram &program);
 	~SpriteMap();
 
 	void render() const;
-	void free();
 
 private:
-	char *map;
+	const char *mapSprites;
+	glm::ivec2 mapSize, tilesheetSize;
+	Sprite *sprites[];
 };
 
 #endif // _SPRITE_MAP_INCLUDE

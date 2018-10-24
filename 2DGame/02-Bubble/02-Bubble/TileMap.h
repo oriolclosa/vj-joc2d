@@ -33,6 +33,8 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 
 	char *getMap();
+	glm::ivec2 getMapSize();
+	glm::ivec2 getTilesheetSize();
 	
 private:
 	bool loadLevel(const string &levelFile);

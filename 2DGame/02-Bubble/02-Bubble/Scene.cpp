@@ -46,7 +46,7 @@ void Scene::init() {
 	
 	// Exemple
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	spritemap = SpriteMap::createSpriteMap(map->getMap(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	spritemap = SpriteMap::createSpriteMap(map->getMap(), map->getMapSize(), map->getTilesheetSize(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -85,7 +85,7 @@ void Scene::render() {
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 			map->render();
 			spritemap->render();
-			player->render();
+			//player->render();
 			break;
 	}
 }
