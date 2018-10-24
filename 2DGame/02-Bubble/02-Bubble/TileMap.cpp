@@ -28,6 +28,10 @@ TileMap::~TileMap()
 		delete map;
 }
 
+char *TileMap::getMap() {
+	return map;
+}
+
 
 void TileMap::render() const
 {
