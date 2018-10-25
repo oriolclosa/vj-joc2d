@@ -6,6 +6,7 @@
 #include <string>
 #include <set>
 #include <algorithm>
+#include <sstream>
 
 
 #define SCREEN_X 0
@@ -64,6 +65,8 @@ void Scene::init() {
 	texs[3].setMagFilter(GL_NEAREST);
 
 	// Exemple
+	camera_movement = 0.0f;
+
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	spriteMap = TileMap::createTileMap("levels/level01-sprites.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -81,27 +84,27 @@ void Scene::init() {
 
 	//Overground
 	for (int i = 0; i <=17; ++i) {
-		string path = "images/margaret/wallover" + to_string(i+1);
-		path += ".png";
-		overTextures[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+		ostringstream path;
+		path << "images/margaret/wallover" << (i+1) << ".png";
+		overTextures[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		overTextures[i].setMagFilter(GL_NEAREST);
 		overSprites[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &overTextures[i], &texProgram);
 	}
 
 	//Wall pictures
 	for (int i = 0; i <= 10; ++i) {
-		string path = "images/margaret/picture" + to_string(i + 1);
-		path += ".png";
-		texWall[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+		ostringstream path;
+		path << "images/margaret/picture" << (i + 1) << ".png";
+		texWall[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texWall[i].setMagFilter(GL_NEAREST);
 		sprWall[i] = Sprite::createSprite(glm::vec2(96, 96), glm::vec2(1, 1), &texWall[i], &texProgram);
 	}
 
 	//Objects
 	for (int i = 0; i <= 10; ++i) {
-		string path = "images/margaret/object" + to_string(i + 1);
-		path += ".png";
-		texObject[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+		ostringstream path;
+		path << "images/margaret/object" << (i + 1) << ".png";
+		texObject[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texObject[i].setMagFilter(GL_NEAREST);
 	}
 	sprObject[0] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[0], &texProgram);
@@ -172,7 +175,7 @@ void Scene::init() {
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
 
@@ -232,6 +235,7 @@ void Scene::render() {
 		case 2:
 			//Exemple
 			texProgram.use();
+			projection = glm::ortho(camera_movement, float(SCREEN_WIDTH -1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
 			texProgram.setUniformMatrix4f("projection", projection);
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 			modelview = glm::mat4(1.0f);
@@ -321,6 +325,20 @@ void Scene::initShaders() {
 	texProgram.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
+}
+
+void Scene::setCameraMovement(float movement) {
+	if (movement < 0.0f){
+		movement = 0.0f;
+	}
+	if (movement >= (map->getTilesheetSize.x - SCREEN_WIDTH)) {
+		movement = (map->getTilesheetSize.x - SCREEN_WIDTH);
+	}
+	camera_movement = movement;
+}
+
+float Scene::getCameraMovement() {
+	return camera_movement;
 }
 
 

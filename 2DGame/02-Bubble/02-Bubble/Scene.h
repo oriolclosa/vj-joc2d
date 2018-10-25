@@ -28,6 +28,9 @@ public:
 	void update(int deltaTime);
 	void render();
 
+	void setCameraMovement(float movement);
+	float getCameraMovement();
+
 private:
 	void initShaders();
 
@@ -58,6 +61,8 @@ private:
 	Sprite *sprObject[10];
 	Texture walkableTexture;
 	Sprite *walkableSprite;
+
+	float camera_movement = 0.0f;
 };
 
 

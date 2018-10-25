@@ -28,8 +28,8 @@ void Game::keyPressed(int key) {
 	printf("%d",key);
 	if (key == 27) // Escape code
 		bPlay = false;
-	else if (key >= 48 && key <=50){
-		render_scene = key-48;
+	else if (key >= 48 && key <= 50) {
+		render_scene = key - 48;
 		scene.render();
 	}
 	else if (key == 102 && Game::instance().getRenderScene() == 0) {
@@ -46,6 +46,10 @@ void Game::keyPressed(int key) {
 	}
 	else if (key == 112) //p
 		render_walkable = !render_walkable;
+	else if (key == 110) //n
+		scene.setCameraMovement(scene.getCameraMovement() - 10.0f);
+	else if (key == 109) //m
+		scene.setCameraMovement(scene.getCameraMovement() + 10.0f);
 	keys[key] = true;
 }
 
