@@ -37,8 +37,8 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;	
-	Texture texs[2];
-	TexturedQuad *texQuad[3];
+	Texture texs[6];
+	TexturedQuad *texQuad[6];
 	Text text;
 
 };

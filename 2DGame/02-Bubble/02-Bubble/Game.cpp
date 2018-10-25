@@ -8,6 +8,7 @@ void Game::init() {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	scene.init();
 	render_scene = 0;
+	selected_main_button = 1;
 }
 
 bool Game::update(int deltaTime) {
@@ -22,11 +23,25 @@ void Game::render() {
 }
 
 void Game::keyPressed(int key) {
+	printf("%d",Game::instance().getRenderScene());
+	printf("%d",key);
 	if (key == 27) // Escape code
 		bPlay = false;
 	else if (key >= 48 && key <=49){
 		render_scene = key-48;
 		scene.render();
+	}
+	else if (key == 102 && Game::instance().getRenderScene() == 0) {
+		render_scene = 1;
+		scene.render();
+	}
+	else if (key == 119 && Game::instance().getRenderScene() == 1) {
+		changeSelectMainButton(false);
+		render();
+	}
+	else if (key == 115 && Game::instance().getRenderScene() == 1) {
+		changeSelectMainButton(true);
+		render();
 	}
 	keys[key] = true;
 }
@@ -68,4 +83,15 @@ int Game::getRenderScene() {
 	return render_scene;
 }
 
+int Game::getSelectedMainButton() {
+	return selected_main_button;
+}
 
+void Game::changeSelectMainButton(bool plus) {
+	if (plus && selected_main_button + 1 < 5) {
+		++selected_main_button;
+	}
+	if (!plus && selected_main_button - 1 > 0) {
+		--selected_main_button;
+	}
+}
