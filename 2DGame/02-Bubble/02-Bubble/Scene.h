@@ -62,7 +62,7 @@ private:
 	Texture walkableTexture;
 	Sprite *walkableSprite;
 
-	float camera_movement = 0.0f;
+	float camera_movement;
 };
 
 
