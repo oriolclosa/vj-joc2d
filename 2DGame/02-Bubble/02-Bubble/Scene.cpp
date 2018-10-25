@@ -183,6 +183,7 @@ void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	//sprites[1]->update(deltaTime);
 	player->update(deltaTime);
+	setCameraMovement(player->getPosition().x - SCREEN_WIDTH / 2);
 }
 
 void Scene::render() {
