@@ -28,6 +28,17 @@ TileMap::~TileMap()
 		delete map;
 }
 
+char *TileMap::getMap() {
+	return map;
+}
+
+glm::ivec2 TileMap::getMapSize() {
+	return mapSize;
+}
+
+glm::ivec2 TileMap::getTilesheetSize() {
+	return tilesheetSize;
+}
 
 void TileMap::render() const
 {
@@ -77,13 +88,13 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
-	map = new int[mapSize.x * mapSize.y];
+	map = new char[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
 		{
 			fin.get(tile);
-			map[j*mapSize.x + i] = tile;
+			map[j*mapSize.x+i] = tile;
 		}
 		fin.get(tile);
 #ifndef _WIN32
@@ -199,4 +210,33 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	
 	return false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
