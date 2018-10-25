@@ -5,7 +5,6 @@
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include "ShaderProgram.h"
-#include "Desk.h"
 
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
@@ -50,7 +49,6 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	char *map;
-	Desk *desk;
 };
 
 

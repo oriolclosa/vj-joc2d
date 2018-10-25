@@ -3,7 +3,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
-#include "Desk.h"
 
 
 
@@ -134,7 +133,7 @@ void Scene::render() {
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 			map->render();
 			//spritemap->render();
-			player->render();
+			//player->render();
 			break;
 	}
 }
