@@ -12,8 +12,8 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
+#define INIT_PLAYER_X_TILES 5
+#define INIT_PLAYER_Y_TILES 5
 
 
 Scene::Scene() {
@@ -182,7 +182,7 @@ void Scene::init() {
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	//sprites[1]->update(deltaTime);
-	//player->update(deltaTime);
+	player->update(deltaTime);
 }
 
 void Scene::render() {
@@ -270,7 +270,7 @@ void Scene::render() {
 					}
 				}
 			}
-			//player->render();
+			player->render();
 			for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 				for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
 					tile = overgroundMap->getMap()[j * overgroundMap->getMapSize().x + i];
@@ -331,9 +331,9 @@ void Scene::setCameraMovement(float movement) {
 	if (movement < 0.0f){
 		movement = 0.0f;
 	}
-	if (movement >= (map->getTilesheetSize.x - SCREEN_WIDTH)) {
-		movement = (map->getTilesheetSize.x - SCREEN_WIDTH);
-	}
+	/*if (movement >= (map->getMapSize().x - SCREEN_WIDTH)) {
+		movement = (map->getMapSize().x - SCREEN_WIDTH);
+	}*/
 	camera_movement = movement;
 }
 
