@@ -3,7 +3,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
-
+#include <string>
+#include <set>
+#include <algorithm>
 
 
 #define SCREEN_X 0
@@ -67,7 +69,7 @@ void Scene::init() {
 
 	backTextures[0].loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[0].setMagFilter(GL_NEAREST);
-	backTextures[1].loadFromFile("images/margaret/floor.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[1].loadFromFile("images/margaret/floor2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[1].setMagFilter(GL_NEAREST);
 	backTextures[2].loadFromFile("images/margaret/wallfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[2].setMagFilter(GL_NEAREST);
@@ -81,6 +83,18 @@ void Scene::init() {
 	textures[2].setMagFilter(GL_NEAREST);
 	textures[3].loadFromFile("images/margaret/desk1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	textures[3].setMagFilter(GL_NEAREST);
+	textures[4].loadFromFile("images/margaret/desk2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[4].setMagFilter(GL_NEAREST);
+	textures[5].loadFromFile("images/margaret/desk3.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[5].setMagFilter(GL_NEAREST);
+	textures[6].loadFromFile("images/margaret/desk4.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[6].setMagFilter(GL_NEAREST);
+	textures[7].loadFromFile("images/margaret/desk5.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[7].setMagFilter(GL_NEAREST);
+	textures[8].loadFromFile("images/margaret/desk6.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[8].setMagFilter(GL_NEAREST);
+	textures[9].loadFromFile("images/margaret/plant1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[9].setMagFilter(GL_NEAREST);
 	sprites[1] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(0.125, 1), &textures[1], &texProgram);
 	sprites[1]->setNumberAnimations(1);
 	sprites[1]->setAnimationSpeed(0, 6);
@@ -95,6 +109,25 @@ void Scene::init() {
 	sprites[1]->changeAnimation(0);
 	sprites[2] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[2], &texProgram);
 	sprites[3] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[3], &texProgram);
+	sprites[4] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[4], &texProgram);
+	sprites[5] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[5], &texProgram);
+	sprites[6] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[6], &texProgram);
+	sprites[7] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[7], &texProgram);
+	sprites[8] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[8], &texProgram);
+	sprites[9] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &textures[9], &texProgram);
+
+	//Object 1
+	set<int> numDesks = { 1, 2, 3, 4, 5, 6 };
+	for (int i = 0; i < 5; ++i) {
+		set<int>::iterator actDesk = numDesks.begin();
+		advance(actDesk, rand()%numDesks.size());
+		string path = "images/margaret/desk" + to_string(*actDesk);
+		path += ".png";
+		//numDesks.erase(actDesk);
+		texDesk[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+		texDesk[i].setMagFilter(GL_NEAREST);
+		sprDesk[i] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &texDesk[i], &texProgram);
+	}
 	
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -182,11 +215,26 @@ void Scene::render() {
 			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 				for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 					tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
-					if (tile >= 'b' && tile <= 'd') {
+					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+					if (tile >= 'b' && tile <= 'j') {
 						int tileAux = tile - int('a');
-						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 						sprites[tileAux]->setPosition(posTile);
 						sprites[tileAux]->render();
+					}
+					else if (tile == 'k') {
+						int tileAux = ((int(posTile.x)+int(posTile.y)/2) % 6);
+						sprDesk[tileAux]->setPosition(posTile);
+						sprDesk[tileAux]->render();
+					}
+					else if (tile == 'l') {
+						int tileAux = ((rand() + 0) % 3);
+						sprObject1[tileAux]->setPosition(posTile);
+						sprObject1[tileAux]->render();
+					}
+					else if (tile == 'm') {
+						int tileAux = ((rand() + 0) % 3);
+						sprObject2[tileAux]->setPosition(posTile);
+						sprObject2[tileAux]->render();
 					}
 				}
 			}

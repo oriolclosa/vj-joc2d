@@ -47,6 +47,12 @@ private:
 	Sprite *sprites[10];
 	Texture backTextures[3];
 	Sprite *backSprites[3];
+	Texture texDesk[6];
+	Sprite *sprDesk[6];
+	Texture texObject1[3];
+	Sprite *sprObject1[3];
+	Texture texObject2[3];
+	Sprite *sprObject2[3];
 };
 
 
