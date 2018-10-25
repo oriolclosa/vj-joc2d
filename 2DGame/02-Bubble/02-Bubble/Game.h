@@ -41,6 +41,8 @@ public:
 	bool getSpecialKey(int key) const;
 	void setRenderScene(int scene);
 	int getRenderScene();
+	int getSelectedMainButton();
+	void changeSelectMainButton(bool plus);
 
 	int getScreenWidth();
 	int getScreenHeight();
@@ -51,6 +53,7 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	int render_scene;
+	int selected_main_button;
 
 };
 
