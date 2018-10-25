@@ -62,14 +62,16 @@ void Scene::init() {
 	texs[2].setMagFilter(GL_NEAREST);
 	texs[3].loadFromFile("images/menu_1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texs[3].setMagFilter(GL_NEAREST);
+
 	// Exemple
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	spriteMap = TileMap::createTileMap("levels/level01-sprites.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	overgroundMap = TileMap::createTileMap("levels/level01-overground.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	backTextures[0].loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[0].setMagFilter(GL_NEAREST);
-	backTextures[1].loadFromFile("images/margaret/floor2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[1].loadFromFile("images/margaret/floor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[1].setMagFilter(GL_NEAREST);
 	backTextures[2].loadFromFile("images/margaret/wallfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[2].setMagFilter(GL_NEAREST);
@@ -77,7 +79,25 @@ void Scene::init() {
 	backSprites[1] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[1], &texProgram);
 	backSprites[2] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[2], &texProgram);
 
-	textures[1].loadFromFile("images/margaret/object1-animated.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	//Overground
+	for (int i = 0; i <=17; ++i) {
+		string path = "images/margaret/wallover" + to_string(i+1);
+		path += ".png";
+		overTextures[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+		overTextures[i].setMagFilter(GL_NEAREST);
+		overSprites[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &overTextures[i], &texProgram);
+	}
+
+	//Wall pictures
+	for (int i = 0; i <= 10; ++i) {
+		string path = "images/margaret/picture" + to_string(i + 1);
+		path += ".png";
+		texWall[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+		texWall[i].setMagFilter(GL_NEAREST);
+		sprWall[i] = Sprite::createSprite(glm::vec2(96, 96), glm::vec2(1, 1), &texWall[i], &texProgram);
+	}
+
+	/*textures[1].loadFromFile("images/margaret/object1-animated.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	textures[1].setMagFilter(GL_NEAREST);
 	textures[2].loadFromFile("images/margaret/object2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	textures[2].setMagFilter(GL_NEAREST);
@@ -127,7 +147,7 @@ void Scene::init() {
 		texDesk[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
 		texDesk[i].setMagFilter(GL_NEAREST);
 		sprDesk[i] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &texDesk[i], &texProgram);
-	}
+	}*/
 	
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -139,7 +159,7 @@ void Scene::init() {
 
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
-	sprites[1]->update(deltaTime);
+	//sprites[1]->update(deltaTime);
 	//player->update(deltaTime);
 }
 
@@ -216,30 +236,25 @@ void Scene::render() {
 				for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 					tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-					if (tile >= 'b' && tile <= 'j') {
-						int tileAux = tile - int('a');
-						sprites[tileAux]->setPosition(posTile);
-						sprites[tileAux]->render();
-					}
-					else if (tile == 'k') {
-						int tileAux = ((int(posTile.x)+int(posTile.y)/2) % 6);
-						sprDesk[tileAux]->setPosition(posTile);
-						sprDesk[tileAux]->render();
-					}
-					else if (tile == 'l') {
-						int tileAux = ((rand() + 0) % 3);
-						sprObject1[tileAux]->setPosition(posTile);
-						sprObject1[tileAux]->render();
-					}
-					else if (tile == 'm') {
-						int tileAux = ((rand() + 0) % 3);
-						sprObject2[tileAux]->setPosition(posTile);
-						sprObject2[tileAux]->render();
+					if (tile >= '1' && tile <= '10') {
+						int tileAux = tile - int('1');
+						sprWall[tileAux]->setPosition(posTile);
+						sprWall[tileAux]->render();
 					}
 				}
 			}
-
 			//player->render();
+			for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
+				for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
+					tile = overgroundMap->getMap()[j * overgroundMap->getMapSize().x + i];
+					if (tile >= '1' && tile <= 'A') {
+						int tileAux = tile - int('1');
+						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+						overSprites[tileAux]->setPosition(posTile);
+						overSprites[tileAux]->render();
+					}
+				}
+			}
 			break;
 	}
 }
