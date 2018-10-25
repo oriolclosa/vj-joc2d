@@ -255,6 +255,9 @@ void Scene::render() {
 					}
 				}
 			}
+			glm::vec2 playerPos = player->getPosition();
+			int playerPosX = (playerPos.x / 32) - SCREEN_X - 1;
+			int playerPosY = (playerPos.y / 32) - SCREEN_Y - 1;
 			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 				for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 					tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
@@ -269,9 +272,13 @@ void Scene::render() {
 						sprObject[tileAux]->setPosition(posTile);
 						sprObject[tileAux]->render();
 					}
+
+					if (playerPosX == i && playerPosY == j) {
+						player->render();
+					}
 				}
 			}
-			player->render();
+			//player->render();
 			for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 				for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
 					tile = overgroundMap->getMap()[j * overgroundMap->getMapSize().x + i];
