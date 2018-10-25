@@ -97,6 +97,25 @@ void Scene::init() {
 		sprWall[i] = Sprite::createSprite(glm::vec2(96, 96), glm::vec2(1, 1), &texWall[i], &texProgram);
 	}
 
+	//Objects
+	for (int i = 0; i <= 10; ++i) {
+		string path = "images/margaret/object" + to_string(i + 1);
+		path += ".png";
+		texObject[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+		texObject[i].setMagFilter(GL_NEAREST);
+	}
+	sprObject[0] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[0], &texProgram);
+	sprObject[1] = Sprite::createSprite(glm::vec2(96, 64), glm::vec2(1, 1), &texObject[1], &texProgram);
+	sprObject[2] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[2], &texProgram);
+	sprObject[3] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[3], &texProgram);
+	sprObject[4] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[4], &texProgram);
+	sprObject[5] = Sprite::createSprite(glm::vec2(32, 96), glm::vec2(1, 1), &texObject[5], &texProgram);
+
+	//Walkable areas
+	walkableTexture.loadFromFile("images/margaret/ok.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	walkableTexture.setMagFilter(GL_NEAREST);
+	walkableSprite = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &walkableTexture, &texProgram);
+
 	/*textures[1].loadFromFile("images/margaret/object1-animated.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	textures[1].setMagFilter(GL_NEAREST);
 	textures[2].loadFromFile("images/margaret/object2.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -218,7 +237,6 @@ void Scene::render() {
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-			map->render();
 
 			int tile;
 			for (int j = 0; j < backgroundMap->getMapSize().y; j++) {
@@ -236,10 +254,15 @@ void Scene::render() {
 				for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 					tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-					if (tile >= '1' && tile <= '10') {
+					if (tile >= '1' && tile <= ':') {
 						int tileAux = tile - int('1');
 						sprWall[tileAux]->setPosition(posTile);
 						sprWall[tileAux]->render();
+					}
+					else if (tile >= 'a' && tile <= 'j') {
+						int tileAux = tile - int('a');
+						sprObject[tileAux]->setPosition(posTile);
+						sprObject[tileAux]->render();
 					}
 				}
 			}
@@ -252,6 +275,18 @@ void Scene::render() {
 						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 						overSprites[tileAux]->setPosition(posTile);
 						overSprites[tileAux]->render();
+					}
+				}
+			}
+			if (Game::instance().getWalkable()) {
+				for (int j = 0; j < map->getMapSize().y; j++) {
+					for (int i = 0; i < map->getMapSize().x; i++) {
+						tile = map->getMap()[j * map->getMapSize().x + i];
+						if (tile == '1') {
+							glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+							walkableSprite->setPosition(posTile);
+							walkableSprite->render();
+						}
 					}
 				}
 			}

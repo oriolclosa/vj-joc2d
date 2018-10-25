@@ -9,6 +9,7 @@ void Game::init() {
 	scene.init();
 	render_scene = 0;
 	selected_main_button = 1;
+	render_walkable = false;
 }
 
 bool Game::update(int deltaTime) {
@@ -43,6 +44,8 @@ void Game::keyPressed(int key) {
 		changeSelectMainButton(true);
 		render();
 	}
+	else if (key == 112) //p
+		render_walkable = !render_walkable;
 	keys[key] = true;
 }
 
@@ -81,6 +84,14 @@ void Game::setRenderScene(int scene) {
 
 int Game::getRenderScene() {
 	return render_scene;
+}
+
+void Game::setWalkable(bool walkable) {
+	render_walkable = walkable;
+}
+
+int Game::getWalkable() {
+	return render_walkable;
 }
 
 int Game::getScreenWidth() {

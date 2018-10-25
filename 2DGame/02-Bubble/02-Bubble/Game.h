@@ -47,6 +47,9 @@ public:
 	int getScreenWidth();
 	int getScreenHeight();
 
+	void setWalkable(bool walkable);
+	int getWalkable();
+
 private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
@@ -54,6 +57,7 @@ private:
 	                                  // we can have access at any time
 	int render_scene;
 	int selected_main_button;
+	bool render_walkable;
 
 };
 

@@ -54,6 +54,10 @@ private:
 	Sprite *sprDesk[6];
 	Texture texWall[10];
 	Sprite *sprWall[10];
+	Texture texObject[10];
+	Sprite *sprObject[10];
+	Texture walkableTexture;
+	Sprite *walkableSprite;
 };
 
 
