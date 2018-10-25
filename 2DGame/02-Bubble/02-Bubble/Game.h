@@ -42,6 +42,9 @@ public:
 	void setRenderScene(int scene);
 	int getRenderScene();
 
+	int getScreenWidth();
+	int getScreenHeight();
+
 private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render

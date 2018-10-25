@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de código fuente\Sprites">
+      <UniqueIdentifier>{5d3427b6-eec5-4699-8938-0e898ed35b7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Sprites">
+      <UniqueIdentifier>{0bf9953c-03c3-4f32-95da-6e3d894fb7b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -54,6 +60,9 @@
     <ClInclude Include="TileMap.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Desk.h">
+      <Filter>Archivos de encabezado\Sprites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -94,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="SpriteMap.cpp">
       <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Desk.cpp">
+      <Filter>Archivos de código fuente\Sprites</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

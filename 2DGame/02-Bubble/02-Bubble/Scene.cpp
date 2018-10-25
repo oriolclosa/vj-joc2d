@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include "Desk.h"
 
 
 
@@ -46,7 +47,7 @@ void Scene::init() {
 	
 	// Exemple
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	spritemap = SpriteMap::createSpriteMap(map->getMap(), map->getMapSize(), map->getTilesheetSize(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	//spritemap = SpriteMap::createSpriteMap(map->getMap(), map->getMapSize(), map->getTilesheetSize(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -73,7 +74,7 @@ void Scene::render() {
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			texQuad[0]->render(texs[0]);
-			text.render("Yo k se no soy 100tifico", glm::vec2(16, 48), 32, glm::vec4(1, 1, 1, 1));
+			text.render("...", glm::vec2(16, 48), 32, glm::vec4(1, 1, 1		, 1));
 			break;
 		case 1:
 			//Exemple
@@ -84,8 +85,8 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 			map->render();
-			spritemap->render();
-			//player->render();
+			//spritemap->render();
+			player->render();
 			break;
 	}
 }

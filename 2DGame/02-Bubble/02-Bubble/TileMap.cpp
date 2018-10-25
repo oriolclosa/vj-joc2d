@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 #include "TileMap.h"
+#include "Desk.h"
+#include "Game.h"
 
 
 using namespace std;
@@ -16,10 +18,11 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 }
 
 
-TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
-{
+TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program){
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
+	desk = new Desk();
+	desk->init(glm::ivec2(Game::instance().getScreenWidth(), Game::instance().getScreenHeight()), program);
 }
 
 TileMap::~TileMap()
@@ -140,6 +143,11 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockSize);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[1].y);
+			}
+
+			if (tile == 'd') {
+				desk->setPosition(glm::vec2(float(50), float(50)));
+				desk->render();
 			}
 		}
 	}

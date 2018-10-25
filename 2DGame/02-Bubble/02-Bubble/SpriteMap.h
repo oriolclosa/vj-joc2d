@@ -6,6 +6,7 @@
 #include "Texture.h"
 #include "ShaderProgram.h"
 #include "Sprite.h"
+#include "Desk.h"
 
 
 class SpriteMap
@@ -22,7 +23,7 @@ public:
 private:
 	const char *mapSprites;
 	glm::ivec2 mapSize, tilesheetSize;
-	Sprite *sprites[];
+	Desk *desk;
 };
 
 #endif // _SPRITE_MAP_INCLUDE

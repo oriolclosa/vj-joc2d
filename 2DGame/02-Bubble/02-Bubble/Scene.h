@@ -11,6 +11,7 @@
 #include "Quad.h"
 #include "TexturedQuad.h"
 #include "Text.h"
+#include "Desk.h"
 
 
 // Scene contains all the entities of our game.
@@ -41,6 +42,7 @@ private:
 	Texture texs[2];
 	TexturedQuad *texQuad[3];
 	Text text;
+	Desk *desk;
 
 };
 

@@ -68,4 +68,10 @@ int Game::getRenderScene() {
 	return render_scene;
 }
 
+int Game::getScreenWidth() {
+	return SCREEN_WIDTH;
+}
 
+int Game::getScreenHeight() {
+	return SCREEN_HEIGHT;
+}
