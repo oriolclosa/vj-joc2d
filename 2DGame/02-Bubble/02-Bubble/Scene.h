@@ -33,6 +33,8 @@ private:
 
 private:
 	TileMap *map;
+	TileMap *backgroundMap;
+	TileMap *spriteMap;
 	SpriteMap *spritemap;
 	Player *player;
 	ShaderProgram texProgram;
@@ -41,6 +43,10 @@ private:
 	Texture texs[6];
 	TexturedQuad *texQuad[6];
 	Text text;
+	Texture textures[10];
+	Sprite *sprites[10];
+	Texture backTextures[3];
+	Sprite *backSprites[3];
 };
 
 

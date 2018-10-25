@@ -27,7 +27,7 @@ void Game::keyPressed(int key) {
 	printf("%d",key);
 	if (key == 27) // Escape code
 		bPlay = false;
-	else if (key >= 48 && key <=49){
+	else if (key >= 48 && key <=50){
 		render_scene = key-48;
 		scene.render();
 	}

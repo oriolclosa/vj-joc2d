@@ -62,7 +62,40 @@ void Scene::init() {
 	texs[3].setMagFilter(GL_NEAREST);
 	// Exemple
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	//spritemap = SpriteMap::createSpriteMap(map->getMap(), map->getMapSize(), map->getTilesheetSize(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	spriteMap = TileMap::createTileMap("levels/level01-sprites.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	backTextures[0].loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[0].setMagFilter(GL_NEAREST);
+	backTextures[1].loadFromFile("images/margaret/floor.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[1].setMagFilter(GL_NEAREST);
+	backTextures[2].loadFromFile("images/margaret/wallfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[2].setMagFilter(GL_NEAREST);
+	backSprites[0] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[0], &texProgram);
+	backSprites[1] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[1], &texProgram);
+	backSprites[2] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[2], &texProgram);
+
+	textures[1].loadFromFile("images/margaret/object1-animated.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[1].setMagFilter(GL_NEAREST);
+	textures[2].loadFromFile("images/margaret/object2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[2].setMagFilter(GL_NEAREST);
+	textures[3].loadFromFile("images/margaret/desk1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	textures[3].setMagFilter(GL_NEAREST);
+	sprites[1] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(0.125, 1), &textures[1], &texProgram);
+	sprites[1]->setNumberAnimations(1);
+	sprites[1]->setAnimationSpeed(0, 6);
+	sprites[1]->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	sprites[1]->addKeyframe(0, glm::vec2(0.125f, 0.0f));
+	sprites[1]->addKeyframe(0, glm::vec2(0.25f, 0.0f));
+	sprites[1]->addKeyframe(0, glm::vec2(0.375f, 0.0f));
+	sprites[1]->addKeyframe(0, glm::vec2(0.5f, 0.0f));
+	sprites[1]->addKeyframe(0, glm::vec2(0.625f, 0.0f));
+	sprites[1]->addKeyframe(0, glm::vec2(0.75f, 0.0f));
+	sprites[1]->addKeyframe(0, glm::vec2(0.875f, 0.0f));
+	sprites[1]->changeAnimation(0);
+	sprites[2] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[2], &texProgram);
+	sprites[3] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[3], &texProgram);
+	
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -73,7 +106,8 @@ void Scene::init() {
 
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
-	player->update(deltaTime);
+	sprites[1]->update(deltaTime);
+	//player->update(deltaTime);
 }
 
 void Scene::render() {
@@ -132,7 +166,31 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 			map->render();
-			//spritemap->render();
+
+			int tile;
+			for (int j = 0; j < backgroundMap->getMapSize().y; j++) {
+				for (int i = 0; i < backgroundMap->getMapSize().x; i++) {
+					tile = backgroundMap->getMap()[j * backgroundMap->getMapSize().x + i];
+					if (tile >= '0' && tile <= '2') {
+						int tileAux = tile - int('0');
+						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+						backSprites[tileAux]->setPosition(posTile);
+						backSprites[tileAux]->render();
+					}
+				}
+			}
+			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
+				for (int i = 0; i < spriteMap->getMapSize().x; i++) {
+					tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
+					if (tile >= 'b' && tile <= 'd') {
+						int tileAux = tile - int('a');
+						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+						sprites[tileAux]->setPosition(posTile);
+						sprites[tileAux]->render();
+					}
+				}
+			}
+
 			//player->render();
 			break;
 	}
