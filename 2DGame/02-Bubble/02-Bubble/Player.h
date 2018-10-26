@@ -25,7 +25,7 @@ public:
 	void doDamage(float damage);
 	void death();
 	float getHealth();
-	unsigned int getLives();
+	unsigned int getLifes();
 	
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
@@ -33,13 +33,13 @@ private:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
-	unsigned int lives;
+	unsigned int lifes;
 	float health;
 	bool right;
 
 };
 
 
-#endif // _PLAYER_INCLUDE
+#endif _PLAYER_INCLUDE
 
 

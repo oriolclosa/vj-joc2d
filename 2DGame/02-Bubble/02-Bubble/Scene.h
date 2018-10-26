@@ -8,6 +8,7 @@
 #include "SpriteMap.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Coin.h"
 
 #include "Quad.h"
 #include "TexturedQuad.h"
@@ -67,6 +68,6 @@ private:
 	int currentLevel;
 };
 
-
 #endif _SCENE_INCLUDE
+
 

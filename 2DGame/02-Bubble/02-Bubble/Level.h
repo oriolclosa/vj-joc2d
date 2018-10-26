@@ -8,6 +8,7 @@
 #include "SpriteMap.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Coin.h"
 
 #include "Quad.h"
 #include "TexturedQuad.h"
@@ -16,6 +17,7 @@
 
 
 #define MAX_ENEMIES 100
+#define MAX_COINS 100
 
 
 class Level{
@@ -63,6 +65,14 @@ private:
 
 	Texture texInfoHealth;
 	Sprite *sprInfoHealth;
+	Texture texInfoLifes[3];
+	Sprite *sprInfoLifes[3];
+
+	Text text;
+	int score;
+
+	Coin *coins[MAX_COINS];
+	int num_coins;
 };
 
 

@@ -37,5 +37,3 @@ private:
 
 
 #endif _ENEMY_INCLUDE
-
-

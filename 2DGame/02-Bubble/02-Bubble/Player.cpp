@@ -18,14 +18,14 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	lives = 3;
+	lifes = 3;
 	health = 100.f;
 	right = false;
 }
 
 void Player::update(int deltaTime){
 	sprite->update(deltaTime);
-	cout << health << ' ' << lives << endl;
+	cout << health << ' ' << lifes << endl;
 	if (health <= 0) death();
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)){
 		posPlayer.x -= WALK_SPEED;
@@ -84,11 +84,11 @@ void Player::takeDamage(float damage) {
 
 void Player::death() {
 	health = 100;
-	--lives;
-	if (lives >= 1) Game::instance().setRenderScene(2);
+	--lifes;
+	if (lifes >= 1) Game::instance().setRenderScene(2);
 	else {
 		Game::instance().setRenderScene(1);
-		lives = 3;
+		lifes = 3;
 	}
 	Game::instance().render();
 }
@@ -101,6 +101,6 @@ float Player::getHealth() {
 	return health;
 }
 
-unsigned int Player::getLives() {
-	return lives;
+unsigned int Player::getLifes() {
+	return lifes;
 }

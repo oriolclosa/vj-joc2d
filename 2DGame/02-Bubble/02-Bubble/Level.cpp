@@ -12,8 +12,10 @@
 #define INIT_PLAYER_X_TILES 8
 #define INIT_PLAYER_Y_TILES 12
 
-#define PROB_ENEMIES 100
-#define MAX_ENEMIES 100
+#define PROB_ENEMIES 25
+#define MAX_ENEMIES 100 //For 100
+
+#define PROB_COINS 1 //For 1.000
 
 #define POS_SKY_X 16
 #define POS_SKY_Y 0
@@ -119,15 +121,14 @@ void Level::init(ShaderProgram &texProgram){
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	//Enemies
+	//Enemies and coins
 	int tile;
-	num_enemies = 0;
+	num_enemies = 0, num_coins = 0;
 	for (int j = 0; j < map->getMapSize().y; j++) {
 		for (int i = 0; i < map->getMapSize().x; i++) {
 			tile = map->getMap()[j * map->getMapSize().x + i];
 			if ((tile == '3') && (num_enemies < MAX_ENEMIES)) {
 				int enemy = rand() % 100;
-				cout << enemy << endl;
 				if (enemy <= PROB_ENEMIES) {
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 					enemies[num_enemies] = new Enemy();
@@ -139,19 +140,47 @@ void Level::init(ShaderProgram &texProgram){
 					++num_enemies;
 				}
 			}
+			else if ((tile == '2') && (num_coins < MAX_COINS)) {
+				int coin = rand() % 1000;
+				if (coin <= PROB_ENEMIES) {
+					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
+					coins[num_coins] = new Coin();
+					coins[num_coins]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					coins[num_coins]->setPosition(posTile);
+					coins[num_coins]->setPlayer(player);
+					++num_coins;
+				}
+			}
 		}
 	}
 
-	//Infobar
+	//Infohealth
 	texInfoHealth.loadFromFile("images/margaret/infohealth.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texInfoHealth.setMagFilter(GL_NEAREST);
 	sprInfoHealth = Sprite::createSprite(glm::vec2(99, 32), glm::vec2(1.0f, 1.0f/53.0f), &texInfoHealth, &texProgram);
 	sprInfoHealth->setNumberAnimations(53);
 	for (int i = 0; i < 53; ++i) {
-		sprInfoHealth->addKeyframe(i, glm::vec2(1.0f, (float(i))/53.0f));
+		sprInfoHealth->addKeyframe(i, glm::vec2(1.0f, (float(i)/53.0f)));
 	}
 	sprInfoHealth->changeAnimation(52);
 	sprInfoHealth->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
+
+	//Infolifes
+	for (int i = 0; i < 3; ++i) {
+		ostringstream path;
+		path << "images/margaret/infolifes" << (i + 1) << ".png";
+		texInfoLifes[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
+		texInfoLifes[i].setMagFilter(GL_NEAREST);
+		sprInfoLifes[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1.0f, 1.0f), &texInfoLifes[i], &texProgram);
+		sprInfoLifes[i]->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
+	}
+
+	//Text
+	if (!text.init("fonts/OpenSans-Regular.ttf"))
+		if (!text.init("fonts/OpenSans-Bold.ttf"))
+			if (!text.init("fonts/DroidSerif.ttf"))
+				cout << "Could not load font!!!" << endl;
+	score = 0;
 
 	currentTime = 0.0f;
 }
@@ -162,6 +191,11 @@ void Level::update(int deltaTime) {
 	for (int i = 0; i < num_enemies; ++i) {
 		enemies[i]->setPlayerPos(player->getPosition());
 		enemies[i]->update(deltaTime);
+	}
+	for (int i = 0; i < num_coins; ++i) {
+		if (coins[i] != NULL) {
+			coins[i]->update(deltaTime);
+		}
 	}
 	updateInfoHealth(player->getHealth());
 }
@@ -181,8 +215,8 @@ void Level::render(ShaderProgram &texProgram) {
 		}
 	}
 	glm::vec2 playerPos = player->getPosition();
-	int playerPosX = (playerPos.x / 32.0f) - SCREEN_X - 1;
-	int playerPosY = (playerPos.y / 32.0f) - SCREEN_Y - 1;
+	int playerPosX = (playerPos.x / 32.0f);
+	int playerPosY = (playerPos.y / 32.0f) - 1;
 	for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 		for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 			tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
@@ -213,6 +247,18 @@ void Level::render(ShaderProgram &texProgram) {
 	for (int i = 0; i < num_enemies; ++i) {
 		enemies[i]->render();
 	}
+	for (int i = 0; i < num_coins; ++i) {
+		if (coins[i] != NULL) {
+			float distance = sqrt(pow(coins[i]->getPosition().x - player->getPosition().x, 2) + pow(coins[i]->getPosition().y - player->getPosition().y, 2));
+			if (distance <= 32) {
+				coins[i] = NULL;
+				score += 10;
+			}
+			else {
+				coins[i]->render();
+			}
+		}
+	}
 	//player->render();
 	for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 		for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
@@ -239,6 +285,10 @@ void Level::render(ShaderProgram &texProgram) {
 	}
 
 	sprInfoHealth->render();
+	sprInfoLifes[((player->getLifes()) - 1)]->render();
+	ostringstream scoreText;
+	scoreText << "Score: " << score;
+	text.render(scoreText.str(), glm::vec2(SCREEN_X + POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
 }
 
 glm::vec2 Level::getPlayerPos() {
@@ -253,5 +303,6 @@ void Level::updateInfoHealth(float health) {
 		posAux = 0.0f;
 	}
 	sprInfoHealth->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
+	sprInfoLifes[((player->getLifes()) - 1)]->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
 }
 
