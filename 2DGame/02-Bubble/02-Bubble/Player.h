@@ -22,6 +22,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 	void takeDamage(float damage);
+	void doDamage(float damage);
 	void death();
 	
 private:
@@ -32,6 +33,7 @@ private:
 	TileMap *map;
 	unsigned int lives;
 	float health;
+	bool right;
 
 };
 
