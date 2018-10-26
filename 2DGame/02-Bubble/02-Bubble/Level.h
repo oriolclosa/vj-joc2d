@@ -30,6 +30,8 @@ public:
 
 	glm::vec2 getPlayerPos();
 
+	void updateInfoHealth(float health);
+
 private:
 	TileMap *map;
 	TileMap *backgroundMap;
@@ -58,6 +60,9 @@ private:
 	Sprite *skySprite;
 	Texture texBuildings[5];
 	Sprite *sprBuildings[5];
+
+	Texture texInfoHealth;
+	Sprite *sprInfoHealth;
 };
 
 

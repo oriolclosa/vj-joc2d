@@ -139,6 +139,17 @@ void Level::init(ShaderProgram &texProgram){
 		}
 	}
 
+	//Infobar
+	texInfoHealth.loadFromFile("images/margaret/infohealth.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texInfoHealth.setMagFilter(GL_NEAREST);
+	sprInfoHealth = Sprite::createSprite(glm::vec2(99, 32), glm::vec2(1.0f, 1.0f/53.0f), &texInfoHealth, &texProgram);
+	sprInfoHealth->setNumberAnimations(53);
+	for (int i = 0; i < 53; ++i) {
+		sprInfoHealth->addKeyframe(i, glm::vec2(1.0f, ((1.0f+float(i))/53)));
+	}
+	sprInfoHealth->changeAnimation(51);
+	sprInfoHealth->setPosition(glm::vec2(50.0f, 50.0f));
+
 	currentTime = 0.0f;
 }
 
@@ -222,10 +233,20 @@ void Level::render(ShaderProgram &texProgram) {
 			}
 		}
 	}
+
+	sprInfoHealth->render();
 }
 
 glm::vec2 Level::getPlayerPos() {
 	return player->getPosition();
+}
+
+void Level::updateInfoHealth(float health) {
+	float healthAux = 52.0f*(health / 100.f)-1.0f;
+	if (healthAux < 0.0f) {
+		healthAux = 52.0f;
+	}
+	sprInfoHealth->changeAnimation(healthAux);
 }
 
 
