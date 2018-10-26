@@ -11,7 +11,7 @@
 #define FALL_STEP 4
 
 #define WALK_SPEED 2
-#define DETECT_DISTANCE 250
+#define DETECT_DISTANCE 350
 
 
 void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){

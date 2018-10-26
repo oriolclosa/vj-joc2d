@@ -95,6 +95,7 @@ void Scene::update(int deltaTime) {
 void Scene::render() {
 	glm::mat4 modelview;
 	// TODO: crear metodes per cada scena
+	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	switch(Game::instance().getRenderScene()) {
 		case 0:
 			// Pre_Menu
