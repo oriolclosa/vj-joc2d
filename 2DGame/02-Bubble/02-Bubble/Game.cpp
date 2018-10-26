@@ -8,7 +8,7 @@ void Game::init() {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	scene.init();
 	render_scene = 0;
-	selected_main_button = 1;
+	selected_main_button = 0;
 	render_walkable = false;
 }
 
@@ -24,8 +24,8 @@ void Game::render() {
 }
 
 void Game::keyPressed(int key) {
-	printf("%d",Game::instance().getRenderScene());
-	printf("%d",key);
+	//printf("%d",Game::instance().getRenderScene());
+	//printf("%d",key);
 	if (key == 27) // Escape code
 		bPlay = false;
 	else if (key >= 48 && key <= 50) {
@@ -50,6 +50,28 @@ void Game::keyPressed(int key) {
 		scene.setCameraMovement(scene.getCameraMovement() - 10.0f);
 	else if (key == 109) //m
 		scene.setCameraMovement(scene.getCameraMovement() + 10.0f);
+	else if (key == 13) {
+		if (getRenderScene() == 1) {
+			switch(getSelectedMainButton()) {
+				case 0: 
+					render_scene = 2;
+					break;
+				case 1: 
+					render_scene = 3;
+					break;
+				case 2: 
+					render_scene = 4;
+					break;
+				case 3: 
+					bPlay = false;
+					break;
+			}
+		}
+		else if (getRenderScene() == 3 || getRenderScene() == 4) {
+			render_scene = 1;
+		}
+		render();
+	}
 	keys[key] = true;
 }
 
@@ -111,10 +133,9 @@ int Game::getSelectedMainButton() {
 }
 
 void Game::changeSelectMainButton(bool plus) {
-	if (plus && selected_main_button + 1 < 5) {
-		++selected_main_button;
-	}
-	if (!plus && selected_main_button - 1 > 0) {
-		--selected_main_button;
-	}
+	if (plus) ++selected_main_button;
+	else --selected_main_button;
+
+	if (selected_main_button < 0) selected_main_button = 3;
+	else selected_main_button = selected_main_button % 4;
 }
