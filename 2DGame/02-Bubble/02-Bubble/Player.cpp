@@ -20,6 +20,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	lives = 3;
 	health = 100.f;
+	right = false;
 }
 
 void Player::update(int deltaTime){
@@ -28,13 +29,15 @@ void Player::update(int deltaTime){
 	if (health <= 0) death();
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)){
 		posPlayer.x -= WALK_SPEED;
+		right = true;
 		if(map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), false)){
 			posPlayer.x += WALK_SPEED;
 		}
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT)){
-		--health;
+		//--health;
 		posPlayer.x += WALK_SPEED;
+		right = false;
 		if(map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), false)){
 			posPlayer.x -= WALK_SPEED;
 		}
@@ -50,6 +53,9 @@ void Player::update(int deltaTime){
 		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), false)) {
 			posPlayer.y -= WALK_SPEED;
 		}
+	}
+	else if (Game::instance().getKey(32)) {
+		doDamage(20);
 	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -87,3 +93,10 @@ void Player::death() {
 	Game::instance().render();
 }
 
+void Player::doDamage(float damage) {
+	health -= damage;
+}
+
+float Player::getHealth() {
+	return health;
+}

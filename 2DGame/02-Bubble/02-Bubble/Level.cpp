@@ -18,6 +18,8 @@
 #define POS_SKY_X 16
 #define POS_SKY_Y 0
 
+#define POS_INFO_X 20
+#define POS_INFO_Y 330
 
 Level::Level() {
 	map = NULL;
@@ -132,6 +134,7 @@ void Level::init(ShaderProgram &texProgram){
 					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 					enemies[num_enemies]->setPosition(posTile);
 					enemies[num_enemies]->setTileMap(map);
+					enemies[num_enemies]->setPlayer(player);
 					enemies[num_enemies]->setPlayerPos(player->getPosition());
 					++num_enemies;
 				}
@@ -148,7 +151,7 @@ void Level::init(ShaderProgram &texProgram){
 		sprInfoHealth->addKeyframe(i, glm::vec2(1.0f, ((1.0f+float(i))/53)));
 	}
 	sprInfoHealth->changeAnimation(51);
-	sprInfoHealth->setPosition(glm::vec2(50.0f, 50.0f));
+	sprInfoHealth->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
 
 	currentTime = 0.0f;
 }
@@ -160,6 +163,7 @@ void Level::update(int deltaTime) {
 		enemies[i]->setPlayerPos(player->getPosition());
 		enemies[i]->update(deltaTime);
 	}
+	updateInfoHealth(player->getHealth());
 }
 
 void Level::render(ShaderProgram &texProgram) {
@@ -247,7 +251,10 @@ void Level::updateInfoHealth(float health) {
 		healthAux = 52.0f;
 	}
 	sprInfoHealth->changeAnimation(healthAux);
+	float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
+	if (posAux < 0.0f) {
+		posAux = 0.0f;
+	}
+	sprInfoHealth->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
 }
-
-
 

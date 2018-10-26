@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 #include "Enemy.h"
 #include "Game.h"
+#include "Level.h"
 
 
 #define JUMP_ANGLE_STEP 4
@@ -12,6 +13,8 @@
 
 #define WALK_SPEED 2
 #define DETECT_DISTANCE 350
+
+#define PLAYER_DAMAGE 1
 
 
 void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
@@ -76,6 +79,7 @@ void Enemy::update(int deltaTime){
 		posPlayer.y += incY;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
+	else if (distance <= 1) attackPlayer(PLAYER_DAMAGE);
 }
 
 void Enemy::render(){
@@ -99,5 +103,11 @@ void Enemy::setPlayerPos(glm::vec2 &playerPosAux) {
 	playerPos = playerPosAux;
 }
 
+void Enemy::attackPlayer(float damage) {
+	if (abs(playerPos.x - posPlayer.x) <= 2)
+		player->takeDamage(damage);
+}
 
-
+void Enemy::setPlayer(Player *playerAux) {
+	player = playerAux;
+}
