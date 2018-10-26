@@ -9,27 +9,10 @@
 #include <sstream>
 
 
-#define SCREEN_X 0
-#define SCREEN_Y 0
-
-#define INIT_PLAYER_X_TILES 8
-#define INIT_PLAYER_Y_TILES 12
-
-#define PROB_ENEMIES 10
-#define MAX_ENEMIES 100
-
-
-Scene::Scene() {
-	map = NULL;
-	spritemap = NULL;
-	player = NULL;
+Scene::Scene(){
 }
 
-Scene::~Scene() {
-	if(map != NULL)
-		delete map;
-	if(player != NULL)
-		delete player;
+Scene::~Scene(){
 }
 
 
@@ -94,153 +77,19 @@ void Scene::init() {
 	texs[3].loadFromFile("images/menu_1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texs[3].setMagFilter(GL_NEAREST);
 
-	// Exemple
 	camera_movement = 0.0f;
+	levels[0] = new Level();
+	levels[0]->init(texProgram);
+	currentLevel = 0;
 
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	spriteMap = TileMap::createTileMap("levels/level01-sprites.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	overgroundMap = TileMap::createTileMap("levels/level01-overground.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-
-	backTextures[0].loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[0].setMagFilter(GL_NEAREST);
-	backTextures[1].loadFromFile("images/margaret/floor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[1].setMagFilter(GL_NEAREST);
-	backTextures[2].loadFromFile("images/margaret/wallfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[2].setMagFilter(GL_NEAREST);
-	backSprites[0] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[0], &texProgram);
-	backSprites[1] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[1], &texProgram);
-	backSprites[2] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[2], &texProgram);
-
-	//Overground
-	for (int i = 0; i <=17; ++i) {
-		ostringstream path;
-		path << "images/margaret/wallover" << (i+1) << ".png";
-		overTextures[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
-		overTextures[i].setMagFilter(GL_NEAREST);
-		overSprites[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &overTextures[i], &texProgram);
-	}
-
-	//Wall pictures
-	for (int i = 0; i <= 10; ++i) {
-		ostringstream path;
-		path << "images/margaret/picture" << (i + 1) << ".png";
-		texWall[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
-		texWall[i].setMagFilter(GL_NEAREST);
-		sprWall[i] = Sprite::createSprite(glm::vec2(96, 96), glm::vec2(1, 1), &texWall[i], &texProgram);
-	}
-
-	//Objects
-	for (int i = 0; i <= 10; ++i) {
-		ostringstream path;
-		path << "images/margaret/object" << (i + 1) << ".png";
-		texObject[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
-		texObject[i].setMagFilter(GL_NEAREST);
-	}
-	sprObject[0] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[0], &texProgram);
-	sprObject[1] = Sprite::createSprite(glm::vec2(96, 64), glm::vec2(1, 1), &texObject[1], &texProgram);
-	sprObject[2] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[2], &texProgram);
-	sprObject[3] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[3], &texProgram);
-	sprObject[4] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[4], &texProgram);
-	sprObject[5] = Sprite::createSprite(glm::vec2(32, 96), glm::vec2(1, 1), &texObject[5], &texProgram);
-
-	//Walkable areas
-	walkableTexture.loadFromFile("images/margaret/ok.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	walkableTexture.setMagFilter(GL_NEAREST);
-	walkableSprite = Sprite::createSprite(glm::vec2(16, 16), glm::vec2(1, 1), &walkableTexture, &texProgram);
-
-	/*textures[1].loadFromFile("images/margaret/object1-animated.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[1].setMagFilter(GL_NEAREST);
-	textures[2].loadFromFile("images/margaret/object2.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[2].setMagFilter(GL_NEAREST);
-	textures[3].loadFromFile("images/margaret/desk1.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[3].setMagFilter(GL_NEAREST);
-	textures[4].loadFromFile("images/margaret/desk2.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[4].setMagFilter(GL_NEAREST);
-	textures[5].loadFromFile("images/margaret/desk3.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[5].setMagFilter(GL_NEAREST);
-	textures[6].loadFromFile("images/margaret/desk4.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[6].setMagFilter(GL_NEAREST);
-	textures[7].loadFromFile("images/margaret/desk5.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[7].setMagFilter(GL_NEAREST);
-	textures[8].loadFromFile("images/margaret/desk6.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[8].setMagFilter(GL_NEAREST);
-	textures[9].loadFromFile("images/margaret/plant1.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	textures[9].setMagFilter(GL_NEAREST);
-	sprites[1] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(0.125, 1), &textures[1], &texProgram);
-	sprites[1]->setNumberAnimations(1);
-	sprites[1]->setAnimationSpeed(0, 6);
-	sprites[1]->addKeyframe(0, glm::vec2(0.0f, 0.0f));
-	sprites[1]->addKeyframe(0, glm::vec2(0.125f, 0.0f));
-	sprites[1]->addKeyframe(0, glm::vec2(0.25f, 0.0f));
-	sprites[1]->addKeyframe(0, glm::vec2(0.375f, 0.0f));
-	sprites[1]->addKeyframe(0, glm::vec2(0.5f, 0.0f));
-	sprites[1]->addKeyframe(0, glm::vec2(0.625f, 0.0f));
-	sprites[1]->addKeyframe(0, glm::vec2(0.75f, 0.0f));
-	sprites[1]->addKeyframe(0, glm::vec2(0.875f, 0.0f));
-	sprites[1]->changeAnimation(0);
-	sprites[2] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[2], &texProgram);
-	sprites[3] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[3], &texProgram);
-	sprites[4] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[4], &texProgram);
-	sprites[5] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[5], &texProgram);
-	sprites[6] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[6], &texProgram);
-	sprites[7] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[7], &texProgram);
-	sprites[8] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &textures[8], &texProgram);
-	sprites[9] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &textures[9], &texProgram);
-
-	//Object 1
-	set<int> numDesks = { 1, 2, 3, 4, 5, 6 };
-	for (int i = 0; i < 5; ++i) {
-		set<int>::iterator actDesk = numDesks.begin();
-		advance(actDesk, rand()%numDesks.size());
-		string path = "images/margaret/desk" + to_string(*actDesk);
-		path += ".png";
-		//numDesks.erase(actDesk);
-		texDesk[i].loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
-		texDesk[i].setMagFilter(GL_NEAREST);
-		sprDesk[i] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &texDesk[i], &texProgram);
-	}*/
-
-	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
-
-	//Enemies
-	int tile;
-	num_enemies = 0;
-	for (int j = 0; j < map->getMapSize().y; j++) {
-		for (int i = 0; i < map->getMapSize().x; i++) {
-			tile = map->getMap()[j * map->getMapSize().x + i];
-			if ((tile == '3') && (num_enemies < MAX_ENEMIES)) {
-				int enemy = rand() % 100;
-				cout << enemy << endl;
-				if (enemy <= PROB_ENEMIES) {
-					cout << "ENEMY!" << endl;
-					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
-					enemies[num_enemies] = new Enemy();
-					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-					enemies[num_enemies]->setPosition(posTile);
-					enemies[num_enemies]->setTileMap(map);
-					enemies[num_enemies]->setPlayerPos(player->getPosition());
-					++num_enemies;
-				}
-			}
-		}
-	}
-	
 	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
 
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
-	player->update(deltaTime);
-	for (int i = 0; i < num_enemies; ++i) {
-		enemies[i]->setPlayerPos(player->getPosition());
-		enemies[i]->update(deltaTime);
-	}
-	setCameraMovement(player->getPosition().x - SCREEN_WIDTH / 2);
+	levels[currentLevel]->update(deltaTime);
+	setCameraMovement(levels[currentLevel]->getPlayerPos().x - SCREEN_WIDTH / 2);
 }
 
 void Scene::render() {
@@ -359,81 +208,15 @@ void Scene::render() {
 			tq_button_0_main_menu->render(texs[3]);
 			break;
 		case 2:
-			//Exemple
 			texProgram.use();
-			projection = glm::ortho(camera_movement, float(SCREEN_WIDTH -1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
+			projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
 			texProgram.setUniformMatrix4f("projection", projection);
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
-			int tile;
-			for (int j = 0; j < backgroundMap->getMapSize().y; j++) {
-				for (int i = 0; i < backgroundMap->getMapSize().x; i++) {
-					tile = backgroundMap->getMap()[j * backgroundMap->getMapSize().x + i];
-					if (tile >= '0' && tile <= '2') {
-						int tileAux = tile - int('0');
-						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-						backSprites[tileAux]->setPosition(posTile);
-						backSprites[tileAux]->render();
-					}
-				}
-			}
-			glm::vec2 playerPos = player->getPosition();
-			int playerPosX = (playerPos.x / 32.0f) - SCREEN_X - 1;
-			int playerPosY = (playerPos.y / 32.0f) - SCREEN_Y - 1;
-			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
-				for (int i = 0; i < spriteMap->getMapSize().x; i++) {
-					tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
-					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-					if (tile >= '1' && tile <= ':') {
-						int tileAux = tile - int('1');
-						sprWall[tileAux]->setPosition(posTile);
-						sprWall[tileAux]->render();
-					}
-					else if (tile >= 'a' && tile <= 'j') {
-						int tileAux = tile - int('a');
-						sprObject[tileAux]->setPosition(posTile);
-						sprObject[tileAux]->render();
-					}
-
-					if (playerPosX == i && playerPosY == j) {
-						player->render();
-					}
-				}
-			}
-			/*for (int i = 0; i < num_enemies; ++i) {
-				enemies1Sprite[i]->render();
-			}*/
-			cout << num_enemies << endl;
-			for (int i = 0; i < num_enemies; ++i) {
-				enemies[i]->render();
-			}
-			//player->render();
-			for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
-				for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
-					tile = overgroundMap->getMap()[j * overgroundMap->getMapSize().x + i];
-					if (tile >= '1' && tile <= 'A') {
-						int tileAux = tile - int('1');
-						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-						overSprites[tileAux]->setPosition(posTile);
-						overSprites[tileAux]->render();
-					}
-				}
-			}
-			if (Game::instance().getWalkable()) {
-				for (int j = 0; j < map->getMapSize().y; j++) {
-					for (int i = 0; i < map->getMapSize().x; i++) {
-						tile = map->getMap()[j * map->getMapSize().x + i];
-						if (tile == '1') {
-							glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
-							walkableSprite->setPosition(posTile);
-							walkableSprite->render();
-						}
-					}
-				}
-			}
+			levels[currentLevel]->render(texProgram);
 			break;
 	}
 }
@@ -468,11 +251,11 @@ void Scene::initShaders() {
 }
 
 void Scene::setCameraMovement(float movement) {
-	if (movement < 0.0f){
+	if (movement < 0.0f) {
 		movement = 0.0f;
 	}
 	/*if (movement >= (map->getMapSize().x - SCREEN_WIDTH)) {
-		movement = (map->getMapSize().x - SCREEN_WIDTH);
+	movement = (map->getMapSize().x - SCREEN_WIDTH);
 	}*/
 	camera_movement = movement;
 }
@@ -480,6 +263,5 @@ void Scene::setCameraMovement(float movement) {
 float Scene::getCameraMovement() {
 	return camera_movement;
 }
-
 
 

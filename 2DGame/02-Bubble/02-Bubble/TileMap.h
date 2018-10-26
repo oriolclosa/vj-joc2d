@@ -28,10 +28,10 @@ public:
 	
 	int getTileSize() const { return tileSize; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
+	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool mob) const;
+	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool mob) const;
+	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool mob) const;
+	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, bool mob) const;
 
 	char *getMap();
 	glm::ivec2 getMapSize();

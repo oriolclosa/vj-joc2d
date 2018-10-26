@@ -12,17 +12,18 @@
 #include "Quad.h"
 #include "TexturedQuad.h"
 #include "Text.h"
-
-
-#define MAX_ENEMIES 100
+#include "Level.h"
 
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
 
-class Scene
-{
+#define SCREEN_X 0
+#define SCREEN_Y 0
+
+
+class Scene{
 
 public:
 	Scene();
@@ -39,12 +40,6 @@ private:
 	void initShaders();
 
 private:
-	TileMap *map;
-	TileMap *backgroundMap;
-	TileMap *spriteMap;
-	TileMap *overgroundMap;
-	SpriteMap *spritemap;
-	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;	
@@ -63,26 +58,13 @@ private:
 	Texture t_esc_main_menu;
 	Texture t_button_0_main_menu, t_button_1_main_menu, t_button_2_main_menu, t_button_3_main_menu;
 	Text text;
-	Texture textures[10];
-	Sprite *sprites[10];
-	Texture backTextures[3];
-	Sprite *backSprites[3];
-	Texture overTextures[17];
-	Sprite *overSprites[17];
-	Texture texDesk[6];
-	Sprite *sprDesk[6];
-	Texture texWall[10];
-	Sprite *sprWall[10];
-	Texture texObject[10];
-	Sprite *sprObject[10];
-	Texture walkableTexture;
-	Sprite *walkableSprite;
-	Enemy *enemies[MAX_ENEMIES];
-	int num_enemies;
 
 	float camera_movement;
+	
+	Level *levels[1];
+	int currentLevel;
 };
 
 
-#endif // _SCENE_INCLUDE
+#endif _SCENE_INCLUDE
 

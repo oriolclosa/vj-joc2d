@@ -26,4 +26,4 @@ private:
 	Desk *desk;
 };
 
-#endif // _SPRITE_MAP_INCLUDE
+#endif _SPRITE_MAP_INCLUDE
