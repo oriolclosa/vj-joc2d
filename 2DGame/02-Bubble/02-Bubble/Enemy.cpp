@@ -25,7 +25,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 void Enemy::update(int deltaTime){
 	sprite->update(deltaTime);
 	float distance = sqrt(pow(playerPos.x - posPlayer.x, 2) + pow(playerPos.y - posPlayer.y, 2));
-	if (distance < DETECT_DISTANCE) {
+	if (distance < DETECT_DISTANCE && distance > 1) {
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > posPlayer.x) {
 			if (playerPos.y != posPlayer.y) {

@@ -15,7 +15,8 @@
 #define INIT_PLAYER_X_TILES 8
 #define INIT_PLAYER_Y_TILES 12
 
-#define PROB_ENEMIES 100
+#define PROB_ENEMIES 10
+#define MAX_ENEMIES 100
 
 
 Scene::Scene() {
@@ -206,7 +207,8 @@ void Scene::init() {
 	player->setTileMap(map);
 
 	//Enemies
-	int tile, k = 0, num_enemies=0;
+	int tile;
+	num_enemies = 0;
 	for (int j = 0; j < map->getMapSize().y; j++) {
 		for (int i = 0; i < map->getMapSize().x; i++) {
 			tile = map->getMap()[j * map->getMapSize().x + i];
@@ -216,11 +218,11 @@ void Scene::init() {
 				if (enemy <= PROB_ENEMIES) {
 					cout << "ENEMY!" << endl;
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
-					enemies[k] = new Enemy();
-					enemies[k]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-					enemies[k]->setPosition(posTile);
-					enemies[k]->setTileMap(map);
-					enemies[k]->setPlayerPos(player->getPosition());
+					enemies[num_enemies] = new Enemy();
+					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					enemies[num_enemies]->setPosition(posTile);
+					enemies[num_enemies]->setTileMap(map);
+					enemies[num_enemies]->setPlayerPos(player->getPosition());
 					++num_enemies;
 				}
 			}
