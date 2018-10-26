@@ -24,12 +24,9 @@ public:
 	Level();
 	~Level();
 
-	void init(ShaderProgram &texProgramAux, glm::mat4 &projectionAux);
+	void init(ShaderProgram &texProgramAux);
 	void update(int deltaTime);
-	void render();
-
-	void setCameraMovement(float movement);
-	float getCameraMovement();
+	void render(ShaderProgram &texProgramAux);
 
 	glm::vec2 getPlayerPos();
 
@@ -40,24 +37,7 @@ private:
 	TileMap *overgroundMap;
 	SpriteMap *spritemap;
 	Player *player;
-	ShaderProgram texProgram;
 	float currentTime;
-	glm::mat4 projection;	
-	Texture texs[6];
-	TexturedQuad *texQuad[6];
-	TexturedQuad *tq_wp_main_menu;
-	TexturedQuad *tq_title_main_menu;
-	TexturedQuad *tq_text_pre_menu;
-	TexturedQuad *tq_keys_main_menu;
-	TexturedQuad *tq_esc_main_menu;
-	TexturedQuad *tq_button_0_main_menu, *tq_button_1_main_menu, *tq_button_2_main_menu, *tq_button_3_main_menu;
-	Texture t_wp_main_menu;
-	Texture t_title_main_menu;
-	Texture t_text_pre_menu;
-	Texture t_keys_main_menu;
-	Texture t_esc_main_menu;
-	Texture t_button_0_main_menu, t_button_1_main_menu, t_button_2_main_menu, t_button_3_main_menu;
-	Text text;
 	Texture textures[10];
 	Sprite *sprites[10];
 	Texture backTextures[6];

@@ -33,10 +33,7 @@ Level::~Level() {
 }
 
 
-void Level::init(ShaderProgram &texProgramAux, glm::mat4 &projectionAux){
-	texProgram = texProgramAux;
-	projection = projectionAux;
-
+void Level::init(ShaderProgram &texProgram){
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	spriteMap = TileMap::createTileMap("levels/level01-sprites.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -140,8 +137,7 @@ void Level::init(ShaderProgram &texProgramAux, glm::mat4 &projectionAux){
 			}
 		}
 	}
-	
-	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+
 	currentTime = 0.0f;
 }
 
@@ -154,7 +150,7 @@ void Level::update(int deltaTime) {
 	}
 }
 
-void Level::render() {
+void Level::render(ShaderProgram &texProgram) {
 	skySprite->render();
 	int tile;
 	for (int j = 0; j < backgroundMap->getMapSize().y; j++) {

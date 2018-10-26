@@ -77,13 +77,12 @@ void Scene::init() {
 	texs[3].loadFromFile("images/menu_1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texs[3].setMagFilter(GL_NEAREST);
 
-	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
-
 	camera_movement = 0.0f;
 	levels[0] = new Level();
-	levels[0]->init(texProgram, projection);
+	levels[0]->init(texProgram);
 	currentLevel = 0;
 
+	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
 
@@ -217,7 +216,7 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
-			levels[currentLevel]->render();
+			levels[currentLevel]->render(texProgram);
 			break;
 	}
 }
