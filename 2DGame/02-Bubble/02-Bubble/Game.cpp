@@ -24,7 +24,7 @@ void Game::render() {
 }
 
 void Game::keyPressed(int key) {
-	//printf("%d",Game::instance().getRenderScene());
+	//printf("%d\n",Game::instance().getRenderScene());
 	//printf("%d",key);
 	if (key == 27) // Escape code
 		bPlay = false;

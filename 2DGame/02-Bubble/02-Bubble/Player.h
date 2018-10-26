@@ -21,6 +21,8 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
+	void takeDamage(float damage);
+	void death();
 	
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
@@ -28,6 +30,8 @@ private:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
+	unsigned int lives;
+	float health;
 
 };
 
