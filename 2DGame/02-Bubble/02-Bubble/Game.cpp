@@ -28,10 +28,6 @@ void Game::keyPressed(int key) {
 	//printf("%d",key);
 	if (key == 27) // Escape code
 		bPlay = false;
-	else if (key >= 48 && key <= 50) {
-		render_scene = key - 48;
-		scene.render();
-	}
 	else if (key == 102 && Game::instance().getRenderScene() == 0) {
 		render_scene = 1;
 		scene.render();
@@ -53,7 +49,8 @@ void Game::keyPressed(int key) {
 	else if (key == 13) {
 		if (getRenderScene() == 1) {
 			switch(getSelectedMainButton()) {
-				case 0: 
+				case 0:
+					scene.updateLevel(0);
 					render_scene = 2;
 					break;
 				case 1: 

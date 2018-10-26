@@ -148,9 +148,9 @@ void Level::init(ShaderProgram &texProgram){
 	sprInfoHealth = Sprite::createSprite(glm::vec2(99, 32), glm::vec2(1.0f, 1.0f/53.0f), &texInfoHealth, &texProgram);
 	sprInfoHealth->setNumberAnimations(53);
 	for (int i = 0; i < 53; ++i) {
-		sprInfoHealth->addKeyframe(i, glm::vec2(1.0f, ((1.0f+float(i))/53)));
+		sprInfoHealth->addKeyframe(i, glm::vec2(1.0f, (float(i))/53.0f));
 	}
-	sprInfoHealth->changeAnimation(51);
+	sprInfoHealth->changeAnimation(52);
 	sprInfoHealth->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
 
 	currentTime = 0.0f;
@@ -246,10 +246,7 @@ glm::vec2 Level::getPlayerPos() {
 }
 
 void Level::updateInfoHealth(float health) {
-	float healthAux = 52.0f*(health / 100.f)-1.0f;
-	if (healthAux < 0.0f) {
-		healthAux = 52.0f;
-	}
+	int healthAux = int(52.0f*(health / 100.f));
 	sprInfoHealth->changeAnimation(healthAux);
 	float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
 	if (posAux < 0.0f) {

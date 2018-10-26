@@ -78,9 +78,7 @@ void Scene::init() {
 	texs[3].setMagFilter(GL_NEAREST);
 
 	camera_movement = 0.0f;
-	levels[0] = new Level();
-	levels[0]->init(texProgram);
-	currentLevel = 0;
+	currentLevel = -1;
 
 	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
@@ -88,8 +86,10 @@ void Scene::init() {
 
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
-	levels[currentLevel]->update(deltaTime);
-	setCameraMovement(levels[currentLevel]->getPlayerPos().x - SCREEN_WIDTH / 2);
+	if (currentLevel >= 0) {
+		level->update(deltaTime);
+		setCameraMovement(level->getPlayerPos().x - SCREEN_WIDTH / 2);
+	}
 }
 
 void Scene::render() {
@@ -209,15 +209,17 @@ void Scene::render() {
 			tq_button_0_main_menu->render(texs[3]);
 			break;
 		case 2:
-			texProgram.use();
-			projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
-			texProgram.setUniformMatrix4f("projection", projection);
-			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-			modelview = glm::mat4(1.0f);
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+			if (currentLevel >= 0) {
+				texProgram.use();
+				projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
+				texProgram.setUniformMatrix4f("projection", projection);
+				texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+				modelview = glm::mat4(1.0f);
+				texProgram.setUniformMatrix4f("modelview", modelview);
+				texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
-			levels[currentLevel]->render(texProgram);
+				level->render(texProgram);
+			}
 			break;
 	}
 }
@@ -263,6 +265,13 @@ void Scene::setCameraMovement(float movement) {
 
 float Scene::getCameraMovement() {
 	return camera_movement;
+}
+
+void Scene::updateLevel(int levelAux) {
+	currentLevel = levelAux;
+	camera_movement = 0.0f;
+	level = new Level();
+	level->init(texProgram);
 }
 
 

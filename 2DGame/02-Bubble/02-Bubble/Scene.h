@@ -36,6 +36,8 @@ public:
 	void setCameraMovement(float movement);
 	float getCameraMovement();
 
+	void updateLevel(int levelAux);
+
 private:
 	void initShaders();
 
@@ -61,7 +63,7 @@ private:
 
 	float camera_movement;
 	
-	Level *levels[1];
+	Level *level;
 	int currentLevel;
 };
 
