@@ -10,6 +10,8 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
 
+#define WALK_SPEED 3
+
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	spritesheet.loadFromFile("images/bub.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -22,27 +24,27 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 void Player::update(int deltaTime){
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)){
-		posPlayer.x -= 2;
+		posPlayer.x -= WALK_SPEED;
 		if(map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32))){
-			posPlayer.x += 2;
+			posPlayer.x += WALK_SPEED;
 		}
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT)){
-		posPlayer.x += 2;
+		posPlayer.x += WALK_SPEED;
 		if(map->collisionMoveRight(posPlayer, glm::ivec2(32, 32))){
-			posPlayer.x -= 2;
+			posPlayer.x -= WALK_SPEED;
 		}
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_UP)){
-		posPlayer.y -= 2;
+		posPlayer.y -= WALK_SPEED;
 		if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32))){
-			posPlayer.y += 2;
+			posPlayer.y += WALK_SPEED;
 		}
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-		posPlayer.y += 2;
+		posPlayer.y += WALK_SPEED;
 		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32))) {
-			posPlayer.y -= 2;
+			posPlayer.y -= WALK_SPEED;
 		}
 	}
 	

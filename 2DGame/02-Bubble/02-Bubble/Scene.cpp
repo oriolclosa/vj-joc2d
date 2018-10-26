@@ -12,8 +12,10 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 6
+#define INIT_PLAYER_X_TILES 8
+#define INIT_PLAYER_Y_TILES 12
+
+#define PROB_ENEMIES 25
 
 
 Scene::Scene() {
@@ -117,7 +119,7 @@ void Scene::init() {
 	//Walkable areas
 	walkableTexture.loadFromFile("images/margaret/ok.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	walkableTexture.setMagFilter(GL_NEAREST);
-	walkableSprite = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &walkableTexture, &texProgram);
+	walkableSprite = Sprite::createSprite(glm::vec2(16, 16), glm::vec2(1, 1), &walkableTexture, &texProgram);
 
 	/*textures[1].loadFromFile("images/margaret/object1-animated.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	textures[1].setMagFilter(GL_NEAREST);
@@ -170,6 +172,25 @@ void Scene::init() {
 		texDesk[i].setMagFilter(GL_NEAREST);
 		sprDesk[i] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &texDesk[i], &texProgram);
 	}*/
+
+	//Enemies
+	int tile, k = 0, num_enemies=0;
+	enemy1Texture.loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	enemy1Texture.setMagFilter(GL_NEAREST);
+	for (int j = 0; j < map->getMapSize().y; j++) {
+		for (int i = 0; i < map->getMapSize().x; i++) {
+			tile = map->getMap()[j * map->getMapSize().x + i];
+			if ((tile == '3') && (num_enemies < MAX_ENEMIES)) {
+				int enemy = rand() % 100;
+				if (enemy < PROB_ENEMIES) {
+					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
+					enemies1Sprite[k] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &enemy1Texture, &texProgram);
+					enemies1Sprite[k]->setPosition(posTile);
+					++num_enemies;
+				}
+			}
+		}
+	}
 	
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -278,6 +299,10 @@ void Scene::render() {
 					}
 				}
 			}
+			/*for (int i = 0; i < num_enemies; ++i) {
+				enemies1Sprite[i]->render();
+			}*/
+			enemies1Sprite[0]->render();
 			//player->render();
 			for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 				for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
@@ -295,7 +320,7 @@ void Scene::render() {
 					for (int i = 0; i < map->getMapSize().x; i++) {
 						tile = map->getMap()[j * map->getMapSize().x + i];
 						if (tile == '1') {
-							glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+							glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 							walkableSprite->setPosition(posTile);
 							walkableSprite->render();
 						}
