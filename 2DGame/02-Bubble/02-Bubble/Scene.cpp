@@ -185,7 +185,9 @@ void Scene::init() {
 			tile = map->getMap()[j * map->getMapSize().x + i];
 			if ((tile == '3') && (num_enemies < MAX_ENEMIES)) {
 				int enemy = rand() % 100;
+				cout << enemy << endl;
 				if (enemy <= PROB_ENEMIES) {
+					cout << "ENEMY!" << endl;
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 					enemies[k] = new Enemy();
 					enemies[k]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -205,8 +207,10 @@ void Scene::init() {
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	enemies[0]->setPlayerPos(player->getPosition());
-	enemies[0]->update(deltaTime);
+	for (int i = 0; i < num_enemies; ++i) {
+		enemies[i]->setPlayerPos(player->getPosition());
+		enemies[i]->update(deltaTime);
+	}
 	setCameraMovement(player->getPosition().x - SCREEN_WIDTH / 2);
 }
 
@@ -305,7 +309,10 @@ void Scene::render() {
 			/*for (int i = 0; i < num_enemies; ++i) {
 				enemies1Sprite[i]->render();
 			}*/
-			enemies[0]->render();
+			cout << num_enemies << endl;
+			for (int i = 0; i < num_enemies; ++i) {
+				enemies[i]->render();
+			}
 			//player->render();
 			for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 				for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
