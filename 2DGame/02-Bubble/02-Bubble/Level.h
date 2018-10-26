@@ -29,6 +29,7 @@ public:
 	void render(ShaderProgram &texProgramAux);
 
 	glm::vec2 getPlayerPos();
+	void attackPlayer(float damage);
 
 private:
 	TileMap *map;

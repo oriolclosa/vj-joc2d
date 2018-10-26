@@ -21,6 +21,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 	void setPlayerPos(glm::vec2 &playerPosAux);
+	void attackPlayer(float damage);
 	
 private:
 	glm::ivec2 tileMapDispl, posPlayer;

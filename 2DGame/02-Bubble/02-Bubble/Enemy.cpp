@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 #include "Enemy.h"
 #include "Game.h"
+#include "Level.h"
 
 
 #define JUMP_ANGLE_STEP 4
@@ -76,6 +77,7 @@ void Enemy::update(int deltaTime){
 		posPlayer.y += incY;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
+	else if (distance <= 1) attackPlayer(20);
 }
 
 void Enemy::render(){
@@ -97,6 +99,11 @@ glm::vec2 Enemy::getPosition() {
 
 void Enemy::setPlayerPos(glm::vec2 &playerPosAux) {
 	playerPos = playerPosAux;
+}
+
+void Enemy::attackPlayer(float damage) {
+	if (abs(playerPos.x - posPlayer.x) <= 2)
+		attackPlayer(damage);
 }
 
 

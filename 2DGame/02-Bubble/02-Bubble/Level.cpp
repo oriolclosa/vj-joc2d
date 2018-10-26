@@ -228,5 +228,8 @@ glm::vec2 Level::getPlayerPos() {
 	return player->getPosition();
 }
 
+void Level::attackPlayer(float damage) {
+	player->takeDamage(damage);
+}
 
 
