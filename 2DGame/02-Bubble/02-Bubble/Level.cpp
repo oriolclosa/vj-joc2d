@@ -12,7 +12,7 @@
 #define INIT_PLAYER_X_TILES 8
 #define INIT_PLAYER_Y_TILES 12
 
-#define PROB_ENEMIES 10
+#define PROB_ENEMIES 100
 #define MAX_ENEMIES 100
 
 #define POS_SKY_X 16
@@ -70,8 +70,9 @@ void Level::init(ShaderProgram &texProgram){
 		path << "images/margaret/building" << (i + 1) << ".png";
 		texBuildings[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texBuildings[i].setMagFilter(GL_NEAREST);
-		sprBuildings[i] = Sprite::createSprite(glm::vec2(256, 160), glm::vec2(1, 1), &texBuildings[i], &texProgram);
 	}
+	sprBuildings[0] = Sprite::createSprite(glm::vec2(256, 160), glm::vec2(1, 1), &texBuildings[0], &texProgram);
+	sprBuildings[1] = Sprite::createSprite(glm::vec2(256, 224), glm::vec2(1, 1), &texBuildings[1], &texProgram);
 
 	//Overground
 	for (int i = 0; i <=17; ++i) {
@@ -181,7 +182,7 @@ void Level::render(ShaderProgram &texProgram) {
 				sprObject[tileAux]->setPosition(posTile);
 				sprObject[tileAux]->render();
 			}
-			else if (tile >= 'A' && tile <= 'A') {
+			else if (tile >= 'A' && tile <= 'B') {
 				int tileAux = tile - int('A');
 				sprBuildings[tileAux]->setPosition(posTile);
 				sprBuildings[tileAux]->render();
