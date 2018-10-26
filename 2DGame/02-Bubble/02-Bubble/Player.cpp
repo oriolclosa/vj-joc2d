@@ -100,3 +100,7 @@ void Player::doDamage(float damage) {
 float Player::getHealth() {
 	return health;
 }
+
+unsigned int Player::getLives() {
+	return lives;
+}
