@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "SpriteMap.h"
 #include "Player.h"
+#include "Enemy.h"
 
 #include "Quad.h"
 #include "TexturedQuad.h"
@@ -64,8 +65,7 @@ private:
 	Sprite *sprObject[10];
 	Texture walkableTexture;
 	Sprite *walkableSprite;
-	Texture enemy1Texture;
-	Sprite *enemies1Sprite[MAX_ENEMIES];
+	Enemy *enemies[MAX_ENEMIES];
 	int num_enemies;
 
 	float camera_movement;

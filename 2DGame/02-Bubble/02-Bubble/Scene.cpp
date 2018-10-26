@@ -15,7 +15,7 @@
 #define INIT_PLAYER_X_TILES 8
 #define INIT_PLAYER_Y_TILES 12
 
-#define PROB_ENEMIES 25
+#define PROB_ENEMIES 100
 
 
 Scene::Scene() {
@@ -173,37 +173,40 @@ void Scene::init() {
 		sprDesk[i] = Sprite::createSprite(glm::vec2(64, 64), glm::vec2(1, 1), &texDesk[i], &texProgram);
 	}*/
 
+	player = new Player();
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setTileMap(map);
+
 	//Enemies
 	int tile, k = 0, num_enemies=0;
-	enemy1Texture.loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	enemy1Texture.setMagFilter(GL_NEAREST);
 	for (int j = 0; j < map->getMapSize().y; j++) {
 		for (int i = 0; i < map->getMapSize().x; i++) {
 			tile = map->getMap()[j * map->getMapSize().x + i];
 			if ((tile == '3') && (num_enemies < MAX_ENEMIES)) {
 				int enemy = rand() % 100;
-				if (enemy < PROB_ENEMIES) {
+				if (enemy <= PROB_ENEMIES) {
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
-					enemies1Sprite[k] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &enemy1Texture, &texProgram);
-					enemies1Sprite[k]->setPosition(posTile);
+					enemies[k] = new Enemy();
+					enemies[k]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					enemies[k]->setPosition(posTile);
+					enemies[k]->setTileMap(map);
+					enemies[k]->setPlayerPos(player->getPosition());
 					++num_enemies;
 				}
 			}
 		}
 	}
 	
-	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
 	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
 
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
-	//sprites[1]->update(deltaTime);
 	player->update(deltaTime);
+	enemies[0]->setPlayerPos(player->getPosition());
+	enemies[0]->update(deltaTime);
 	setCameraMovement(player->getPosition().x - SCREEN_WIDTH / 2);
 }
 
@@ -277,8 +280,8 @@ void Scene::render() {
 				}
 			}
 			glm::vec2 playerPos = player->getPosition();
-			int playerPosX = (playerPos.x / 32) - SCREEN_X - 1;
-			int playerPosY = (playerPos.y / 32) - SCREEN_Y - 1;
+			int playerPosX = (playerPos.x / 32.0f) - SCREEN_X - 1;
+			int playerPosY = (playerPos.y / 32.0f) - SCREEN_Y - 1;
 			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 				for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 					tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
@@ -302,7 +305,7 @@ void Scene::render() {
 			/*for (int i = 0; i < num_enemies; ++i) {
 				enemies1Sprite[i]->render();
 			}*/
-			enemies1Sprite[0]->render();
+			enemies[0]->render();
 			//player->render();
 			for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 				for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
