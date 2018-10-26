@@ -24,6 +24,7 @@ public:
 	void takeDamage(float damage);
 	void doDamage(float damage);
 	void death();
+	float getHealth();
 	
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
