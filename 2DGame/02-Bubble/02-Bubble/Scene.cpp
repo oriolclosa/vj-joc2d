@@ -268,10 +268,16 @@ float Scene::getCameraMovement() {
 }
 
 void Scene::updateLevel(int levelAux) {
-	currentLevel = levelAux;
 	camera_movement = 0.0f;
-	level = new Level();
-	level->init(texProgram);
+	if (levelAux < 0) {
+		currentLevel = -1;
+		level = NULL;
+	}
+	else {
+		currentLevel = levelAux;
+		level = new Level();
+		level->init(texProgram);
+	}
 }
 
 
