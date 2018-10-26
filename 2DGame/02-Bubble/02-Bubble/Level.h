@@ -1,5 +1,5 @@
-#ifndef _SCENE_INCLUDE
-#define _SCENE_INCLUDE
+#ifndef _LEVEL_INCLUDE
+#define _LEVEL_INCLUDE
 
 
 #include <glm/glm.hpp>
@@ -12,34 +12,34 @@
 #include "Quad.h"
 #include "TexturedQuad.h"
 #include "Text.h"
-#include "Level.h"
+#include "Scene.h"
 
 
-// Scene contains all the entities of our game.
-// It is responsible for updating and render them.
+#define MAX_ENEMIES 100
 
 
-#define SCREEN_X 0
-#define SCREEN_Y 0
-
-
-class Scene{
+class Level{
 
 public:
-	Scene();
-	~Scene();
+	Level();
+	~Level();
 
-	void init();
+	void init(ShaderProgram &texProgramAux, glm::mat4 &projectionAux);
 	void update(int deltaTime);
 	void render();
 
 	void setCameraMovement(float movement);
 	float getCameraMovement();
 
-private:
-	void initShaders();
+	glm::vec2 getPlayerPos();
 
 private:
+	TileMap *map;
+	TileMap *backgroundMap;
+	TileMap *spriteMap;
+	TileMap *overgroundMap;
+	SpriteMap *spritemap;
+	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;	
@@ -58,13 +58,28 @@ private:
 	Texture t_esc_main_menu;
 	Texture t_button_0_main_menu, t_button_1_main_menu, t_button_2_main_menu, t_button_3_main_menu;
 	Text text;
-
-	float camera_movement;
-	
-	Level *levels[1];
-	int currentLevel;
+	Texture textures[10];
+	Sprite *sprites[10];
+	Texture backTextures[6];
+	Sprite *backSprites[6];
+	Texture overTextures[17];
+	Sprite *overSprites[17];
+	Texture texDesk[6];
+	Sprite *sprDesk[6];
+	Texture texWall[10];
+	Sprite *sprWall[10];
+	Texture texObject[10];
+	Sprite *sprObject[10];
+	Texture walkableTexture;
+	Sprite *walkableSprite;
+	Enemy *enemies[MAX_ENEMIES];
+	int num_enemies;
+	Texture skyTexture;
+	Sprite *skySprite;
+	Texture texBuildings[5];
+	Sprite *sprBuildings[5];
 };
 
 
-#endif _SCENE_INCLUDE
+#endif _LEVEL_INCLUDE
 

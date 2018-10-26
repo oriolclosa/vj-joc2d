@@ -25,25 +25,25 @@ void Player::update(int deltaTime){
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)){
 		posPlayer.x -= WALK_SPEED;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32))){
+		if(map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), false)){
 			posPlayer.x += WALK_SPEED;
 		}
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT)){
 		posPlayer.x += WALK_SPEED;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(32, 32))){
+		if(map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), false)){
 			posPlayer.x -= WALK_SPEED;
 		}
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_UP)){
 		posPlayer.y -= WALK_SPEED;
-		if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32))){
+		if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), false)){
 			posPlayer.y += WALK_SPEED;
 		}
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
 		posPlayer.y += WALK_SPEED;
-		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32))) {
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), false)) {
 			posPlayer.y -= WALK_SPEED;
 		}
 	}

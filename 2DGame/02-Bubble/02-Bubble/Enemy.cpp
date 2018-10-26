@@ -15,8 +15,9 @@
 
 
 void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
-	spritesheet.loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
+	spritesheet.loadFromFile("images/margaret/enemy1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.setMagFilter(GL_NEAREST);
+	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &spritesheet, &shaderProgram);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	
@@ -59,16 +60,16 @@ void Enemy::update(int deltaTime){
 				incY = -WALK_SPEED;
 			}
 		}
-		if (incX < 0 && map->collisionMoveLeft(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32))) {
+		if (incX < 0 && map->collisionMoveLeft(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
 			incX = 0;
 		}
-		else if (incX > 0 && map->collisionMoveRight(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32))) {
+		else if (incX > 0 && map->collisionMoveRight(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
 			incX = 0;
 		}
-		if (incY < 0 && map->collisionMoveDown(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32))) {
+		if (incY < 0 && map->collisionMoveDown(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
 			incY = 0;
 		}
-		else if (incY > 0 && map->collisionMoveUp(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32))) {
+		else if (incY > 0 && map->collisionMoveUp(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
 			incY = 0;
 		}
 		posPlayer.x += incX;

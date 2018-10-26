@@ -32,6 +32,6 @@ private:
 };
 
 
-#endif // _ENEMY_INCLUDE
+#endif _ENEMY_INCLUDE
 
 
