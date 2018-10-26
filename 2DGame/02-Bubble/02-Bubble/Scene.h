@@ -13,6 +13,9 @@
 #include "Text.h"
 
 
+#define MAX_ENEMIES 100
+
+
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
@@ -73,6 +76,9 @@ private:
 	Sprite *sprObject[10];
 	Texture walkableTexture;
 	Sprite *walkableSprite;
+	Texture enemy1Texture;
+	Sprite *enemies1Sprite[MAX_ENEMIES];
+	int num_enemies;
 
 	float camera_movement;
 };
