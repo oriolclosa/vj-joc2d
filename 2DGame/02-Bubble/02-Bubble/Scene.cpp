@@ -209,6 +209,14 @@ void Scene::render() {
 			tq_button_0_main_menu->render(texs[3]);
 			break;
 		case 2:
+			texProgram.use();
+			projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
+			texProgram.setUniformMatrix4f("projection", projection);
+			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			texProgram.setUniformMatrix4f("modelview", modelview);
+			texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
 			levels[currentLevel]->render();
 			break;
 	}
