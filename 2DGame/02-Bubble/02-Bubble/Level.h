@@ -44,8 +44,8 @@ private:
 	float currentTime;
 	Texture textures[10];
 	Sprite *sprites[10];
-	Texture backTextures[6];
-	Sprite *backSprites[6];
+	Texture backTextures[7];
+	Sprite *backSprites[7];
 	Texture overTextures[17];
 	Sprite *overSprites[17];
 	Texture texDesk[6];

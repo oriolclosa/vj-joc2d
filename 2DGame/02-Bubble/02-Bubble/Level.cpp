@@ -12,7 +12,7 @@
 #define INIT_PLAYER_X_TILES 8
 #define INIT_PLAYER_Y_TILES 12
 
-#define PROB_ENEMIES 25
+#define PROB_ENEMIES 10
 #define MAX_ENEMIES 100 //For 100
 
 #define PROB_COINS 1 //For 1.000
@@ -55,12 +55,15 @@ void Level::init(ShaderProgram &texProgram){
 	backTextures[4].setMagFilter(GL_NEAREST);
 	backTextures[5].loadFromFile("images/margaret/exteriorwallfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[5].setMagFilter(GL_NEAREST);
+	backTextures[6].loadFromFile("images/margaret/exteriorgrass.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[6].setMagFilter(GL_NEAREST);
 	backSprites[0] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[0], &texProgram);
 	backSprites[1] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[1], &texProgram);
 	backSprites[2] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[2], &texProgram);
 	backSprites[3] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[3], &texProgram);
 	backSprites[4] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[4], &texProgram);
 	backSprites[5] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[5], &texProgram);
+	backSprites[6] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[6], &texProgram);
 
 	//Sky
 	skyTexture.loadFromFile("images/margaret/sky.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -109,6 +112,8 @@ void Level::init(ShaderProgram &texProgram){
 	sprObject[3] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[3], &texProgram);
 	sprObject[4] = Sprite::createSprite(glm::vec2(32, 64), glm::vec2(1, 1), &texObject[4], &texProgram);
 	sprObject[5] = Sprite::createSprite(glm::vec2(32, 96), glm::vec2(1, 1), &texObject[5], &texProgram);
+	sprObject[6] = Sprite::createSprite(glm::vec2(96, 128), glm::vec2(1, 1), &texObject[6], &texProgram);
+	sprObject[7] = Sprite::createSprite(glm::vec2(32, 96), glm::vec2(1, 1), &texObject[7], &texProgram);
 
 	//Walkable areas
 	walkableTexture.loadFromFile("images/margaret/ok.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -212,6 +217,12 @@ void Level::render(ShaderProgram &texProgram) {
 				backSprites[tileAux]->setPosition(posTile);
 				backSprites[tileAux]->render();
 			}
+			else if (tile >= '7' && tile <= '7') {
+				int tileAux = tile - int('1');
+				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+				backSprites[tileAux]->setPosition(posTile);
+				backSprites[tileAux]->render();
+			}
 		}
 	}
 	glm::vec2 playerPos = player->getPosition();
@@ -226,7 +237,7 @@ void Level::render(ShaderProgram &texProgram) {
 				sprWall[tileAux]->setPosition(posTile);
 				sprWall[tileAux]->render();
 			}
-			else if (tile >= 'a' && tile <= 'j') {
+			else if (tile >= 'a' && tile <= 'h') {
 				int tileAux = tile - int('a');
 				sprObject[tileAux]->setPosition(posTile);
 				sprObject[tileAux]->render();
