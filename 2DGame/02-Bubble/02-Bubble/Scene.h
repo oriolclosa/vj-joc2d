@@ -61,7 +61,7 @@ private:
 	Texture t_keys_main_menu;
 	Texture t_esc_main_menu;
 	Texture t_button_0_main_menu, t_button_1_main_menu, t_button_2_main_menu, t_button_3_main_menu;
-	Texture t_wp_game_over;
+	Texture t_wp_game_over, t_wp_game_win;
 	Text text;
 
 	float camera_movement;

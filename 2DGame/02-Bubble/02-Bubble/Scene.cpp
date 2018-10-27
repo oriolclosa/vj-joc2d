@@ -80,6 +80,8 @@ void Scene::init() {
 	// Game_Over
 	t_wp_game_over.loadFromFile("images/wp_game_over.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	t_wp_game_over.setMagFilter(GL_NEAREST);
+	t_wp_game_win.loadFromFile("images/wp_game_win.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	t_wp_game_win.setMagFilter(GL_NEAREST);
 
 	camera_movement = 0.0f;
 	currentLevel = -1;
@@ -233,11 +235,16 @@ void Scene::render() {
 
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_wp_main_menu->render(t_wp_game_over);
+			if (Game::instance().getEndGameState()) tq_wp_main_menu->render(t_wp_game_win);
+			else tq_wp_main_menu->render(t_wp_game_over);
 
 			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f + SCREEN_HEIGHT * 0.495f, 0.f));
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			tq_button_1_main_menu->render(texs[3]);
+
+			char str[12];
+			sprintf(str, "Score: %d", Game::instance().getScore());
+			text.render(str, glm::vec2(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.7f), 32, glm::vec4(1, 1, 1, 1));
 			break;
 	}
 }

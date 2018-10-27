@@ -54,6 +54,8 @@ public:
 
 	int getScore();
 	void setScore(int score);
+	bool getEndGameState();
+	void setEndGameState(bool state);
 
 private:
 	bool bPlay;                       // Continue to play game?
@@ -64,6 +66,7 @@ private:
 	int selected_main_button;
 	bool render_walkable;
 	int global_score;
+	bool win;
 
 };
 
