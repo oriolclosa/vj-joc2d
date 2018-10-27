@@ -50,8 +50,8 @@ private:
 	float currentTime;
 	Texture textures[10];
 	Sprite *sprites[10];
-	Texture backTextures[8];
-	Sprite *backSprites[8];
+	Texture backTextures[10];
+	Sprite *backSprites[10];
 	Texture overTextures[17];
 	Sprite *overSprites[17];
 	Texture texDesk[6];
@@ -81,6 +81,9 @@ private:
 	int num_coins;
 
 	bool active;
+
+	Texture texBlockObject;
+	Sprite *sprBlockObject;
 };
 
 
