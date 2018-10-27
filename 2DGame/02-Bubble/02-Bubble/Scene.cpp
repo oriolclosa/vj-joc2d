@@ -146,7 +146,7 @@ void Scene::render() {
 			//text.render("Untitled 2D Game", glm::vec2(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.225f), 64, glm::vec4(1, 1, 1, 1));
 
 			int button = Game::instance().getSelectedMainButton();
-			cout << button << endl;
+			//cout << button << endl;
 			texProgram.use();
 			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f, 0.f));
 			texProgram.setUniformMatrix4f("modelview", modelview);
@@ -213,9 +213,6 @@ void Scene::render() {
 			tq_button_0_main_menu->render(texs[3]);
 			break;
 		case 2:
-			if (currentLevel >= 0 && level->getPlayerLifes() < 1){
-				cout << "SHINE!" << endl;
-			}
 			if (currentLevel >= 0) {
 				texProgram.use();
 				projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
@@ -292,6 +289,7 @@ void Scene::updateLevel(int levelAux) {
 	camera_movement = 0.0f;
 	if (levelAux < 0) {
 		currentLevel = -1;
+		Game::instance().setScore(Game::instance().getScore() + level->getScore());
 		level->setActive(false);
 		level = NULL;
 	}

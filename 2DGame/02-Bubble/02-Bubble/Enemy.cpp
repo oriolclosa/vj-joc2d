@@ -25,6 +25,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	iniPosition = pos;
 	posPlayer = pos;
 	health = 75.f;
+	type = 1;
 }
 
 void Enemy::update(int deltaTime){
@@ -124,4 +125,8 @@ void Enemy::restart() {
 
 float Enemy::getHealth() {
 	return health;
+}
+
+int Enemy::getScore() {
+	return type * 20;
 }

@@ -10,6 +10,7 @@ void Game::init() {
 	render_scene = 0;
 	selected_main_button = 0;
 	render_walkable = false;
+	global_score = 0;
 }
 
 bool Game::update(int deltaTime) {
@@ -69,6 +70,7 @@ void Game::keyPressed(int key) {
 		}
 		else if (getRenderScene() == 5) {
 			render_scene = 1;
+			global_score = 0;
 		}
 		render();
 	}
@@ -142,4 +144,13 @@ void Game::changeSelectMainButton(bool plus) {
 
 Scene Game::getScene() {
 	return scene;
+}
+
+void Game::setScore(int score) {
+	global_score = score;
+}
+
+int Game::getScore() {
+	return global_score;
+
 }
