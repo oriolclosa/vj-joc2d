@@ -19,7 +19,7 @@ Scene::~Scene(){
 void Scene::init() {
 	initShaders();
 
-	// Menu_0
+	// Pre_Menu
 	glm::vec2 geom[2];
 	glm::vec2 texCoords[2];
 
@@ -59,7 +59,7 @@ void Scene::init() {
 		if(!text.init("fonts/OpenSans-Bold.ttf"))
 			if(!text.init("fonts/DroidSerif.ttf"))
 				cout << "Could not load font!!!" << endl;
-	// Menu_1
+	// Main_Menu
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	tq_button_0_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
@@ -76,6 +76,10 @@ void Scene::init() {
 	t_button_0_main_menu.setMagFilter(GL_NEAREST);
 	texs[3].loadFromFile("images/menu_1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texs[3].setMagFilter(GL_NEAREST);
+
+	// Game_Over
+	t_wp_game_over.loadFromFile("images/wp_game_over.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	t_wp_game_over.setMagFilter(GL_NEAREST);
 
 	camera_movement = 0.0f;
 	currentLevel = -1;
@@ -223,6 +227,19 @@ void Scene::render() {
 
 				level->render(texProgram);
 			}
+			break;
+		case 5:
+			texProgram.use();
+			texProgram.setUniformMatrix4f("projection", projection);
+			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
+			modelview = glm::mat4(1.0f);
+			texProgram.setUniformMatrix4f("modelview", modelview);
+			tq_wp_main_menu->render(t_wp_game_over);
+
+			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f + SCREEN_HEIGHT * 0.495f, 0.f));
+			texProgram.setUniformMatrix4f("modelview", modelview);
+			tq_button_1_main_menu->render(texs[3]);
 			break;
 	}
 }

@@ -116,7 +116,7 @@ void Player::death() {
 	health = 100;
 	--lifes;
 	if (lifes < 1) {
-		Game::instance().setRenderScene(1);
+		Game::instance().setRenderScene(5);
 		Game::instance().getScene().updateLevel(-1);
 	}
 	else {

@@ -67,6 +67,9 @@ void Game::keyPressed(int key) {
 		else if (getRenderScene() == 3 || getRenderScene() == 4) {
 			render_scene = 1;
 		}
+		else if (getRenderScene() == 5) {
+			render_scene = 1;
+		}
 		render();
 	}
 	keys[key] = true;
