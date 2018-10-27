@@ -25,6 +25,7 @@ public:
 	void setPlayerPos(glm::vec2 &playerPosAux);
 	void attackPlayer(float damage);
 	void takeDamage(float damage);
+	float getHealth();	
 
 	void restart();
 	
