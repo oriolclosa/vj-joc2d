@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Coin.h"
+#include "Blocking.h"
 
 #include "Quad.h"
 #include "TexturedQuad.h"
@@ -81,8 +82,7 @@ private:
 
 	bool active;
 
-	Texture texBlockObject;
-	Sprite *sprBlockObject;
+	Blocking *blockObject;
 };
 
 
