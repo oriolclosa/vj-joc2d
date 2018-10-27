@@ -209,6 +209,9 @@ void Scene::render() {
 			tq_button_0_main_menu->render(texs[3]);
 			break;
 		case 2:
+			if (currentLevel >= 0 && level->getPlayerLifes() < 1){
+				cout << "SHINE!" << endl;
+			}
 			if (currentLevel >= 0) {
 				texProgram.use();
 				projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);

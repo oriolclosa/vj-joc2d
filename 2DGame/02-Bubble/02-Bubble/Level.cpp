@@ -322,3 +322,6 @@ void Level::updateInfoHealth(float health) {
 	sprInfoLifes[((player->getLifes()) - 1)]->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
 }
 
+int Level::getPlayerLifes() {
+	return player->getLifes();
+}

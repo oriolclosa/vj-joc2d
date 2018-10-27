@@ -33,6 +33,7 @@ public:
 	glm::vec2 getPlayerPos();
 
 	void updateInfoHealth(float health);
+	int getPlayerLifes();
 
 private:
 	TileMap *map;
