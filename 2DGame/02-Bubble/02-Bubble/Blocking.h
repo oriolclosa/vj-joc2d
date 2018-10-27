@@ -14,13 +14,17 @@ public:
 
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
+	void setPlayerPos(glm::vec2 &playerPosAux);
 
 	void restart();
 
 private:
-	glm::ivec2 posPlayer, iniPosition;
+	glm::ivec2 posPlayer, iniPosition, playerPos;
 	Texture spritesheet;
 	Sprite *sprite;
+
+	int status;
+	float moved;
 };
 
 

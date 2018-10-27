@@ -199,7 +199,7 @@ void Level::init(ShaderProgram &texProgram){
 			if (tile == '_') {
 				blockObject = new Blocking();
 				blockObject->init(texProgram, posTile);
-				blockObject->setPosition(posTile); //-glm::vec2(0.0f, 608.0f / 2.0f));
+				blockObject->setPosition(posTile - glm::vec2(0.0f, 608.0f));
 			}
 		}
 	}
@@ -229,6 +229,10 @@ void Level::update(int deltaTime) {
 				if (coins[i] != NULL) {
 					coins[i]->update(deltaTime);
 				}
+			}
+			if (blockObject != NULL) {
+				blockObject->setPlayerPos(player->getPosition());
+				blockObject->update(deltaTime);
 			}
 			updateInfoHealth(player->getHealth());
 		    updatePlayerAttack(player->getDamageDone());
