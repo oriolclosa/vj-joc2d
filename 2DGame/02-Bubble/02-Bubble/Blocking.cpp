@@ -31,7 +31,7 @@ void Blocking::update(int deltaTime) {
 			status = 2;
 		}
 		else {
-			moved += 2.0f;
+			moved += 2.5f;
 			sprite->setPosition(posPlayer + glm::ivec2(0, int(moved)));
 		}
 	}
