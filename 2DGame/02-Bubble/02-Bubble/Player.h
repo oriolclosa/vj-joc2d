@@ -40,7 +40,8 @@ private:
 	bool right;
 	int coolDownA1, coolDownA2, coolDownA3;
 	float damageDone;
-
+	int coolDownRec1, coolDownRec2;
+	int coolDownDamage;
 };
 
 
