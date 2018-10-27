@@ -38,6 +38,7 @@ public:
 
 	void setActive(bool activeAux);
 	void restart();
+	void updateEnemiesAlive();
 
 private:
 	TileMap *map;

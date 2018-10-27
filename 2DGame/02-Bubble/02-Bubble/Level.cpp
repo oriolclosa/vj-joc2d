@@ -212,6 +212,7 @@ void Level::update(int deltaTime) {
 			}
 			updateInfoHealth(player->getHealth());
 		    updatePlayerAttack(player->getDamageDone());
+			updateEnemiesAlive();
 		}
 	}
 }
@@ -268,7 +269,7 @@ void Level::render(ShaderProgram &texProgram) {
 			enemies1Sprite[i]->render();
 		}*/
 		for (int i = 0; i < num_enemies; ++i) {
-			enemies[i]->render();
+			if (enemies[i] != NULL) enemies[i]->render();
 		}
 		for (int i = 0; i < num_coins; ++i) {
 			if (coins[i] != NULL) {
@@ -394,4 +395,12 @@ void Level::restart() {
 	score = 0;
 	active = true;
 	currentTime = 0.0f;
+}
+
+void Level::updateEnemiesAlive() {
+	for (int i = 0; i < num_enemies; ++i) {
+		if (enemies[i] != NULL && enemies[i]->getHealth() < 1) {
+			enemies[i] = NULL;
+		}
+	}
 }

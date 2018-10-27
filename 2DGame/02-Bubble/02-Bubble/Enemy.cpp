@@ -14,7 +14,7 @@
 #define WALK_SPEED 2
 #define DETECT_DISTANCE 350
 
-#define PLAYER_DAMAGE 1
+#define PLAYER_DAMAGE 20
 
 
 void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos){
@@ -120,4 +120,8 @@ void Enemy::takeDamage(float damage) {
 void Enemy::restart() {
 	posPlayer = iniPosition;
 	sprite->setPosition(posPlayer);
+}
+
+float Enemy::getHealth() {
+	return health;
 }
