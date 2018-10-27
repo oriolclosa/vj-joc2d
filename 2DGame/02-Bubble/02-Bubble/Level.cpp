@@ -59,6 +59,10 @@ void Level::init(ShaderProgram &texProgram){
 	backTextures[6].setMagFilter(GL_NEAREST);
 	backTextures[7].loadFromFile("images/margaret/exteriorfloorsewer.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[7].setMagFilter(GL_NEAREST);
+	backTextures[8].loadFromFile("images/margaret/exteriorfloorrail1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[8].setMagFilter(GL_NEAREST);
+	backTextures[9].loadFromFile("images/margaret/exteriorfloorrail2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[9].setMagFilter(GL_NEAREST);
 	backSprites[0] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[0], &texProgram);
 	backSprites[1] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[1], &texProgram);
 	backSprites[2] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[2], &texProgram);
@@ -67,6 +71,8 @@ void Level::init(ShaderProgram &texProgram){
 	backSprites[5] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[5], &texProgram);
 	backSprites[6] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[6], &texProgram);
 	backSprites[7] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[7], &texProgram);
+	backSprites[8] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[8], &texProgram);
+	backSprites[9] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[9], &texProgram);
 
 	//Sky
 	skyTexture.loadFromFile("images/margaret/sky.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -184,6 +190,11 @@ void Level::init(ShaderProgram &texProgram){
 		sprInfoLifes[i]->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
 	}
 
+	//Blocking object (train)
+	texBlockObject.loadFromFile("images/margaret/train.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texBlockObject.setMagFilter(GL_NEAREST);
+	sprBlockObject = Sprite::createSprite(glm::vec2(64, 582), glm::vec2(1.0f, 1.0f), &texBlockObject, &texProgram);
+
 	//Text
 	if (!text.init("fonts/OpenSans-Regular.ttf"))
 		if (!text.init("fonts/OpenSans-Bold.ttf"))
@@ -211,6 +222,7 @@ void Level::update(int deltaTime) {
 				}
 			}
 			updateInfoHealth(player->getHealth());
+		    updatePlayerAttack(player->getDamageDone());
 		}
 	}
 }
@@ -228,7 +240,7 @@ void Level::render(ShaderProgram &texProgram) {
 					backSprites[tileAux]->setPosition(posTile);
 					backSprites[tileAux]->render();
 				}
-				else if (tile >= '7' && tile <= '8') {
+				else if (tile >= '7' && tile <= ':') {
 					int tileAux = tile - int('1');
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 					backSprites[tileAux]->setPosition(posTile);
@@ -257,6 +269,10 @@ void Level::render(ShaderProgram &texProgram) {
 					int tileAux = tile - int('A');
 					sprBuildings[tileAux]->setPosition(posTile);
 					sprBuildings[tileAux]->render();
+				}
+				else if (tile == '_') {
+					sprBlockObject->setPosition(posTile -glm::vec2(0.0f, 608.0f/2.0f));
+					sprBlockObject->render();
 				}
 				if ((playerPosX == (i) || playerPosX == (i - 1) || playerPosX == (i + 1)) && playerPosY == (j)) {
 					player->render();
@@ -313,6 +329,8 @@ void Level::render(ShaderProgram &texProgram) {
 		if(text.init()){
 			//text.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
 		}
+
+		sprBlockObject->render();
 	}
 }
 
@@ -335,6 +353,22 @@ void Level::updateInfoHealth(float health) {
 	}
 	sprInfoHealth->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
 	sprInfoLifes[((player->getLifes()) - 1)]->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
+}
+
+void Level::updatePlayerAttack(float damage) {
+	if (damage == 0) return;
+	bool right = player->getDirection();
+	float x_player = getPlayerPos().x;
+	for (int i = 0; i < num_enemies; ++i) {
+		float x_enemy = enemies[i]->getPosition().x;
+		float dif = abs(x_player - x_enemy);
+		if (!right && x_enemy >= x_player && dif <= 64) {
+			enemies[i]->takeDamage(damage);
+		}
+		else if (right && x_enemy <= x_player && dif <= 64) {
+			enemies[i]->takeDamage(damage);
+		}
+	}
 }
 
 int Level::getPlayerLifes() {

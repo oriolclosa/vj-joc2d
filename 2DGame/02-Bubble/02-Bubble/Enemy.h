@@ -24,6 +24,7 @@ public:
 	glm::vec2 getPosition();
 	void setPlayerPos(glm::vec2 &playerPosAux);
 	void attackPlayer(float damage);
+	void takeDamage(float damage);
 
 	void restart();
 	
@@ -35,6 +36,7 @@ private:
 	Player *player;
 	TileMap *map;
 	glm::vec2 playerPos;
+	float health;
 };
 
 

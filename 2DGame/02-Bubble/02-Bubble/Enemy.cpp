@@ -24,12 +24,13 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	tileMapDispl = tileMapPos;
 	iniPosition = pos;
 	posPlayer = pos;
+	health = 75.f;
 }
 
 void Enemy::update(int deltaTime){
 	sprite->update(deltaTime);
 	float distance = sqrt(pow(playerPos.x - posPlayer.x, 2) + pow(playerPos.y - posPlayer.y, 2));
-	if (distance < DETECT_DISTANCE && distance > 1) {
+	if (distance < DETECT_DISTANCE && distance > 32) {
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > posPlayer.x) {
 			if (playerPos.y != posPlayer.y) {
@@ -79,7 +80,7 @@ void Enemy::update(int deltaTime){
 		posPlayer.y += incY;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	else if (distance <= 1) attackPlayer(PLAYER_DAMAGE);
+	else if (distance <= 32) attackPlayer(PLAYER_DAMAGE);
 }
 
 void Enemy::render(){
@@ -104,12 +105,16 @@ void Enemy::setPlayerPos(glm::vec2 &playerPosAux) {
 }
 
 void Enemy::attackPlayer(float damage) {
-	if (abs(playerPos.x - posPlayer.x) <= 2)
+	if (abs(playerPos.x - posPlayer.x) <= 64)
 		player->takeDamage(damage);
 }
 
 void Enemy::setPlayer(Player *playerAux) {
 	player = playerAux;
+}
+
+void Enemy::takeDamage(float damage) {
+	health -= damage;
 }
 
 void Enemy::restart() {

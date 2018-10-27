@@ -26,6 +26,8 @@ public:
 	void death();
 	float getHealth();
 	int getLifes();
+	float getDamageDone();
+	bool getDirection();
 	
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
@@ -36,6 +38,8 @@ private:
 	int lifes;
 	float health;
 	bool right;
+	int coolDownA1, coolDownA2, coolDownA3;
+	float damageDone;
 
 };
 
