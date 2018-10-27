@@ -23,10 +23,21 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	right = false;
 	coolDownA1 = coolDownA2 = coolDownA3 = 0;
 	damageDone = 0;
+	coolDownRec1 = coolDownRec2 = 0;
+	coolDownDamage = 0;
 }
 
 void Player::update(int deltaTime){
 	sprite->update(deltaTime);
+	if (coolDownDamage > 0) --coolDownDamage;
+	if (health < 100 && coolDownRec1 == 0) {
+		if (coolDownRec2 > 0) --coolDownRec2;
+		if (coolDownRec2 == 0) {
+			health += 1;
+			coolDownRec2 = 100;
+		}
+	}
+	if (coolDownRec1 > 0) --coolDownRec1;
 	damageDone = 0;
 	if (coolDownA1 > 0) --coolDownA1;
 	if (coolDownA2 > 0) --coolDownA2;
@@ -93,7 +104,12 @@ glm::vec2 Player::getPosition() {
 }
 
 void Player::takeDamage(float damage) {
-	health -= damage;
+	if (coolDownDamage == 0) {
+		health -= damage;
+		coolDownRec1 = 600;
+		coolDownRec2 = 0;
+		coolDownDamage = 120;
+	}
 }
 
 void Player::death() {
