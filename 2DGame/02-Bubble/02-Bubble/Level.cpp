@@ -239,6 +239,11 @@ void Level::update(int deltaTime) {
 
 void Level::render(ShaderProgram &texProgram) {
 	if (active) {
+		skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
+		skySprite->render();
+		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 1024, POS_SKY_Y * 32));
+		skySprite->render();
+		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 2048, POS_SKY_Y * 32));
 		skySprite->render();
 		int tile;
 		for (int j = 0; j < backgroundMap->getMapSize().y; j++) {
