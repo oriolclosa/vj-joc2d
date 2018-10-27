@@ -211,6 +211,7 @@ void Level::update(int deltaTime) {
 				}
 			}
 			updateInfoHealth(player->getHealth());
+		    updatePlayerAttack(player->getDamageDone());
 		}
 	}
 }
@@ -335,6 +336,22 @@ void Level::updateInfoHealth(float health) {
 	}
 	sprInfoHealth->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
 	sprInfoLifes[((player->getLifes()) - 1)]->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
+}
+
+void Level::updatePlayerAttack(float damage) {
+	if (damage == 0) return;
+	bool right = player->getDirection();
+	float x_player = getPlayerPos().x;
+	for (int i = 0; i < num_enemies; ++i) {
+		float x_enemy = enemies[i]->getPosition().x;
+		float dif = abs(x_player - x_enemy);
+		if (!right && x_enemy >= x_player && dif <= 64) {
+			enemies[i]->takeDamage(damage);
+		}
+		else if (right && x_enemy <= x_player && dif <= 64) {
+			enemies[i]->takeDamage(damage);
+		}
+	}
 }
 
 int Level::getPlayerLifes() {

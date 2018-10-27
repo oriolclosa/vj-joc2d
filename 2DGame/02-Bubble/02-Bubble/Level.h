@@ -34,6 +34,7 @@ public:
 
 	void updateInfoHealth(float health);
 	int getPlayerLifes();
+	void updatePlayerAttack(float damage);
 
 	void setActive(bool activeAux);
 	void restart();

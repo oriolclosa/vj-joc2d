@@ -21,19 +21,28 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	lifes = 3;
 	health = 100.f;
 	right = false;
+	coolDownA1 = coolDownA2 = coolDownA3 = 0;
+	damageDone = 0;
 }
 
 void Player::update(int deltaTime){
 	sprite->update(deltaTime);
+	damageDone = 0;
+	if (coolDownA1 > 0) --coolDownA1;
+	if (coolDownA2 > 0) --coolDownA2;
+	if (coolDownA3 > 0) --coolDownA3;
 	if (health <= 0) death();
-		if (Game::instance().getKey(32)) { //SPACE
+	if (Game::instance().getKey(32) && coolDownA1 == 0) { // SPACE, Attack 1
 		doDamage(10);
+		coolDownA1 = 90;
 	}
-	else if (Game::instance().getKey(101)) { //SPACE
+	else if (Game::instance().getKey(101) && coolDownA2 == 0) { // e, Attack 2
 		doDamage(20);
+		coolDownA2 = 165;
 	}
-	else if (Game::instance().getKey(102)) { //SPACE
+	else if (Game::instance().getKey(102) && coolDownA3 == 0) { // f, Attack 3
 		doDamage(40);
+		coolDownA3 = 420;
 	}
 	else if(Game::instance().getKey(97)){ // a
 		posPlayer.x -= WALK_SPEED;
@@ -100,7 +109,7 @@ void Player::death() {
 }
 
 void Player::doDamage(float damage) {
-	health -= damage;
+	damageDone = damage;
 }
 
 float Player::getHealth() {
@@ -109,4 +118,12 @@ float Player::getHealth() {
 
 int Player::getLifes() {
 	return lifes;
+}
+
+float Player::getDamageDone() {
+	return damageDone;
+}
+
+bool Player::getDirection() {
+	return right;
 }
