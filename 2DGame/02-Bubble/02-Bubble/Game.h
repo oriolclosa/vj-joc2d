@@ -50,6 +50,8 @@ public:
 	void setWalkable(bool walkable);
 	int getWalkable();
 
+	Scene getScene();
+
 private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render

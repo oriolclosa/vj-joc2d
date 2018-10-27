@@ -38,6 +38,7 @@ public:
 	float getCameraMovement();
 
 	void updateLevel(int levelAux);
+	void restartLevel();
 
 private:
 	void initShaders();

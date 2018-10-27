@@ -27,14 +27,23 @@ void Player::update(int deltaTime){
 	sprite->update(deltaTime);
 	cout << health << ' ' << lifes << endl;
 	if (health <= 0) death();
-	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)){
+		if (Game::instance().getKey(32)) { //SPACE
+		doDamage(10);
+	}
+	else if (Game::instance().getKey(101)) { //SPACE
+		doDamage(20);
+	}
+	else if (Game::instance().getKey(102)) { //SPACE
+		doDamage(40);
+	}
+	else if(Game::instance().getKey(97)){ // a
 		posPlayer.x -= WALK_SPEED;
 		right = true;
 		if(map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), false)){
 			posPlayer.x += WALK_SPEED;
 		}
 	}
-	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT)){
+	else if(Game::instance().getKey(100)){ // d
 		//--health;
 		posPlayer.x += WALK_SPEED;
 		right = false;
@@ -42,20 +51,17 @@ void Player::update(int deltaTime){
 			posPlayer.x -= WALK_SPEED;
 		}
 	}
-	else if (Game::instance().getSpecialKey(GLUT_KEY_UP)){
+	else if (Game::instance().getKey(119)){ // w
 		posPlayer.y -= WALK_SPEED;
 		if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), false)){
 			posPlayer.y += WALK_SPEED;
 		}
 	}
-	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+	else if (Game::instance().getKey(115)) { // s
 		posPlayer.y += WALK_SPEED;
 		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), false)) {
 			posPlayer.y -= WALK_SPEED;
 		}
-	}
-	else if (Game::instance().getKey(32)) {
-		doDamage(20);
 	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -85,12 +91,13 @@ void Player::takeDamage(float damage) {
 void Player::death() {
 	health = 100;
 	--lifes;
-	if (lifes >= 1) Game::instance().setRenderScene(2);
-	else {
+	if (lifes < 1) {
 		Game::instance().setRenderScene(1);
-		lifes = 3;
+		Game::instance().getScene().updateLevel(-1);
 	}
-	Game::instance().render();
+	else {
+		Game::instance().getScene().restartLevel();
+	}
 }
 
 void Player::doDamage(float damage) {
@@ -101,6 +108,6 @@ float Player::getHealth() {
 	return health;
 }
 
-unsigned int Player::getLifes() {
+int Player::getLifes() {
 	return lifes;
 }

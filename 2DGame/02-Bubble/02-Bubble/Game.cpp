@@ -136,3 +136,7 @@ void Game::changeSelectMainButton(bool plus) {
 	if (selected_main_button < 0) selected_main_button = 3;
 	else selected_main_button = selected_main_button % 4;
 }
+
+Scene Game::getScene() {
+	return scene;
+}

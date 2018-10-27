@@ -14,7 +14,7 @@
 class Enemy{
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos);
 	void update(int deltaTime);
 	void render();
 	
@@ -24,9 +24,11 @@ public:
 	glm::vec2 getPosition();
 	void setPlayerPos(glm::vec2 &playerPosAux);
 	void attackPlayer(float damage);
+
+	void restart();
 	
 private:
-	glm::ivec2 tileMapDispl, posPlayer;
+	glm::ivec2 tileMapDispl, posPlayer, iniPosition;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;

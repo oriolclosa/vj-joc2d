@@ -17,13 +17,13 @@
 #define PLAYER_DAMAGE 1
 
 
-void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
+void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos){
 	spritesheet.loadFromFile("images/margaret/enemy1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &spritesheet, &shaderProgram);
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	
+	iniPosition = pos;
+	posPlayer = pos;
 }
 
 void Enemy::update(int deltaTime){
@@ -110,4 +110,9 @@ void Enemy::attackPlayer(float damage) {
 
 void Enemy::setPlayer(Player *playerAux) {
 	player = playerAux;
+}
+
+void Enemy::restart() {
+	posPlayer = iniPosition;
+	sprite->setPosition(posPlayer);
 }

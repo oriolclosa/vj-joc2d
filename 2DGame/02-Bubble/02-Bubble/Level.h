@@ -33,6 +33,10 @@ public:
 	glm::vec2 getPlayerPos();
 
 	void updateInfoHealth(float health);
+	int getPlayerLifes();
+
+	void setActive(bool activeAux);
+	void restart();
 
 private:
 	TileMap *map;
@@ -73,6 +77,8 @@ private:
 
 	Coin *coins[MAX_COINS];
 	int num_coins;
+
+	bool active;
 };
 
 

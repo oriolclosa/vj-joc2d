@@ -8,7 +8,7 @@
 class Coin {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos);
 	void update(int deltaTime);
 	void render();
 
@@ -16,8 +16,10 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 
+	void restart();
+
 private:
-	glm::ivec2 tileMapDispl, posPlayer;
+	glm::ivec2 tileMapDispl, posPlayer, iniPosition;
 	Texture spritesheet;
 	Sprite *sprite;
 	Player *player;

@@ -209,6 +209,9 @@ void Scene::render() {
 			tq_button_0_main_menu->render(texs[3]);
 			break;
 		case 2:
+			if (currentLevel >= 0 && level->getPlayerLifes() < 1){
+				cout << "SHINE!" << endl;
+			}
 			if (currentLevel >= 0) {
 				texProgram.use();
 				projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
@@ -271,6 +274,7 @@ void Scene::updateLevel(int levelAux) {
 	camera_movement = 0.0f;
 	if (levelAux < 0) {
 		currentLevel = -1;
+		level->setActive(false);
 		level = NULL;
 	}
 	else {
@@ -278,6 +282,10 @@ void Scene::updateLevel(int levelAux) {
 		level = new Level();
 		level->init(texProgram);
 	}
+}
+
+void Scene::restartLevel() {
+	level->restart();
 }
 
 

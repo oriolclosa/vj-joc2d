@@ -142,8 +142,7 @@ void Level::init(ShaderProgram &texProgram){
 				if (enemy <= PROB_ENEMIES) {
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 					enemies[num_enemies] = new Enemy();
-					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-					enemies[num_enemies]->setPosition(posTile);
+					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
 					enemies[num_enemies]->setTileMap(map);
 					enemies[num_enemies]->setPlayer(player);
 					enemies[num_enemies]->setPlayerPos(player->getPosition());
@@ -155,7 +154,7 @@ void Level::init(ShaderProgram &texProgram){
 				if (coin <= PROB_ENEMIES) {
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 					coins[num_coins] = new Coin();
-					coins[num_coins]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					coins[num_coins]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
 					coins[num_coins]->setPosition(posTile);
 					coins[num_coins]->setPlayer(player);
 					++num_coins;
@@ -191,120 +190,128 @@ void Level::init(ShaderProgram &texProgram){
 			if (!text.init("fonts/DroidSerif.ttf"))
 				cout << "Could not load font!!!" << endl;
 	score = 0;
-
+	active = true;
 	currentTime = 0.0f;
 }
 
 void Level::update(int deltaTime) {
-	currentTime += deltaTime;
-	player->update(deltaTime);
-	for (int i = 0; i < num_enemies; ++i) {
-		enemies[i]->setPlayerPos(player->getPosition());
-		enemies[i]->update(deltaTime);
-	}
-	for (int i = 0; i < num_coins; ++i) {
-		if (coins[i] != NULL) {
-			coins[i]->update(deltaTime);
+	if (active) {
+		currentTime += deltaTime;
+		player->update(deltaTime);
+		if (active) {
+			for (int i = 0; i < num_enemies; ++i) {
+				if (enemies[i] != NULL) {
+					enemies[i]->setPlayerPos(player->getPosition());
+					enemies[i]->update(deltaTime);
+				}
+			}
+			for (int i = 0; i < num_coins; ++i) {
+				if (coins[i] != NULL) {
+					coins[i]->update(deltaTime);
+				}
+			}
+			updateInfoHealth(player->getHealth());
 		}
 	}
-	updateInfoHealth(player->getHealth());
 }
 
 void Level::render(ShaderProgram &texProgram) {
-	skySprite->render();
-	int tile;
-	for (int j = 0; j < backgroundMap->getMapSize().y; j++) {
-		for (int i = 0; i < backgroundMap->getMapSize().x; i++) {
-			tile = backgroundMap->getMap()[j * backgroundMap->getMapSize().x + i];
-			if (tile >= '0' && tile <= '5') {
-				int tileAux = tile - int('0');
-				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-				backSprites[tileAux]->setPosition(posTile);
-				backSprites[tileAux]->render();
-			}
-			else if (tile >= '7' && tile <= '8') {
-				int tileAux = tile - int('1');
-				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-				backSprites[tileAux]->setPosition(posTile);
-				backSprites[tileAux]->render();
-			}
-		}
-	}
-	glm::vec2 playerPos = player->getPosition();
-	int playerPosX = ((playerPos.x + 16.0f) / 32.0f);
-	int playerPosY = ((playerPos.y - 32.0f) / 32.0f);
-	for (int i = 0; i < spriteMap->getMapSize().x; i++) {
-		for (int j = 0; j < spriteMap->getMapSize().y; j++) {
-			tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
-			glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-			if (tile >= '1' && tile <= ':') {
-				int tileAux = tile - int('1');
-				sprWall[tileAux]->setPosition(posTile);
-				sprWall[tileAux]->render();
-			}
-			else if (tile >= 'a' && tile <= 'h') {
-				int tileAux = tile - int('a');
-				sprObject[tileAux]->setPosition(posTile);
-				sprObject[tileAux]->render();
-			}
-			else if (tile >= 'A' && tile <= 'D') {
-				int tileAux = tile - int('A');
-				sprBuildings[tileAux]->setPosition(posTile);
-				sprBuildings[tileAux]->render();
-			}
-			if ((playerPosX == (i) || playerPosX == (i-1) || playerPosX == (i + 1)) && playerPosY == (j)) {
-				player->render();
-			}
-		}
-	}
-	/*for (int i = 0; i < num_enemies; ++i) {
-		enemies1Sprite[i]->render();
-	}*/
-	for (int i = 0; i < num_enemies; ++i) {
-		enemies[i]->render();
-	}
-	for (int i = 0; i < num_coins; ++i) {
-		if (coins[i] != NULL) {
-			float distance = sqrt(pow(coins[i]->getPosition().x - player->getPosition().x, 2) + pow(coins[i]->getPosition().y - player->getPosition().y, 2));
-			if (distance <= 32) {
-				coins[i] = NULL;
-				score += 10;
-			}
-			else {
-				coins[i]->render();
-			}
-		}
-	}
-	//player->render();
-	for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
-		for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
-			tile = overgroundMap->getMap()[j * overgroundMap->getMapSize().x + i];
-			if (tile >= '1' && tile <= 'A') {
-				int tileAux = tile - int('1');
-				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-				overSprites[tileAux]->setPosition(posTile);
-				overSprites[tileAux]->render();
-			}
-		}
-	}
-	if (Game::instance().getWalkable()) {
-		for (int j = 0; j < map->getMapSize().y; j++) {
-			for (int i = 0; i < map->getMapSize().x; i++) {
-				tile = map->getMap()[j * map->getMapSize().x + i];
-				if (tile != '0') {
-					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
-					walkableSprite->setPosition(posTile);
-					walkableSprite->render();
+	if (active) {
+		skySprite->render();
+		int tile;
+		for (int j = 0; j < backgroundMap->getMapSize().y; j++) {
+			for (int i = 0; i < backgroundMap->getMapSize().x; i++) {
+				tile = backgroundMap->getMap()[j * backgroundMap->getMapSize().x + i];
+				if (tile >= '0' && tile <= '5') {
+					int tileAux = tile - int('0');
+					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+					backSprites[tileAux]->setPosition(posTile);
+					backSprites[tileAux]->render();
+				}
+				else if (tile >= '7' && tile <= '8') {
+					int tileAux = tile - int('1');
+					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+					backSprites[tileAux]->setPosition(posTile);
+					backSprites[tileAux]->render();
 				}
 			}
 		}
-	}
+		glm::vec2 playerPos = player->getPosition();
+		int playerPosX = ((playerPos.x + 16.0f) / 32.0f);
+		int playerPosY = ((playerPos.y - 32.0f) / 32.0f);
+		for (int i = 0; i < spriteMap->getMapSize().x; i++) {
+			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
+				tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
+				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+				if (tile >= '1' && tile <= ':') {
+					int tileAux = tile - int('1');
+					sprWall[tileAux]->setPosition(posTile);
+					sprWall[tileAux]->render();
+				}
+				else if (tile >= 'a' && tile <= 'h') {
+					int tileAux = tile - int('a');
+					sprObject[tileAux]->setPosition(posTile);
+					sprObject[tileAux]->render();
+				}
+				else if (tile >= 'A' && tile <= 'D') {
+					int tileAux = tile - int('A');
+					sprBuildings[tileAux]->setPosition(posTile);
+					sprBuildings[tileAux]->render();
+				}
+				if ((playerPosX == (i) || playerPosX == (i - 1) || playerPosX == (i + 1)) && playerPosY == (j)) {
+					player->render();
+				}
+			}
+		}
+		/*for (int i = 0; i < num_enemies; ++i) {
+			enemies1Sprite[i]->render();
+		}*/
+		for (int i = 0; i < num_enemies; ++i) {
+			enemies[i]->render();
+		}
+		for (int i = 0; i < num_coins; ++i) {
+			if (coins[i] != NULL) {
+				float distance = sqrt(pow(coins[i]->getPosition().x - player->getPosition().x, 2) + pow(coins[i]->getPosition().y - player->getPosition().y, 2));
+				if (distance <= 32) {
+					coins[i] = NULL;
+					score += 10;
+				}
+				else {
+					coins[i]->render();
+				}
+			}
+		}
+		//player->render();
+		for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
+			for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
+				tile = overgroundMap->getMap()[j * overgroundMap->getMapSize().x + i];
+				if (tile >= '1' && tile <= 'A') {
+					int tileAux = tile - int('1');
+					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+					overSprites[tileAux]->setPosition(posTile);
+					overSprites[tileAux]->render();
+				}
+			}
+		}
+		if (Game::instance().getWalkable()) {
+			for (int j = 0; j < map->getMapSize().y; j++) {
+				for (int i = 0; i < map->getMapSize().x; i++) {
+					tile = map->getMap()[j * map->getMapSize().x + i];
+					if (tile != '0') {
+						glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
+						walkableSprite->setPosition(posTile);
+						walkableSprite->render();
+					}
+				}
+			}
+		}
 
-	sprInfoHealth->render();
-	sprInfoLifes[((player->getLifes()) - 1)]->render();
-	ostringstream scoreText;
-	scoreText << "Score: " << score;
-	text.render(scoreText.str(), glm::vec2(SCREEN_X + POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
+		sprInfoHealth->render();
+		sprInfoLifes[((player->getLifes()) - 1)]->render();
+		ostringstream scoreText;
+		scoreText << "Score: " << score;
+		text.render(scoreText.str(), glm::vec2(SCREEN_X + POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
+	}
 }
 
 glm::vec2 Level::getPlayerPos() {
@@ -313,6 +320,12 @@ glm::vec2 Level::getPlayerPos() {
 
 void Level::updateInfoHealth(float health) {
 	int healthAux = int(52.0f*(health / 100.f));
+	if (healthAux < 0) {
+		healthAux = 0;
+	}
+	else if (healthAux > 52) {
+		healthAux = 52;
+	}
 	sprInfoHealth->changeAnimation(healthAux);
 	float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
 	if (posAux < 0.0f) {
@@ -322,3 +335,38 @@ void Level::updateInfoHealth(float health) {
 	sprInfoLifes[((player->getLifes()) - 1)]->setPosition(glm::vec2(posAux + POS_INFO_X, POS_INFO_Y));
 }
 
+int Level::getPlayerLifes() {
+	return player->getLifes();
+}
+
+void Level::setActive(bool activeAux) {
+	active = activeAux;
+}
+
+void Level::restart() {
+	skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+
+	//Enemies and coins
+	for (int i = 0; i < num_enemies; ++i) {
+		if (enemies[i] != NULL) {
+			enemies[i]->restart();
+		}
+	}
+	for (int i = 0; i < num_coins; ++i) {
+		if (coins[i] != NULL) {
+			coins[i]->restart();
+		}
+	}
+
+	//Infohealth
+	sprInfoHealth->changeAnimation(52);
+	sprInfoHealth->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
+
+	//Infolifes
+	sprInfoLifes[2]->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
+
+	score = 0;
+	active = true;
+	currentTime = 0.0f;
+}
