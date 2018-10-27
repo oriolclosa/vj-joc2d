@@ -57,6 +57,8 @@ void Level::init(ShaderProgram &texProgram){
 	backTextures[5].setMagFilter(GL_NEAREST);
 	backTextures[6].loadFromFile("images/margaret/exteriorgrass.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backTextures[6].setMagFilter(GL_NEAREST);
+	backTextures[7].loadFromFile("images/margaret/exteriorfloorsewer.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	backTextures[7].setMagFilter(GL_NEAREST);
 	backSprites[0] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[0], &texProgram);
 	backSprites[1] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[1], &texProgram);
 	backSprites[2] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[2], &texProgram);
@@ -64,6 +66,7 @@ void Level::init(ShaderProgram &texProgram){
 	backSprites[4] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[4], &texProgram);
 	backSprites[5] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[5], &texProgram);
 	backSprites[6] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[6], &texProgram);
+	backSprites[7] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[7], &texProgram);
 
 	//Sky
 	skyTexture.loadFromFile("images/margaret/sky.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -80,6 +83,8 @@ void Level::init(ShaderProgram &texProgram){
 	}
 	sprBuildings[0] = Sprite::createSprite(glm::vec2(256, 160), glm::vec2(1, 1), &texBuildings[0], &texProgram);
 	sprBuildings[1] = Sprite::createSprite(glm::vec2(256, 224), glm::vec2(1, 1), &texBuildings[1], &texProgram);
+	sprBuildings[2] = Sprite::createSprite(glm::vec2(192, 192), glm::vec2(1, 1), &texBuildings[2], &texProgram);
+	sprBuildings[3] = Sprite::createSprite(glm::vec2(256, 160), glm::vec2(1, 1), &texBuildings[3], &texProgram);
 
 	//Overground
 	for (int i = 0; i <=17; ++i) {
@@ -217,7 +222,7 @@ void Level::render(ShaderProgram &texProgram) {
 				backSprites[tileAux]->setPosition(posTile);
 				backSprites[tileAux]->render();
 			}
-			else if (tile >= '7' && tile <= '7') {
+			else if (tile >= '7' && tile <= '8') {
 				int tileAux = tile - int('1');
 				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 				backSprites[tileAux]->setPosition(posTile);
@@ -242,7 +247,7 @@ void Level::render(ShaderProgram &texProgram) {
 				sprObject[tileAux]->setPosition(posTile);
 				sprObject[tileAux]->render();
 			}
-			else if (tile >= 'A' && tile <= 'B') {
+			else if (tile >= 'A' && tile <= 'D') {
 				int tileAux = tile - int('A');
 				sprBuildings[tileAux]->setPosition(posTile);
 				sprBuildings[tileAux]->render();
