@@ -25,7 +25,6 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 
 void Player::update(int deltaTime){
 	sprite->update(deltaTime);
-	cout << health << ' ' << lifes << endl;
 	if (health <= 0) death();
 		if (Game::instance().getKey(32)) { //SPACE
 		doDamage(10);

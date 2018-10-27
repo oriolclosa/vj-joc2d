@@ -42,6 +42,9 @@ void TexturedQuad::render(const Texture &tex) const
 
 void TexturedQuad::free()
 {
-	glDeleteBuffers(1, &vbo);
+	try {
+		glDeleteBuffers(1, &vbo);
+	}
+	catch(int e){}
 }
 

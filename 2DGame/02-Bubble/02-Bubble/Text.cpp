@@ -21,13 +21,11 @@ Text::Text()
 	quad = NULL;
 }
 
-Text::~Text()
-{
-	destroy();
-	if(quad != NULL)
-	{
+Text::~Text(){
+	if(quad != NULL){
+		//destroy();
 		quad->free();
-		delete quad;
+		//delete quad;
 	}
 }
 
@@ -64,6 +62,18 @@ bool Text::init(const char *filename)
 	
 	quad = TexturedQuad::createTexturedQuad(geom, texCoords, program);
 	
+	return true;
+}
+
+bool Text::init() {
+	FT_Error error;
+
+	if (!bLibInit){
+		error = FT_Init_FreeType(&Text::library);
+		if (error)
+			return false;
+		bLibInit = true;
+	}
 	return true;
 }
 
@@ -120,6 +130,7 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 	projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
 	program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
+	cout << str << endl;
 
 	for(unsigned int i=0; i<str.length(); i++)
 	{

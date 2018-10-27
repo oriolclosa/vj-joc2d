@@ -34,6 +34,7 @@ public:
 	~Text();
 	
 	bool init(const char *filename);
+	bool init();
 	void destroy();
 	
 	ShaderProgram &getProgram();

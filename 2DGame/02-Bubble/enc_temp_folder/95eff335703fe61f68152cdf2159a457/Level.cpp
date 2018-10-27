@@ -311,7 +311,7 @@ void Level::render(ShaderProgram &texProgram) {
 		ostringstream scoreText;
 		scoreText << "Score: " << score;
 		if(text.init()){
-			//text.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
+			text.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
 		}
 	}
 }
