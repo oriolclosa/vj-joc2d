@@ -231,10 +231,10 @@ void Level::render(ShaderProgram &texProgram) {
 		}
 	}
 	glm::vec2 playerPos = player->getPosition();
-	int playerPosX = (playerPos.x / 32.0f);
-	int playerPosY = (playerPos.y / 32.0f) - 1;
-	for (int j = 0; j < spriteMap->getMapSize().y; j++) {
-		for (int i = 0; i < spriteMap->getMapSize().x; i++) {
+	int playerPosX = ((playerPos.x + 16.0f) / 32.0f);
+	int playerPosY = ((playerPos.y - 32.0f) / 32.0f);
+	for (int i = 0; i < spriteMap->getMapSize().x; i++) {
+		for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 			tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
 			glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 			if (tile >= '1' && tile <= ':') {
@@ -252,7 +252,7 @@ void Level::render(ShaderProgram &texProgram) {
 				sprBuildings[tileAux]->setPosition(posTile);
 				sprBuildings[tileAux]->render();
 			}
-			if (playerPosX == i && playerPosY == j) {
+			if ((playerPosX == (i) || playerPosX == (i-1) || playerPosX == (i + 1)) && playerPosY == (j)) {
 				player->render();
 			}
 		}
