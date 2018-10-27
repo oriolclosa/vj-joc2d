@@ -376,13 +376,15 @@ void Level::updatePlayerAttack(float damage) {
 	bool right = player->getDirection();
 	float x_player = getPlayerPos().x;
 	for (int i = 0; i < num_enemies; ++i) {
-		float x_enemy = enemies[i]->getPosition().x;
-		float dif = abs(x_player - x_enemy);
-		if (!right && x_enemy >= x_player && dif <= 64) {
-			enemies[i]->takeDamage(damage);
-		}
-		else if (right && x_enemy <= x_player && dif <= 64) {
-			enemies[i]->takeDamage(damage);
+		if (enemies[i] != NULL) { //classe boos, matar enemics suma punts
+			float x_enemy = enemies[i]->getPosition().x;
+			float dif = abs(x_player - x_enemy);
+			if (!right && x_enemy >= x_player && dif <= 64) {
+				enemies[i]->takeDamage(damage);
+			}
+			else if (right && x_enemy <= x_player && dif <= 64) {
+				enemies[i]->takeDamage(damage);
+			}
 		}
 	}
 }

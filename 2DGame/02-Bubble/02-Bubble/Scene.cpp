@@ -229,6 +229,7 @@ void Scene::render() {
 			}
 			break;
 		case 5:
+			// Game_Over
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
