@@ -11,7 +11,7 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
 
-#define WALK_SPEED 2
+#define WALK_SPEED 4
 #define DETECT_DISTANCE 350
 
 #define PLAYER_DAMAGE 20
