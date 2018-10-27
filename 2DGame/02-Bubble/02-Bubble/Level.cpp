@@ -91,6 +91,7 @@ void Level::init(ShaderProgram &texProgram){
 	sprBuildings[1] = Sprite::createSprite(glm::vec2(256, 224), glm::vec2(1, 1), &texBuildings[1], &texProgram);
 	sprBuildings[2] = Sprite::createSprite(glm::vec2(192, 192), glm::vec2(1, 1), &texBuildings[2], &texProgram);
 	sprBuildings[3] = Sprite::createSprite(glm::vec2(256, 160), glm::vec2(1, 1), &texBuildings[3], &texProgram);
+	sprBuildings[4] = Sprite::createSprite(glm::vec2(192, 192), glm::vec2(1, 1), &texBuildings[4], &texProgram);
 
 	//Overground
 	for (int i = 0; i <=17; ++i) {
@@ -191,9 +192,17 @@ void Level::init(ShaderProgram &texProgram){
 	}
 
 	//Blocking object (train)
-	texBlockObject.loadFromFile("images/margaret/train.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	texBlockObject.setMagFilter(GL_NEAREST);
-	sprBlockObject = Sprite::createSprite(glm::vec2(64, 582), glm::vec2(1.0f, 1.0f), &texBlockObject, &texProgram);
+	for (int i = 0; i < spriteMap->getMapSize().x; i++) {
+		for (int j = 0; j < spriteMap->getMapSize().y; j++) {
+			tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
+			glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
+			if (tile == '_') {
+				blockObject = new Blocking();
+				blockObject->init(texProgram, posTile);
+				blockObject->setPosition(posTile); //-glm::vec2(0.0f, 608.0f / 2.0f));
+			}
+		}
+	}
 
 	//Text
 	if (!text.init("fonts/OpenSans-Regular.ttf"))
@@ -230,6 +239,11 @@ void Level::update(int deltaTime) {
 
 void Level::render(ShaderProgram &texProgram) {
 	if (active) {
+		skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
+		skySprite->render();
+		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 1024, POS_SKY_Y * 32));
+		skySprite->render();
+		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 2048, POS_SKY_Y * 32));
 		skySprite->render();
 		int tile;
 		for (int j = 0; j < backgroundMap->getMapSize().y; j++) {
@@ -249,6 +263,9 @@ void Level::render(ShaderProgram &texProgram) {
 				}
 			}
 		}
+		if (blockObject != NULL) {
+			blockObject->render();
+		}
 		glm::vec2 playerPos = player->getPosition();
 		int playerPosX = ((playerPos.x + 16.0f) / 32.0f);
 		int playerPosY = ((playerPos.y - 32.0f) / 32.0f);
@@ -266,14 +283,10 @@ void Level::render(ShaderProgram &texProgram) {
 					sprObject[tileAux]->setPosition(posTile);
 					sprObject[tileAux]->render();
 				}
-				else if (tile >= 'A' && tile <= 'D') {
+				else if (tile >= 'A' && tile <= 'E') {
 					int tileAux = tile - int('A');
 					sprBuildings[tileAux]->setPosition(posTile);
 					sprBuildings[tileAux]->render();
-				}
-				else if (tile == '_') {
-					sprBlockObject->setPosition(posTile -glm::vec2(0.0f, 608.0f/2.0f));
-					sprBlockObject->render();
 				}
 				if ((playerPosX == (i) || playerPosX == (i - 1) || playerPosX == (i + 1)) && playerPosY == (j)) {
 					player->render();
@@ -330,8 +343,6 @@ void Level::render(ShaderProgram &texProgram) {
 		if(text.init()){
 			//text.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
 		}
-
-		sprBlockObject->render();
 	}
 }
 

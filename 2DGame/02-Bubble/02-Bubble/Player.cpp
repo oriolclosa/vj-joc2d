@@ -10,7 +10,7 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
 
-#define WALK_SPEED 20
+#define WALK_SPEED 5
 
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
