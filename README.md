@@ -1,2 +1,4 @@
 # vj-joc2d
-🎮 Videjocs Q1 2018 (FIB), Joc en 2D
+<br>
+<img alt="Earth saver" src="https://github.com/oriolclosa/vj-joc2d/raw/master/src/game.png" width="100%"/>
+<br>
