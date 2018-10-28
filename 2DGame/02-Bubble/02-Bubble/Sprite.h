@@ -33,6 +33,9 @@ public:
 	int animation() const;
 	
 	void setPosition(const glm::vec2 &pos);
+	void setSize(const glm::vec2 &sizeAux);
+
+	void lookRight(bool right);
 
 private:
 	Texture *texture;
@@ -46,6 +49,8 @@ private:
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
 
+	bool right;
+	glm::vec2 size;
 };
 
 

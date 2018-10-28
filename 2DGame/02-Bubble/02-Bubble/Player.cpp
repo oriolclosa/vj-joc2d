@@ -21,6 +21,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	spritesheet.loadFromFile("images/0/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(128, 176), glm::vec2(1.0f / 56.0f, 1.0f / 4.0f), &spritesheet, &shaderProgram);
+	sprite->setSize(glm::vec2(128, 76));
 
 	sprite->setNumberAnimations(4);
 
@@ -51,6 +52,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	lifes = 3;
 	health = 100.f;
 	right = false;
+	sprite->lookRight(right);
 	coolDownA1 = coolDownA2 = coolDownA3 = 0;
 	damageDone = 0;
 	coolDownRec1 = coolDownRec2 = 0;
@@ -91,6 +93,7 @@ void Player::update(int deltaTime){
 	else if(Game::instance().getKey(97)){ // a
 		posPlayer.x -= WALK_SPEED;
 		right = true;
+		sprite->lookRight(right);
 		if(map->collisionMoveLeft(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.x += WALK_SPEED;
 		}
@@ -98,6 +101,7 @@ void Player::update(int deltaTime){
 	else if(Game::instance().getKey(100)){ // d
 		posPlayer.x += WALK_SPEED;
 		right = false;
+		sprite->lookRight(right);
 		if(map->collisionMoveRight(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.x -= WALK_SPEED;
 		}
