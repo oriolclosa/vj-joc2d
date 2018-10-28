@@ -8,7 +8,7 @@
 
 
 void Coin::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos) {
-	spritesheet.loadFromFile("images/margaret/coins.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile("images/0/coins.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f/6.0f, 1.0f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(1);

@@ -42,6 +42,9 @@ public:
 	void updateEnemiesAlive();
 	int getScore();
 
+	void setCharacter(int characterAux);
+	int getCharacter();
+
 private:
 	TileMap *map;
 	TileMap *backgroundMap;
@@ -85,6 +88,8 @@ private:
 	bool active;
 
 	Blocking *blockObject;
+
+	int currentCharacter;
 };
 
 

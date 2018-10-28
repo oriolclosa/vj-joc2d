@@ -23,6 +23,10 @@
 #define POS_INFO_X 20
 #define POS_INFO_Y 330
 
+enum character{
+	SKLODOWSKA, TESLA
+};
+
 Level::Level() {
 	map = NULL;
 	spritemap = NULL;
@@ -38,44 +42,27 @@ Level::~Level() {
 
 
 void Level::init(ShaderProgram &texProgram){
+	currentCharacter = 0;
+
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	spriteMap = TileMap::createTileMap("levels/level01-sprites.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	overgroundMap = TileMap::createTileMap("levels/level01-overground.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
-	backTextures[0].loadFromFile("images/margaret/wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[0].setMagFilter(GL_NEAREST);
-	backTextures[1].loadFromFile("images/margaret/floor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[1].setMagFilter(GL_NEAREST);
-	backTextures[2].loadFromFile("images/margaret/wallfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[2].setMagFilter(GL_NEAREST);
-	backTextures[3].loadFromFile("images/margaret/exteriorfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[3].setMagFilter(GL_NEAREST);
-	backTextures[4].loadFromFile("images/margaret/exteriorfence.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[4].setMagFilter(GL_NEAREST);
-	backTextures[5].loadFromFile("images/margaret/exteriorwallfloor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[5].setMagFilter(GL_NEAREST);
-	backTextures[6].loadFromFile("images/margaret/exteriorgrass.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[6].setMagFilter(GL_NEAREST);
-	backTextures[7].loadFromFile("images/margaret/exteriorfloorsewer.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[7].setMagFilter(GL_NEAREST);
-	backTextures[8].loadFromFile("images/margaret/exteriorfloorrail1.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[8].setMagFilter(GL_NEAREST);
-	backTextures[9].loadFromFile("images/margaret/exteriorfloorrail2.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	backTextures[9].setMagFilter(GL_NEAREST);
-	backSprites[0] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[0], &texProgram);
-	backSprites[1] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[1], &texProgram);
-	backSprites[2] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[2], &texProgram);
-	backSprites[3] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[3], &texProgram);
-	backSprites[4] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[4], &texProgram);
-	backSprites[5] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[5], &texProgram);
-	backSprites[6] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[6], &texProgram);
-	backSprites[7] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[7], &texProgram);
-	backSprites[8] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[8], &texProgram);
-	backSprites[9] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[9], &texProgram);
+	//Background
+	for (int i = 0; i < 10; ++i) {
+		ostringstream path;
+		path << "images/" << currentCharacter << "/back" << (i + 1) << ".png";
+		cout << path.str() << endl;
+		backTextures[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
+		backTextures[i].setMagFilter(GL_NEAREST);
+		backSprites[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[i], &texProgram);
+	}
 
 	//Sky
-	skyTexture.loadFromFile("images/margaret/sky.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	ostringstream path;
+	path << "images/" << currentCharacter << "/sky.png";
+	skyTexture.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	skyTexture.setMagFilter(GL_NEAREST);
 	skySprite = Sprite::createSprite(glm::vec2(1024, 128), glm::vec2(1, 1), &skyTexture, &texProgram);
 	skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
@@ -83,7 +70,7 @@ void Level::init(ShaderProgram &texProgram){
 	//Buildings
 	for (int i = 0; i <= 5; ++i) {
 		ostringstream path;
-		path << "images/margaret/building" << (i + 1) << ".png";
+		path << "images/" << currentCharacter << "/building" << (i + 1) << ".png";
 		texBuildings[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texBuildings[i].setMagFilter(GL_NEAREST);
 	}
@@ -96,7 +83,7 @@ void Level::init(ShaderProgram &texProgram){
 	//Overground
 	for (int i = 0; i <=17; ++i) {
 		ostringstream path;
-		path << "images/margaret/wallover" << (i+1) << ".png";
+		path << "images/" << currentCharacter << "/wallover" << (i + 1) << ".png";
 		overTextures[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		overTextures[i].setMagFilter(GL_NEAREST);
 		overSprites[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &overTextures[i], &texProgram);
@@ -105,7 +92,7 @@ void Level::init(ShaderProgram &texProgram){
 	//Wall pictures
 	for (int i = 0; i <= 10; ++i) {
 		ostringstream path;
-		path << "images/margaret/picture" << (i + 1) << ".png";
+		path << "images/" << currentCharacter << "/picture" << (i + 1) << ".png";
 		texWall[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texWall[i].setMagFilter(GL_NEAREST);
 		sprWall[i] = Sprite::createSprite(glm::vec2(96, 96), glm::vec2(1, 1), &texWall[i], &texProgram);
@@ -114,7 +101,7 @@ void Level::init(ShaderProgram &texProgram){
 	//Objects
 	for (int i = 0; i <= 10; ++i) {
 		ostringstream path;
-		path << "images/margaret/object" << (i + 1) << ".png";
+		path << "images/" << currentCharacter << "/object" << (i + 1) << ".png";
 		texObject[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texObject[i].setMagFilter(GL_NEAREST);
 	}
@@ -128,7 +115,9 @@ void Level::init(ShaderProgram &texProgram){
 	sprObject[7] = Sprite::createSprite(glm::vec2(32, 96), glm::vec2(1, 1), &texObject[7], &texProgram);
 
 	//Walkable areas
-	walkableTexture.loadFromFile("images/margaret/ok.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	ostringstream path2;
+	path2 << "images/" << currentCharacter << "/ok.png";
+	walkableTexture.loadFromFile(path2.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	walkableTexture.setMagFilter(GL_NEAREST);
 	walkableSprite = Sprite::createSprite(glm::vec2(16, 16), glm::vec2(1, 1), &walkableTexture, &texProgram);
 	
@@ -171,7 +160,9 @@ void Level::init(ShaderProgram &texProgram){
 	}
 
 	//Infohealth
-	texInfoHealth.loadFromFile("images/margaret/infohealth.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	ostringstream path3;
+	path3 << "images/" << currentCharacter << "/infohealth.png";
+	texInfoHealth.loadFromFile(path3.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	texInfoHealth.setMagFilter(GL_NEAREST);
 	sprInfoHealth = Sprite::createSprite(glm::vec2(99, 32), glm::vec2(1.0f, 1.0f/53.0f), &texInfoHealth, &texProgram);
 	sprInfoHealth->setNumberAnimations(53);
@@ -184,7 +175,7 @@ void Level::init(ShaderProgram &texProgram){
 	//Infolifes
 	for (int i = 0; i < 3; ++i) {
 		ostringstream path;
-		path << "images/margaret/infolifes" << (i + 1) << ".png";
+		path << "images/" << currentCharacter << "/infolifes" << (i + 1) << ".png";
 		texInfoLifes[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texInfoLifes[i].setMagFilter(GL_NEAREST);
 		sprInfoLifes[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1.0f, 1.0f), &texInfoLifes[i], &texProgram);
@@ -243,7 +234,7 @@ void Level::update(int deltaTime) {
 
 void Level::render(ShaderProgram &texProgram) {
 	if (active) {
-		cout << "Score I: " << score << endl;
+		//cout << "Score I: " << score << endl;
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
 		skySprite->render();
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 1024, POS_SKY_Y * 32));
@@ -271,6 +262,7 @@ void Level::render(ShaderProgram &texProgram) {
 		if (blockObject != NULL) {
 			blockObject->render();
 		}
+		bool playerRendered = false;
 		glm::vec2 playerPos = player->getBottomPosition();
 		int playerPosX = (playerPos.x / 32.0f);
 		int playerPosY = (playerPos.y / 32.0f);
@@ -295,8 +287,12 @@ void Level::render(ShaderProgram &texProgram) {
 				}
 				if ((playerPosX == (i) || playerPosX == (i - 1) || playerPosX == (i + 1)) && playerPosY == (j)) {
 					player->render();
+					playerRendered = true;
 				}
 			}
+		}
+		if (!playerRendered) {
+			player->render();
 		}
 		/*for (int i = 0; i < num_enemies; ++i) {
 			enemies1Sprite[i]->render();
@@ -316,7 +312,6 @@ void Level::render(ShaderProgram &texProgram) {
 				}
 			}
 		}
-		//player->render();
 		for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 			for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
 				tile = overgroundMap->getMap()[j * overgroundMap->getMapSize().x + i];
@@ -451,4 +446,12 @@ void Level::updateEnemiesAlive() {
 
 int Level::getScore() {
 	return score;
+}
+
+void Level::setCharacter(int characterAux) {
+	currentCharacter = characterAux;
+}
+
+int Level::getCharacter() {
+	return currentCharacter;
 }

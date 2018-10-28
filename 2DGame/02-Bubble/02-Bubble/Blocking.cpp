@@ -10,7 +10,7 @@
 
 
 void Blocking::init(ShaderProgram &shaderProgram, glm::vec2 pos) {
-	spritesheet.loadFromFile("images/margaret/train.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile("images/0/train.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(64, 608), glm::vec2(1.0f, 1.0f), &spritesheet, &shaderProgram);
 	iniPosition = pos;
