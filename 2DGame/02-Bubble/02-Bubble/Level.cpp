@@ -182,6 +182,16 @@ void Level::init(ShaderProgram &texProgram){
 		sprInfoLifes[i]->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
 	}
 
+	//Infocooldowns
+	for (int i = 0; i < 4; ++i) {
+		ostringstream path;
+		path << "images/" << currentCharacter << "/infocooldowns" << (i + 1) << ".png";
+		t_info_cooldown[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
+		t_info_cooldown[i].setMagFilter(GL_NEAREST);		
+		spr_info_cooldown[i] = Sprite::createSprite(glm::vec2(16, 16), glm::vec2(1.0f, 1.0f), &t_info_cooldown[i], &texProgram);
+		spr_info_cooldown[i]->setPosition(glm::vec2(SCREEN_X + POS_INFO_X + 126 + 32 * i, SCREEN_Y + POS_INFO_Y + 8));
+	}
+
 	//Blocking object (train)
 	for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 		for (int j = 0; j < spriteMap->getMapSize().y; j++) {
@@ -342,6 +352,17 @@ void Level::render(ShaderProgram &texProgram) {
 		scoreText << "Score: " << score;
 		if(text.init()){
 			//text.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
+		}
+		
+		float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
+		if (posAux < 0.0f) {
+			posAux = 0.0f;
+		}
+		for(int i = 0; i < 4; ++i) {
+			if (player->activeCooldownI(i)) {
+				spr_info_cooldown[i]->setPosition(glm::vec2(posAux + POS_INFO_X + 126 + 32 * i, POS_INFO_Y + 8));
+				spr_info_cooldown[i]->render();
+			}
 		}
 	}
 }

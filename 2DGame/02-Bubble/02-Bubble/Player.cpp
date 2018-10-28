@@ -12,6 +12,22 @@
 
 #define WALK_SPEED 5
 
+#define HEALTH 100
+#define LIFES 3
+
+#define DAMAGE_ATTACK_1 30
+#define DAMAGE_ATTACK_2 40
+#define DAMAGE_ATTACK_3 70
+
+#define COOLDOWN_ATTACK_1 90
+#define COOLDOWN_ATTACK_2 165 
+#define COOLDOWN_ATTACK_3 420
+
+#define COOLDOWN_START_RECUPERATION 600
+#define COOLDOWN_BETWEEN_RECUPERATIONS 100
+
+#define SAFE_TIME_BETWEEN_HITS 120
+
 enum PlayerAnimations{
 	WALK, ATTACK_1, ATTACK_2, ATTACK_3
 };
@@ -49,8 +65,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	lifes = 3;
-	health = 100.f;
+	lifes = LIFES;
+	health = HEALTH;
 	right = false;
 	sprite->lookRight(right);
 	coolDownA1 = coolDownA2 = coolDownA3 = 0;
@@ -62,7 +78,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 void Player::update(int deltaTime){
 	sprite->update(deltaTime);
 	if (coolDownDamage > 0) --coolDownDamage;
-	if (health < 100 && coolDownRec1 == 0) {
+	if (health < HEALTH && coolDownRec1 == 0) {
 		if (coolDownRec2 > 0) --coolDownRec2;
 		if (coolDownRec2 == 0) {
 			health += 1;
@@ -77,18 +93,18 @@ void Player::update(int deltaTime){
 	if (health <= 0) death();
 	if (Game::instance().getKey(101) && coolDownA1 == 0) { // e, Attack 1
 		sprite->changeAnimation(ATTACK_1);
-		doDamage(10);
-		coolDownA1 = 90;
+		doDamage(DAMAGE_ATTACK_1);
+		coolDownA1 = COOLDOWN_ATTACK_1;
 	}
 	else if (Game::instance().getKey(102) && coolDownA2 == 0) { // f, Attack 2
 		sprite->changeAnimation(ATTACK_2);
-		doDamage(20);
-		coolDownA2 = 165;
+		doDamage(DAMAGE_ATTACK_2);
+		coolDownA2 = COOLDOWN_ATTACK_2;
 	}
 	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
 		sprite->changeAnimation(ATTACK_3);
-		doDamage(40);
-		coolDownA3 = 420;
+		doDamage(DAMAGE_ATTACK_3);
+		coolDownA3 = COOLDOWN_ATTACK_3;
 	}
 	else if(Game::instance().getKey(97)){ // a
 		posPlayer.x -= WALK_SPEED;
@@ -142,14 +158,14 @@ glm::vec2 Player::getPosition() {
 void Player::takeDamage(float damage) {
 	if (coolDownDamage == 0) {
 		health -= damage;
-		coolDownRec1 = 600;
+		coolDownRec1 = COOLDOWN_START_RECUPERATION;
 		coolDownRec2 = 0;
-		coolDownDamage = 120;
+		coolDownDamage = SAFE_TIME_BETWEEN_HITS;
 	}
 }
 
 void Player::death() {
-	health = 100;
+	health = HEALTH;
 	--lifes;
 	if (lifes < 1) {
 		Game::instance().setRenderScene(5);
@@ -195,4 +211,19 @@ glm::vec2 Player::getCornerPosition() {
 
 glm::vec2 Player::getInnerSize() {
 	return glm::ivec2(36, 78);
+}
+
+bool Player::activeCooldownI(int i) {
+	switch(i) {
+		case 0:
+			return coolDownRec1 > 0;
+			break;
+		case 1:
+			return coolDownA1 > 0;
+			break;
+		case 2:
+			return coolDownA2 > 0;
+		case 3:
+			return coolDownA3 > 0;
+	}
 }
