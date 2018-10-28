@@ -10,6 +10,8 @@ void Game::init() {
 	render_scene = 0;
 	selected_main_button = 0;
 	render_walkable = false;
+	global_score = 0;
+	setEndGameState(false);
 }
 
 bool Game::update(int deltaTime) {
@@ -50,6 +52,7 @@ void Game::keyPressed(int key) {
 		if (getRenderScene() == 1) {
 			switch(getSelectedMainButton()) {
 				case 0:
+					setEndGameState(false);
 					scene.updateLevel(0);
 					render_scene = 2;
 					break;
@@ -69,7 +72,9 @@ void Game::keyPressed(int key) {
 		}
 		else if (getRenderScene() == 5) {
 			render_scene = 1;
+			global_score = 0;
 		}
+		//else setEndGameState(true); debug
 		render();
 	}
 	keys[key] = true;
@@ -142,4 +147,21 @@ void Game::changeSelectMainButton(bool plus) {
 
 Scene Game::getScene() {
 	return scene;
+}
+
+void Game::setScore(int score) {
+	global_score = score;
+}
+
+int Game::getScore() {
+	return global_score;
+
+}
+
+bool Game::getEndGameState() {
+	return win;
+}
+
+void Game::setEndGameState(bool state) {
+	win = state;
 }

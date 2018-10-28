@@ -153,6 +153,7 @@ void Player::death() {
 	if (lifes < 1) {
 		Game::instance().setRenderScene(5);
 		Game::instance().getScene().updateLevel(-1);
+		cout << "Score: " << Game::instance().getScore() << endl;
 	}
 	else {
 		Game::instance().getScene().restartLevel();

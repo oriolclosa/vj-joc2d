@@ -40,6 +40,7 @@ public:
 	void setActive(bool activeAux);
 	void restart();
 	void updateEnemiesAlive();
+	int getScore();
 
 private:
 	TileMap *map;

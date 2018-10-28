@@ -243,6 +243,7 @@ void Level::update(int deltaTime) {
 
 void Level::render(ShaderProgram &texProgram) {
 	if (active) {
+		cout << "Score I: " << score << endl;
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
 		skySprite->render();
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 1024, POS_SKY_Y * 32));
@@ -432,6 +433,8 @@ void Level::restart() {
 		blockObject->restart();
 	}
 
+	Game::instance().setScore(Game::instance().getScore() + score);
+
 	score = 0;
 	active = true;
 	currentTime = 0.0f;
@@ -440,7 +443,12 @@ void Level::restart() {
 void Level::updateEnemiesAlive() {
 	for (int i = 0; i < num_enemies; ++i) {
 		if (enemies[i] != NULL && enemies[i]->getHealth() < 1) {
+			score += enemies[i]->getScore(); //Fer un get de enemic que retorni una puntuacio X en funcio del enemic
 			enemies[i] = NULL;
 		}
 	}
+}
+
+int Level::getScore() {
+	return score;
 }

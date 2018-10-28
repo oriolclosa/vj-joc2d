@@ -26,6 +26,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	health = 75.0f;
+	type = 1;
 }
 
 void Enemy::update(int deltaTime){
@@ -125,4 +126,8 @@ void Enemy::restart() {
 
 float Enemy::getHealth() {
 	return health;
+}
+
+int Enemy::getScore() {
+	return type * 20;
 }

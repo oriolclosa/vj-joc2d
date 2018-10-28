@@ -52,6 +52,11 @@ public:
 
 	Scene getScene();
 
+	int getScore();
+	void setScore(int score);
+	bool getEndGameState();
+	void setEndGameState(bool state);
+
 private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
@@ -60,6 +65,8 @@ private:
 	int render_scene;
 	int selected_main_button;
 	bool render_walkable;
+	int global_score;
+	bool win;
 
 };
 

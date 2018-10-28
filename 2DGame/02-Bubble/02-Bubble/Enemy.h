@@ -26,6 +26,7 @@ public:
 	void attackPlayer(float damage);
 	void takeDamage(float damage);
 	float getHealth();	
+	int getScore();
 
 	void restart();
 	
@@ -38,6 +39,7 @@ private:
 	TileMap *map;
 	glm::vec2 playerPos;
 	float health;
+	int type;
 };
 
 
