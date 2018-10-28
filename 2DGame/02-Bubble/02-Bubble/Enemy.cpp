@@ -14,7 +14,7 @@
 #define WALK_SPEED 4
 #define DETECT_DISTANCE 350
 
-#define PLAYER_DAMAGE 32
+#define PLAYER_DAMAGE 5
 
 #define HEALTH 100
 

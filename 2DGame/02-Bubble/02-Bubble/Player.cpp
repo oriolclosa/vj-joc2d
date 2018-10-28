@@ -19,9 +19,9 @@
 #define DAMAGE_ATTACK_2 40
 #define DAMAGE_ATTACK_3 70
 
-#define COOLDOWN_ATTACK_1 90
-#define COOLDOWN_ATTACK_2 165 
-#define COOLDOWN_ATTACK_3 420
+#define COOLDOWN_ATTACK_1 45
+#define COOLDOWN_ATTACK_2 85 
+#define COOLDOWN_ATTACK_3 210
 
 #define COOLDOWN_START_RECUPERATION 600
 #define COOLDOWN_BETWEEN_RECUPERATIONS 100
@@ -176,6 +176,7 @@ void Player::death() {
 		//cout << "Score: " << Game::instance().getScore() << endl;
 	}
 	else {
+		sprite->changeAnimation(WALK);
 		Game::instance().getScene().restartLevel();
 	}
 }

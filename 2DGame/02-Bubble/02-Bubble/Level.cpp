@@ -269,6 +269,21 @@ void Level::render(ShaderProgram &texProgram) {
 				}
 			}
 		}
+		for (int i = 0; i < num_coins; ++i) {
+			if (coins[i] != NULL) {
+				float distance = sqrt(pow(coins[i]->getPosition().x - player->getCentralPosition().x, 2) + pow(coins[i]->getPosition().y - player->getCentralPosition().y, 2));
+				if (distance <= 32) {
+					coins[i] = NULL;
+					score += 10;
+				}
+				else {
+					coins[i]->render();
+				}
+			}
+		}
+		for (int i = 0; i < num_enemies; ++i) {
+			if (enemies[i] != NULL) enemies[i]->render();
+		}
 		if (blockObject != NULL) {
 			blockObject->render();
 		}
@@ -303,24 +318,6 @@ void Level::render(ShaderProgram &texProgram) {
 		}
 		if (!playerRendered) {
 			player->render();
-		}
-		/*for (int i = 0; i < num_enemies; ++i) {
-			enemies1Sprite[i]->render();
-		}*/
-		for (int i = 0; i < num_enemies; ++i) {
-			if (enemies[i] != NULL) enemies[i]->render();
-		}
-		for (int i = 0; i < num_coins; ++i) {
-			if (coins[i] != NULL) {
-				float distance = sqrt(pow(coins[i]->getPosition().x - player->getCentralPosition().x, 2) + pow(coins[i]->getPosition().y - player->getCentralPosition().y, 2));
-				if (distance <= 32) {
-					coins[i] = NULL;
-					score += 10;
-				}
-				else {
-					coins[i]->render();
-				}
-			}
 		}
 		for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 			for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
