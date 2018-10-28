@@ -24,7 +24,8 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	tileMapDispl = tileMapPos;
 	iniPosition = pos;
 	posPlayer = pos;
-	health = 75.f;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	health = 75.0f;
 }
 
 void Enemy::update(int deltaTime){

@@ -28,6 +28,12 @@ public:
 	int getLifes();
 	float getDamageDone();
 	bool getDirection();
+
+	glm::vec2 getCentralPosition();
+	glm::vec2 getBottomPosition();
+	glm::vec2 getCornerPosition();
+
+	glm::vec2 getInnerSize();
 	
 private:
 	glm::ivec2 tileMapDispl, posPlayer;

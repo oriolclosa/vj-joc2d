@@ -12,10 +12,39 @@
 
 #define WALK_SPEED 5
 
+enum PlayerAnimations{
+	WALK, ATTACK_1, ATTACK_2, ATTACK_3
+};
+
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
-	spritesheet.loadFromFile("images/bub.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
+	spritesheet.loadFromFile("images/margaret/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.setMagFilter(GL_NEAREST);
+	sprite = Sprite::createSprite(glm::ivec2(128, 176), glm::vec2(1.0f / 80.0f, 1.0f / 4.0f), &spritesheet, &shaderProgram);
+
+	sprite->setNumberAnimations(4);
+
+	sprite->setAnimationSpeed(WALK, 24);
+	sprite->addKeyframe(WALK, glm::vec2(0.0f, 0.0f));
+	sprite->addKeyframe(WALK, glm::vec2(1.0f / 80.0f, 0.0f));
+
+	sprite->setAnimationSpeed(ATTACK_1, 24);
+	for (int i = 0; i < 16; ++i) {
+		sprite->addKeyframe(ATTACK_1, glm::vec2(float(i) / 80.0f, 1.0f / 4.0f));
+	}
+
+	sprite->setAnimationSpeed(ATTACK_2, 24);
+	for (int i = 0; i < 25; ++i) {
+		sprite->addKeyframe(ATTACK_2, glm::vec2(float(i) / 80.0f, 2.0f / 4.0f));
+	}
+
+	sprite->setAnimationSpeed(ATTACK_3, 24);
+	for (int i = 0; i < 80; ++i) {
+		sprite->addKeyframe(ATTACK_3, glm::vec2(float(i) / 80.0f, 3.0f / 4.0f));
+	}
+
+	sprite->changeAnimation(WALK);
+
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	lifes = 3;
@@ -43,42 +72,48 @@ void Player::update(int deltaTime){
 	if (coolDownA2 > 0) --coolDownA2;
 	if (coolDownA3 > 0) --coolDownA3;
 	if (health <= 0) death();
-	if (Game::instance().getKey(32) && coolDownA1 == 0) { // SPACE, Attack 1
+	if (Game::instance().getKey(101) && coolDownA1 == 0) { // e, Attack 1
+		sprite->changeAnimation(ATTACK_1);
 		doDamage(10);
 		coolDownA1 = 90;
 	}
-	else if (Game::instance().getKey(101) && coolDownA2 == 0) { // e, Attack 2
+	else if (Game::instance().getKey(102) && coolDownA2 == 0) { // f, Attack 2
+		sprite->changeAnimation(ATTACK_2);
 		doDamage(20);
 		coolDownA2 = 165;
 	}
-	else if (Game::instance().getKey(102) && coolDownA3 == 0) { // f, Attack 3
+	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
+		sprite->changeAnimation(ATTACK_3);
 		doDamage(40);
 		coolDownA3 = 420;
 	}
 	else if(Game::instance().getKey(97)){ // a
+		sprite->changeAnimation(WALK);
 		posPlayer.x -= WALK_SPEED;
 		right = true;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), false)){
+		if(map->collisionMoveLeft(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.x += WALK_SPEED;
 		}
 	}
 	else if(Game::instance().getKey(100)){ // d
-		//--health;
+		sprite->changeAnimation(WALK);
 		posPlayer.x += WALK_SPEED;
 		right = false;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), false)){
+		if(map->collisionMoveRight(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.x -= WALK_SPEED;
 		}
 	}
 	else if (Game::instance().getKey(119)){ // w
+		sprite->changeAnimation(WALK);
 		posPlayer.y -= WALK_SPEED;
-		if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), false)){
+		if (map->collisionMoveUp(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.y += WALK_SPEED;
 		}
 	}
 	else if (Game::instance().getKey(115)) { // s
+		sprite->changeAnimation(WALK);
 		posPlayer.y += WALK_SPEED;
-		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), false)) {
+		if (map->collisionMoveDown(getCornerPosition(), getInnerSize(), false)) {
 			posPlayer.y -= WALK_SPEED;
 		}
 	}
@@ -142,4 +177,20 @@ float Player::getDamageDone() {
 
 bool Player::getDirection() {
 	return right;
+}
+
+glm::vec2 Player::getCentralPosition() {
+	return posPlayer + glm::ivec2(64, 88);
+}
+
+glm::vec2 Player::getBottomPosition() {
+	return posPlayer + glm::ivec2(64, 176);
+}
+
+glm::vec2 Player::getCornerPosition() {
+	return posPlayer + glm::ivec2(45, 57);
+}
+
+glm::vec2 Player::getInnerSize() {
+	return glm::ivec2(36, 78);
 }

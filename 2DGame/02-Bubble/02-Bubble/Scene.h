@@ -64,6 +64,9 @@ private:
 	Texture t_wp_game_over;
 	Text text;
 
+	Texture texMenuPre;
+	TexturedQuad *teqMenuPre;
+
 	float camera_movement;
 	
 	Level *level;

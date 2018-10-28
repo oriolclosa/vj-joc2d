@@ -25,6 +25,10 @@ void Scene::init() {
 
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
+	teqMenuPre = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+
+	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	tq_wp_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.15f);
@@ -43,13 +47,11 @@ void Scene::init() {
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	tq_esc_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	
+	texMenuPre.loadFromFile("images/menu-pre.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	t_wp_main_menu.loadFromFile("images/wp_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_wp_main_menu.setMagFilter(GL_NEAREST);
 	t_title_main_menu.loadFromFile("images/title_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_title_main_menu.setMagFilter(GL_NEAREST);
 	t_text_pre_menu.loadFromFile("images/text_pre_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_text_pre_menu.setMagFilter(GL_NEAREST);
 	t_keys_main_menu.loadFromFile("images/keys_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	t_keys_main_menu.setMagFilter(GL_NEAREST);
 	t_esc_main_menu.loadFromFile("images/esc_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -109,21 +111,7 @@ void Scene::render() {
 
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_wp_main_menu->render(t_wp_main_menu);
-
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * 0.1f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_title_main_menu->render(t_title_main_menu);
-
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * 0.8f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_text_pre_menu->render(t_text_pre_menu);
-
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.95f - (SCREEN_WIDTH * 0.04f) / 2.f, SCREEN_HEIGHT * 0.9f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_esc_main_menu->render(t_esc_main_menu);
-			//text.render("Untitled 2D Game", glm::vec2(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.225f), 64, glm::vec4(1, 1, 1, 1));
-			//text.render("Press F to start the game", glm::vec2(SCREEN_WIDTH * 0.375f, SCREEN_HEIGHT * 0.85f), 24, glm::vec4(1, 1, 1, 1));
+			teqMenuPre->render(texMenuPre);
 			break;
 		case 1:
 			// Main_Menu

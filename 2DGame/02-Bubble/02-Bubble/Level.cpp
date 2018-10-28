@@ -9,8 +9,8 @@
 #include <sstream>
 
 
-#define INIT_PLAYER_X_TILES 8
-#define INIT_PLAYER_Y_TILES 12
+#define INIT_PLAYER_X_TILES 4
+#define INIT_PLAYER_Y_TILES 8
 
 #define PROB_ENEMIES 10
 #define MAX_ENEMIES 100 //For 100
@@ -152,7 +152,7 @@ void Level::init(ShaderProgram &texProgram){
 					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
 					enemies[num_enemies]->setTileMap(map);
 					enemies[num_enemies]->setPlayer(player);
-					enemies[num_enemies]->setPlayerPos(player->getPosition());
+					enemies[num_enemies]->setPlayerPos(player->getCentralPosition());
 					++num_enemies;
 				}
 			}
@@ -221,7 +221,7 @@ void Level::update(int deltaTime) {
 		if (active) {
 			for (int i = 0; i < num_enemies; ++i) {
 				if (enemies[i] != NULL) {
-					enemies[i]->setPlayerPos(player->getPosition());
+					enemies[i]->setPlayerPos(player->getCentralPosition());
 					enemies[i]->update(deltaTime);
 				}
 			}
@@ -231,7 +231,7 @@ void Level::update(int deltaTime) {
 				}
 			}
 			if (blockObject != NULL) {
-				blockObject->setPlayerPos(player->getPosition());
+				blockObject->setPlayerPos(player->getCentralPosition());
 				blockObject->update(deltaTime);
 			}
 			updateInfoHealth(player->getHealth());
@@ -270,9 +270,9 @@ void Level::render(ShaderProgram &texProgram) {
 		if (blockObject != NULL) {
 			blockObject->render();
 		}
-		glm::vec2 playerPos = player->getPosition();
-		int playerPosX = ((playerPos.x + 16.0f) / 32.0f);
-		int playerPosY = ((playerPos.y - 32.0f) / 32.0f);
+		glm::vec2 playerPos = player->getBottomPosition();
+		int playerPosX = (playerPos.x / 32.0f);
+		int playerPosY = (playerPos.y / 32.0f);
 		for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 				tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
@@ -305,7 +305,7 @@ void Level::render(ShaderProgram &texProgram) {
 		}
 		for (int i = 0; i < num_coins; ++i) {
 			if (coins[i] != NULL) {
-				float distance = sqrt(pow(coins[i]->getPosition().x - player->getPosition().x, 2) + pow(coins[i]->getPosition().y - player->getPosition().y, 2));
+				float distance = sqrt(pow(coins[i]->getPosition().x - player->getCentralPosition().x, 2) + pow(coins[i]->getPosition().y - player->getCentralPosition().y, 2));
 				if (distance <= 32) {
 					coins[i] = NULL;
 					score += 10;
@@ -351,7 +351,7 @@ void Level::render(ShaderProgram &texProgram) {
 }
 
 glm::vec2 Level::getPlayerPos() {
-	return player->getPosition();
+	return player->getCentralPosition();
 }
 
 void Level::updateInfoHealth(float health) {
@@ -425,6 +425,12 @@ void Level::restart() {
 		if (!text.init("fonts/OpenSans-Bold.ttf"))
 			if (!text.init("fonts/DroidSerif.ttf"))
 				cout << "Could not load font!!!" << endl;
+
+	//Blocking object
+	int tile;
+	if (blockObject != NULL) {
+		blockObject->restart();
+	}
 
 	score = 0;
 	active = true;
