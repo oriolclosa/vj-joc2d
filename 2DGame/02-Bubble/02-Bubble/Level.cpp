@@ -202,6 +202,9 @@ void Level::init(ShaderProgram &texProgram){
 				blockObject->init(texProgram, posTile);
 				blockObject->setPosition(posTile - glm::vec2(0.0f, 608.0f));
 			}
+			else if (tile == '`') {
+				cout << "BOSS INIT GOES HERE!" << endl;
+			}
 		}
 	}
 
