@@ -1,0 +1,21 @@
+#ifndef _BOSS_INCLUDE
+#define _BOSS_INCLUDE
+
+#include "Sprite.h" // Fan falta?
+#include "TileMap.h"
+#include "Player.h"
+
+#include "Enemy.h"
+
+class Boss: public Enemy {
+	
+public:
+
+private:
+	int state;
+};
+
+
+
+
+#endif _BOSS_INCLUDE
