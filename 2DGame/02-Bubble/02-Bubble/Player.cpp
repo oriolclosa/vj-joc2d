@@ -59,8 +59,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	coolDownDamage = 0;
 }
 
-void Player::update(int deltaTime){
-	sprite->update(deltaTime);
+void Player::update(float totalTime, int deltaTime){
+	sprite->update(totalTime, deltaTime);
 	if (coolDownDamage > 0) --coolDownDamage;
 	if (health < 100 && coolDownRec1 == 0) {
 		if (coolDownRec2 > 0) --coolDownRec2;
@@ -77,16 +77,19 @@ void Player::update(int deltaTime){
 	if (health <= 0) death();
 	if (Game::instance().getKey(101) && coolDownA1 == 0) { // e, Attack 1
 		sprite->changeAnimation(ATTACK_1);
+		sprite->resetToAnimation(totalTime, 1000.0f*(16.0f/24.0f), WALK);
 		doDamage(10);
 		coolDownA1 = 90;
 	}
 	else if (Game::instance().getKey(102) && coolDownA2 == 0) { // f, Attack 2
 		sprite->changeAnimation(ATTACK_2);
+		sprite->resetToAnimation(totalTime, 1000.0f*(25.0f / 24.0f), WALK);
 		doDamage(20);
 		coolDownA2 = 165;
 	}
 	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
 		sprite->changeAnimation(ATTACK_3);
+		sprite->resetToAnimation(totalTime, 1000.0f*(56.0f / 24.0f), WALK);
 		doDamage(40);
 		coolDownA3 = 420;
 	}

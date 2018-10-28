@@ -31,17 +31,33 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	texture = spritesheet;
 	shaderProgram = program;
 	currentAnimation = -1;
+	resetToAnim = -1;
+	resetToTime = 0.0f;
 	position = glm::vec2(0.f);
 
 	right = true;
 }
 
-void Sprite::update(int deltaTime)
-{
-	if(currentAnimation >= 0)
-	{
+void Sprite::update(float totalTime, int deltaTime){
+	if ((resetToAnim >= 0) && ((totalTime - resetToTimeIni) >= resetToTime)) {
+		changeAnimation(resetToAnim);
+		resetToAnim = -1;
+	}
+	else if (currentAnimation >= 0) {
 		timeAnimation += deltaTime;
-		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
+		while (timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
+		{
+			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
+			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
+		}
+		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
+	}
+}
+
+void Sprite::update(int deltaTime) {
+	if (currentAnimation >= 0) {
+		timeAnimation += deltaTime;
+		while (timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
 			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
@@ -118,5 +134,10 @@ void Sprite::setSize(const glm::vec2 &sizeAux) {
 	size = sizeAux;
 }
 
+void Sprite::resetToAnimation(float timeToIni, float timeTo, int animTo) {
+	resetToTimeIni = timeToIni;
+	resetToTime = timeTo;
+	resetToAnim = animTo;
+}
 
 

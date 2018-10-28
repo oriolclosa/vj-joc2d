@@ -13,8 +13,7 @@
 // able to manage animations stored as a spritesheet. 
 
 
-class Sprite
-{
+class Sprite{
 
 public:
 	// Textured quads can only be created inside an OpenGL context
@@ -23,6 +22,7 @@ public:
 	Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program);
 
 	void update(int deltaTime);
+	void update(float totalTime, int deltaTime);
 	void render() const;
 	void free();
 
@@ -37,6 +37,8 @@ public:
 
 	void lookRight(bool right);
 
+	void resetToAnimation(float timeToIni, float timeTo, int animTo);
+
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
@@ -44,8 +46,8 @@ private:
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
 	glm::vec2 position;
-	int currentAnimation, currentKeyframe;
-	float timeAnimation;
+	int currentAnimation, currentKeyframe, resetToAnim, resetToTimeIni;
+	float timeAnimation, resetToTime;
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
 

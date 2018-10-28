@@ -208,7 +208,7 @@ void Level::init(ShaderProgram &texProgram){
 void Level::update(int deltaTime) {
 	if (active) {
 		currentTime += deltaTime;
-		player->update(deltaTime);
+		player->update(currentTime, deltaTime);
 		if (active) {
 			for (int i = 0; i < num_enemies; ++i) {
 				if (enemies[i] != NULL) {
