@@ -79,6 +79,9 @@ private:
 	Texture texInfoLifes[3];
 	Sprite *sprInfoLifes[3];
 
+	Sprite *spr_info_cooldown[4];
+	Texture t_info_cooldown[4];
+
 	Text text;
 	int score;
 

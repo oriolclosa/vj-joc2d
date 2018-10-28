@@ -28,6 +28,7 @@ public:
 	int getLifes();
 	float getDamageDone();
 	bool getDirection();
+	bool activeCooldownI(int i);
 
 	glm::vec2 getCentralPosition();
 	glm::vec2 getBottomPosition();

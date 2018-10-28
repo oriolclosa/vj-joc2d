@@ -14,7 +14,9 @@
 #define WALK_SPEED 4
 #define DETECT_DISTANCE 350
 
-#define PLAYER_DAMAGE 20
+#define PLAYER_DAMAGE 32
+
+#define HEALTH 100
 
 
 void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos){
@@ -25,7 +27,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	iniPosition = pos;
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	health = 75.0f;
+	health = HEALTH;
 	type = 1;
 }
 
@@ -108,7 +110,8 @@ void Enemy::setPlayerPos(glm::vec2 &playerPosAux) {
 
 void Enemy::attackPlayer(float damage) {
 	if (abs(playerPos.x - posPlayer.x) <= 64)
-		player->takeDamage(damage);
+		if (abs(playerPos.y - posPlayer.y) <= 64)
+			player->takeDamage(damage);
 }
 
 void Enemy::setPlayer(Player *playerAux) {
