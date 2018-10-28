@@ -55,6 +55,7 @@ private:
 	TexturedQuad *tq_keys_main_menu;
 	TexturedQuad *tq_esc_main_menu;
 	TexturedQuad *tq_button_0_main_menu, *tq_button_1_main_menu, *tq_button_2_main_menu, *tq_button_3_main_menu;
+	TexturedQuad *tq_character_selection_target_0, *tq_character_selection_target_1, *tq_character_selection_target_2;
 	Texture t_wp_main_menu;
 	Texture t_title_main_menu;
 	Texture t_text_pre_menu;
@@ -62,6 +63,7 @@ private:
 	Texture t_esc_main_menu;
 	Texture t_button_0_main_menu, t_button_1_main_menu, t_button_2_main_menu, t_button_3_main_menu;
 	Texture t_wp_game_over, t_wp_game_win;
+	Texture t_wp_character_selection, t_character_selection_target;
 	Text text;
 
 	Texture texMenuPre;

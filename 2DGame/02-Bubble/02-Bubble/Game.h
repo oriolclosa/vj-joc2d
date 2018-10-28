@@ -56,6 +56,8 @@ public:
 	void setScore(int score);
 	bool getEndGameState();
 	void setEndGameState(bool state);
+	int getSelectedCharacter();
+	void changeCharacterSelected(bool right);
 
 private:
 	bool bPlay;                       // Continue to play game?
@@ -67,6 +69,7 @@ private:
 	bool render_walkable;
 	int global_score;
 	bool win;
+	int character;
 
 };
 
