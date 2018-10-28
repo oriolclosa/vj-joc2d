@@ -199,7 +199,7 @@ void Level::init(ShaderProgram &texProgram){
 			if (tile == '_') {
 				blockObject = new Blocking();
 				blockObject->init(texProgram, posTile);
-				blockObject->setPosition(posTile + glm::vec2(0.0f, 608.0f));
+				blockObject->setPosition(posTile - glm::vec2(0.0f, 608.0f));
 			}
 		}
 	}
