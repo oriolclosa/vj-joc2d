@@ -29,6 +29,10 @@ void Scene::init() {
 
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
+	teqMenuBack = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+
+	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	tq_wp_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.15f);
@@ -48,6 +52,7 @@ void Scene::init() {
 	tq_esc_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	
 	texMenuPre.loadFromFile("images/menu-pre.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuBack.loadFromFile("images/menu-back.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	t_wp_main_menu.loadFromFile("images/wp_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	t_title_main_menu.loadFromFile("images/title_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -121,9 +126,11 @@ void Scene::render() {
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_wp_main_menu->render(t_wp_main_menu);
+			teqMenuBack->render(texMenuBack);
+			
 			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * 0.1f, 0.f));
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			tq_title_main_menu->render(t_title_main_menu);

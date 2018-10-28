@@ -66,6 +66,8 @@ private:
 
 	Texture texMenuPre;
 	TexturedQuad *teqMenuPre;
+	Texture texMenuBack;
+	TexturedQuad *teqMenuBack;
 
 	float camera_movement;
 	
