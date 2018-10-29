@@ -15,6 +15,9 @@ Scene::Scene(){
 Scene::~Scene(){
 }
 
+enum scene {
+	PRE, MENU, GAME, INSTRUCTIONS, CREDITS, END, CHARACTER
+};
 
 void Scene::init() {
 	initShaders();
@@ -30,6 +33,15 @@ void Scene::init() {
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	teqMenuBack = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	teqMenuButtons[0] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	teqMenuButtons[1] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	teqMenuButtons[2] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	teqMenuButtons[3] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	teqMenuCharacter = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+
+	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.52f, SCREEN_HEIGHT * 0.09851111111f);
+	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
+	teqMenuTitle = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
@@ -53,6 +65,18 @@ void Scene::init() {
 	
 	texMenuPre.loadFromFile("images/menu-pre.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texMenuBack.loadFromFile("images/menu-back.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuButtons[0].loadFromFile("images/menu-buttons-play.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuButtons[1].loadFromFile("images/menu-buttons-instructions.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuButtons[2].loadFromFile("images/menu-buttons-credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuButtons[3].loadFromFile("images/menu-buttons-exit.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuCharacter.loadFromFile("images/menu-character.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	for (int i = 0; i < 3; ++i) {
+		texCharacters[i].loadFromFile("images/0/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		texCharacters[i].setMagFilter(GL_NEAREST);
+		sprCharacters[i] = Sprite::createSprite(glm::ivec2(256, 352), glm::vec2(1.0f / 56.0f, 1.0f / 4.0f), &texCharacters[i], &texProgram);
+		sprCharacters[i]->setPosition(glm::vec2(20.0f + float(i)*202.5f, 30.0f));
+	}
 
 	t_wp_main_menu.loadFromFile("images/wp_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	t_title_main_menu.loadFromFile("images/title_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -79,7 +103,7 @@ void Scene::init() {
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	tq_button_3_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	t_button_0_main_menu.loadFromFile("images/menu_0.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	t_button_0_main_menu.loadFromFile("images/menu-button.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	t_button_0_main_menu.setMagFilter(GL_NEAREST);
 	texs[3].loadFromFile("images/menu_1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texs[3].setMagFilter(GL_NEAREST);
@@ -140,7 +164,7 @@ void Scene::render() {
 	// TODO: crear metodes per cada scena
 	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	switch(Game::instance().getRenderScene()) {
-		case 0:
+		case PRE:
 			// Pre_Menu
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
@@ -150,7 +174,7 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			teqMenuPre->render(texMenuPre);
 			break;
-		case 1:
+		case MENU:
 			// Main_Menu
 			{
 			texProgram.use();
@@ -159,41 +183,18 @@ void Scene::render() {
 
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			teqMenuBack->render(texMenuBack);
-			
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * 0.1f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_title_main_menu->render(t_title_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.95f - (SCREEN_WIDTH * 0.06f) / 2.f, SCREEN_HEIGHT * 0.82f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_keys_main_menu->render(t_keys_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.95f - (SCREEN_WIDTH * 0.04f) / 2.f, SCREEN_HEIGHT * 0.9f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_esc_main_menu->render(t_esc_main_menu);
-			//text.render("Untitled 2D Game", glm::vec2(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.225f), 64, glm::vec4(1, 1, 1, 1));
 
 			int button = Game::instance().getSelectedMainButton();
-			//cout << button << endl;
 			texProgram.use();
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			if (button == 0) tq_button_0_main_menu->render(texs[3]);
-			else tq_button_0_main_menu->render(t_button_0_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f + SCREEN_HEIGHT * 0.165f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			if (button == 1) tq_button_1_main_menu->render(texs[3]);
-			else tq_button_1_main_menu->render(t_button_0_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f + SCREEN_HEIGHT * 0.330f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			if (button == 2) tq_button_2_main_menu->render(texs[3]);
-			else tq_button_2_main_menu->render(t_button_0_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f + SCREEN_HEIGHT * 0.495f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			if (button == 3) tq_button_3_main_menu->render(texs[3]);
-			else tq_button_3_main_menu->render(t_button_0_main_menu);
+			
+			if (button == 0) teqMenuButtons[0]->render(texMenuButtons[0]);
+			else if (button == 1) teqMenuButtons[1]->render(texMenuButtons[1]);
+			else if (button == 2) teqMenuButtons[2]->render(texMenuButtons[2]);
+			else teqMenuButtons[3]->render(texMenuButtons[3]);
+
 			break;
 			}
-		case 3:
+		case INSTRUCTIONS:
 			// Menu_Intruccions
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
@@ -216,7 +217,7 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			tq_button_0_main_menu->render(texs[3]);
 			break;
-		case 4:
+		case CREDITS:
 			// Menu_Credits
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
@@ -239,7 +240,7 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			tq_button_0_main_menu->render(texs[3]);
 			break;
-		case 2:
+		case GAME:
 			if (currentLevel >= 0) {
 				texProgram.use();
 				projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
@@ -252,7 +253,7 @@ void Scene::render() {
 				level->render(texProgram);
 			}
 			break;
-		case 5:
+		case END:
 			// Game_Over or WIN
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
@@ -271,7 +272,7 @@ void Scene::render() {
 			sprintf(str, "Score: %d", Game::instance().getScore());
 			text.render(str, glm::vec2(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.7f), 32, glm::vec4(1, 1, 1, 1));
 			break;
-		case 6:
+		case CHARACTER:
 			// Character_Selection
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
@@ -279,7 +280,11 @@ void Scene::render() {
 
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_wp_main_menu->render(t_wp_character_selection);
+			teqMenuCharacter->render(texMenuCharacter);
+
+			for (int i = 0; i < 3; ++i) {
+				sprCharacters[i]->render();
+			}
 
 			int character = Game::instance().getSelectedCharacter();
 			//cout << "Char: " << character << endl;

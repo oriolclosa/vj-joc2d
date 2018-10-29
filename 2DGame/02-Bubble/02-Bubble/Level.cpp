@@ -12,10 +12,10 @@
 #define INIT_PLAYER_X_TILES 4
 #define INIT_PLAYER_Y_TILES 8
 
-#define PROB_ENEMIES 10
-#define MAX_ENEMIES 100 //For 100
+#define PROB_ENEMIES 50 //For 100
+#define MAX_ENEMIES 100
 
-#define PROB_COINS 1 //For 1.000
+#define PROB_COINS 10 //For 1.000
 
 #define POS_SKY_X 16
 #define POS_SKY_Y 0
@@ -147,7 +147,7 @@ void Level::init(ShaderProgram &texProgram){
 			}
 			else if ((tile == '2') && (num_coins < MAX_COINS)) {
 				int coin = rand() % 1000;
-				if (coin <= PROB_ENEMIES) {
+				if (coin <= PROB_COINS) {
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 					coins[num_coins] = new Coin();
 					coins[num_coins]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
@@ -192,7 +192,7 @@ void Level::init(ShaderProgram &texProgram){
 		spr_info_cooldown[i]->setPosition(glm::vec2(SCREEN_X + POS_INFO_X + 126 + 32 * i, SCREEN_Y + POS_INFO_Y + 8));
 	}
 
-	//Blocking object (train)
+	//Blocking object (train) and boss
 	for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 		for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 			tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];

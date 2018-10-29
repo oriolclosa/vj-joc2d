@@ -14,6 +14,7 @@
 #include "TexturedQuad.h"
 #include "Text.h"
 #include "Level.h"
+#include "Texture.h"
 
 
 // Scene contains all the entities of our game.
@@ -70,11 +71,21 @@ private:
 	TexturedQuad *teqMenuPre;
 	Texture texMenuBack;
 	TexturedQuad *teqMenuBack;
+	Texture texMenuButtons[4];
+	Texture texMenuButtonsSelected[4];
+	TexturedQuad *teqMenuButtons[4];
+	Texture texMenuTitle;
+	TexturedQuad *teqMenuTitle;
+	Texture texMenuCharacter;
+	TexturedQuad *teqMenuCharacter;
 
 	float camera_movement;
 	
 	Level *level;
 	int currentLevel;
+
+	Texture texCharacters[3];
+	Sprite *sprCharacters[3];
 };
 
 #endif _SCENE_INCLUDE
