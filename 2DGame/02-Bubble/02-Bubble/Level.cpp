@@ -203,7 +203,11 @@ void Level::init(ShaderProgram &texProgram){
 				blockObject->setPosition(posTile - glm::vec2(0.0f, 608.0f));
 			}
 			else if (tile == '`') {
-				cout << "BOSS INIT GOES HERE!" << endl;
+				boss = new Boss();
+				boss->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
+				boss->setTileMap(map);
+				boss->setPlayer(player);
+				boss->setPlayerPos(player->getCentralPosition());
 			}
 		}
 	}
@@ -216,6 +220,7 @@ void Level::init(ShaderProgram &texProgram){
 	score = 0;
 	active = true;
 	currentTime = 0.0f;
+	level_complete = false;
 }
 
 void Level::update(int deltaTime) {
@@ -223,6 +228,10 @@ void Level::update(int deltaTime) {
 		currentTime += deltaTime;
 		player->update(currentTime, deltaTime);
 		if (active) {
+			if (boss != NULL) {
+				boss->setPlayerPos(player->getCentralPosition());
+				boss->update(deltaTime);
+			}
 			for (int i = 0; i < num_enemies; ++i) {
 				if (enemies[i] != NULL) {
 					enemies[i]->setPlayerPos(player->getCentralPosition());
@@ -284,6 +293,7 @@ void Level::render(ShaderProgram &texProgram) {
 				}
 			}
 		}
+		if (boss != NULL) boss->render();
 		for (int i = 0; i < num_enemies; ++i) {
 			if (enemies[i] != NULL) enemies[i]->render();
 		}
@@ -404,6 +414,16 @@ void Level::updatePlayerAttack(float damage) {
 			}
 		}
 	}
+	if (boss != NULL) { //classe boos, matar enemics suma punts
+		float x_enemy = boss->getPosition().x;
+		float dif = abs(x_player - x_enemy);
+		if (!right && x_enemy >= x_player && dif <= 64) {
+			boss->takeDamage(damage);
+		}
+		else if (right && x_enemy <= x_player && dif <= 64) {
+			boss->takeDamage(damage);
+		}
+	}
 }
 
 int Level::getPlayerLifes() {
@@ -419,6 +439,7 @@ void Level::restart() {
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
 	//Enemies and coins
+	if (boss != NULL) boss->restart();
 	for (int i = 0; i < num_enemies; ++i) {
 		if (enemies[i] != NULL) {
 			enemies[i]->restart();
@@ -463,6 +484,11 @@ void Level::updateEnemiesAlive() {
 			enemies[i] = NULL;
 		}
 	}
+	if (boss != NULL && boss->getHealth() < 1) {
+		score += boss->getScore();
+		boss = NULL;
+		level_complete = true;
+	}
 }
 
 int Level::getScore() {
@@ -475,4 +501,8 @@ void Level::setCharacter(int characterAux) {
 
 int Level::getCharacter() {
 	return currentCharacter;
+}
+
+bool Level::complete() {
+	return level_complete;
 }

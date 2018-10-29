@@ -118,8 +118,20 @@ void Scene::init() {
 void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	if (currentLevel >= 0) {
+		if(level->complete()) {
+			updateLevel(-1);
+			/*if (level->getLevelNum() < max_level) {
+				updateLevel(level->getLevelNum() + 1);
+			}
+			else {*/
+				Game::instance().setEndGameState(true);
+				Game::instance().setRenderScene(5);
+			//}
+		}
+		else {
 		level->update(deltaTime);
 		setCameraMovement(level->getPlayerPos().x - SCREEN_WIDTH / 2);
+		}
 	}
 }
 
@@ -241,7 +253,7 @@ void Scene::render() {
 			}
 			break;
 		case 5:
-			// Game_Over
+			// Game_Over or WIN
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -270,8 +282,8 @@ void Scene::render() {
 			tq_wp_main_menu->render(t_wp_character_selection);
 
 			int character = Game::instance().getSelectedCharacter();
-			cout << "Char: " << character << endl;
-			cout << "Scene: " << Game::instance().getRenderScene() << endl;
+			//cout << "Char: " << character << endl;
+			//cout << "Scene: " << Game::instance().getRenderScene() << endl;
 			if (character == 0) {
 				modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.25f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * (1.f - 0.9f), 0.f));
 				texProgram.setUniformMatrix4f("modelview", modelview);
@@ -286,7 +298,9 @@ void Scene::render() {
 				modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.8f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * (1.f - 0.85f), 0.f));
 				texProgram.setUniformMatrix4f("modelview", modelview);
 				tq_character_selection_target_2->render(t_character_selection_target);
+			
 			}
+			break;
 	}
 }
 

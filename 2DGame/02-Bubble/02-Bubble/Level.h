@@ -8,6 +8,7 @@
 #include "SpriteMap.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Boss.h"
 #include "Coin.h"
 #include "Blocking.h"
 
@@ -44,6 +45,7 @@ public:
 
 	void setCharacter(int characterAux);
 	int getCharacter();
+	bool complete();
 
 private:
 	TileMap *map;
@@ -68,6 +70,7 @@ private:
 	Texture walkableTexture;
 	Sprite *walkableSprite;
 	Enemy *enemies[MAX_ENEMIES];
+	Boss *boss;
 	int num_enemies;
 	Texture skyTexture;
 	Sprite *skySprite;
@@ -93,6 +96,7 @@ private:
 	Blocking *blockObject;
 
 	int currentCharacter;
+	bool level_complete;
 };
 
 
