@@ -29,9 +29,6 @@ void Scene::init() {
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	teqMenuPre = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	teqMenuBack = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	teqMenuButtons[0] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	teqMenuButtons[1] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
@@ -69,7 +66,11 @@ void Scene::init() {
 	texMenuButtons[1].loadFromFile("images/menu-buttons-instructions.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texMenuButtons[2].loadFromFile("images/menu-buttons-credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texMenuButtons[3].loadFromFile("images/menu-buttons-exit.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	texMenuCharacter.loadFromFile("images/menu-character.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuCharacter[0].loadFromFile("images/menu-character-0.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuCharacter[1].loadFromFile("images/menu-character-1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuCharacter[2].loadFromFile("images/menu-character-2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuCredits.loadFromFile("images/menu-credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuInstructions.loadFromFile("images/menu-instructions.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	for (int i = 0; i < 3; ++i) {
 		texCharacters[i].loadFromFile("images/0/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -199,46 +200,22 @@ void Scene::render() {
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
 			modelview = glm::mat4(1.0f);
+
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_wp_main_menu->render(t_wp_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * 0.1f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_title_main_menu->render(t_title_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.95f - (SCREEN_WIDTH * 0.06f) / 2.f, SCREEN_HEIGHT * 0.82f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_keys_main_menu->render(t_keys_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.95f - (SCREEN_WIDTH * 0.04f) / 2.f, SCREEN_HEIGHT * 0.9f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_esc_main_menu->render(t_esc_main_menu);
-		
-			texProgram.use();
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.8f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_button_0_main_menu->render(texs[3]);
+			teqMenuBack->render(texMenuInstructions);
 			break;
 		case CREDITS:
 			// Menu_Credits
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
 			modelview = glm::mat4(1.0f);
+
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_wp_main_menu->render(t_wp_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * 0.1f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_title_main_menu->render(t_title_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.95f - (SCREEN_WIDTH * 0.06f) / 2.f, SCREEN_HEIGHT * 0.82f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_keys_main_menu->render(t_keys_main_menu);
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.95f - (SCREEN_WIDTH * 0.04f) / 2.f, SCREEN_HEIGHT * 0.9f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_esc_main_menu->render(t_esc_main_menu);
-		
-			texProgram.use();
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.8f, 0.f));
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_button_0_main_menu->render(texs[3]);
+			teqMenuBack->render(texMenuCredits);
 			break;
 		case GAME:
 			if (currentLevel >= 0) {
@@ -280,30 +257,11 @@ void Scene::render() {
 
 			modelview = glm::mat4(1.0f);
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			teqMenuCharacter->render(texMenuCharacter);
+			int character = Game::instance().getSelectedCharacter();
+			teqMenuCharacter->render(texMenuCharacter[character]);
 
 			for (int i = 0; i < 3; ++i) {
 				sprCharacters[i]->render();
-			}
-
-			int character = Game::instance().getSelectedCharacter();
-			//cout << "Char: " << character << endl;
-			//cout << "Scene: " << Game::instance().getRenderScene() << endl;
-			if (character == 0) {
-				modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.25f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * (1.f - 0.9f), 0.f));
-				texProgram.setUniformMatrix4f("modelview", modelview);
-				tq_character_selection_target_0->render(t_character_selection_target);
-			}
-			else if (character == 1) {
-				modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.55f - (SCREEN_WIDTH * 0.35f) / 2.f, 0.f, 0.f));
-				texProgram.setUniformMatrix4f("modelview", modelview);
-				tq_character_selection_target_1->render(t_character_selection_target);
-			}
-			else if (character == 2) {
-				modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.8f - (SCREEN_WIDTH * 0.3f) / 2.f, SCREEN_HEIGHT * (1.f - 0.85f), 0.f));
-				texProgram.setUniformMatrix4f("modelview", modelview);
-				tq_character_selection_target_2->render(t_character_selection_target);
-			
 			}
 			break;
 	}

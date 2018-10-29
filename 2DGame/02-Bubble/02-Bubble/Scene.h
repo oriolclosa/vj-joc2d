@@ -76,8 +76,10 @@ private:
 	TexturedQuad *teqMenuButtons[4];
 	Texture texMenuTitle;
 	TexturedQuad *teqMenuTitle;
-	Texture texMenuCharacter;
+	Texture texMenuCharacter[3];
 	TexturedQuad *teqMenuCharacter;
+	Texture texMenuCredits;
+	Texture texMenuInstructions;
 
 	float camera_movement;
 	
