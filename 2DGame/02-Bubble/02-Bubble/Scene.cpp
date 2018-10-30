@@ -85,10 +85,12 @@ void Scene::init() {
 	texMenuScore[1].loadFromFile("images/menu-score-won.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	for (int i = 0; i < 3; ++i) {
-		texCharacters[i].loadFromFile("images/0/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		ostringstream path;
+		path << "images/" << i << "/character.png";
+		texCharacters[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texCharacters[i].setMagFilter(GL_NEAREST);
 		sprCharacters[i] = Sprite::createSprite(glm::ivec2(256, 352), glm::vec2(1.0f / 56.0f, 1.0f / 4.0f), &texCharacters[i], &texProgram);
-		sprCharacters[i]->setPosition(glm::vec2(20.0f + float(i)*202.5f, 30.0f));
+		sprCharacters[i]->setPosition(glm::vec2(18.0f + float(i)*202.5f, 30.0f));
 	}
 
 	// Select which font you want to use

@@ -42,7 +42,8 @@ Level::~Level() {
 
 
 void Level::init(ShaderProgram &texProgram){
-	currentCharacter = 0;
+	currentCharacter = Game::instance().getSelectedCharacter();
+	cout << currentCharacter << endl;
 
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);

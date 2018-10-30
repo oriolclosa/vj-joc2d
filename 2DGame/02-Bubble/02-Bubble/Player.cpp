@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 #include "Player.h"
 #include "Game.h"
+#include <sstream>
 
 
 #define JUMP_ANGLE_STEP 4
@@ -34,7 +35,13 @@ enum PlayerAnimations{
 
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
-	spritesheet.loadFromFile("images/0/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	int currentCharacter = Game::instance().getSelectedCharacter();
+	cout << currentCharacter << endl;
+	if (currentCharacter == NULL) currentCharacter = 0;
+	ostringstream path;
+	path << "images/" << currentCharacter << "/character.png";
+
+	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(128, 176), glm::vec2(1.0f / 56.0f, 1.0f / 4.0f), &spritesheet, &shaderProgram);
 	sprite->setSize(glm::vec2(128, 76));

@@ -112,7 +112,6 @@ void Game::keyPressed(int key) {
 					win = false;
 					global_score = 0;
 					scene.updateLevel(0);
-					// scene.setCharacter(character)
 					render_scene = 2;
 					render();
 				}
