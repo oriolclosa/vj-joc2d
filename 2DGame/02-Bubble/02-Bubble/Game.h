@@ -2,6 +2,7 @@
 #define _GAME_INCLUDE
 
 #include "Scene.h"
+#include "Sound.h"
 
 #define SCREEN_WIDTH 682
 #define SCREEN_HEIGHT 384
@@ -80,6 +81,7 @@ private:
 	int global_score;				  // Score of the current playthrough
 	bool win;						  // The playthrough ends with a win?
 	int character;					  // Character of the current playthrough
+	Sound sound;					  // Sound to play
 
 };
 

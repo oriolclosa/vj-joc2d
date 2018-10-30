@@ -49,6 +49,7 @@ private:
 	float damageDone;
 	int coolDownRec1, coolDownRec2;
 	int coolDownDamage;
+	int freez;
 };
 
 

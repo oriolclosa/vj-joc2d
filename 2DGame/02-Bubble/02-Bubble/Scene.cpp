@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <sstream>
 
+#define NUM_LEVELS 2
 
 Scene::Scene(){
 }
@@ -68,22 +69,6 @@ void Scene::init() {
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	tq_wp_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.15f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_title_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.05f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_text_pre_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.06f, SCREEN_HEIGHT * 0.06f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_keys_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.04f, SCREEN_HEIGHT * 0.06f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_esc_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	
 	texMenuPre.loadFromFile("images/menu-pre.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texMenuBack.loadFromFile("images/menu-back.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -106,13 +91,6 @@ void Scene::init() {
 		sprCharacters[i]->setPosition(glm::vec2(20.0f + float(i)*202.5f, 30.0f));
 	}
 
-	t_wp_main_menu.loadFromFile("images/wp_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_title_main_menu.loadFromFile("images/title_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_text_pre_menu.loadFromFile("images/text_pre_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_keys_main_menu.loadFromFile("images/keys_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_keys_main_menu.setMagFilter(GL_NEAREST);
-	t_esc_main_menu.loadFromFile("images/esc_main_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_esc_main_menu.setMagFilter(GL_NEAREST);
 	// Select which font you want to use
 	if(!text.init("fonts/OpenSans-Regular.ttf"))
 		if(!text.init("fonts/OpenSans-Bold.ttf"))
@@ -121,18 +99,7 @@ void Scene::init() {
 	// Main_Menu
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_button_0_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	tq_button_1_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_button_2_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_button_3_main_menu = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	t_button_0_main_menu.loadFromFile("images/menu-button.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_button_0_main_menu.setMagFilter(GL_NEAREST);
 	texs[3].loadFromFile("images/menu_1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texs[3].setMagFilter(GL_NEAREST);
 
@@ -143,22 +110,6 @@ void Scene::init() {
 	t_wp_game_win.setMagFilter(GL_NEAREST);
 
 	// Character_Selection
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.9f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_character_selection_target_0 = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.35f, SCREEN_HEIGHT);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_character_selection_target_1 = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.85f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	tq_character_selection_target_2 = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-
-	t_wp_character_selection.loadFromFile("images/wp_character_selection.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_wp_character_selection.setMagFilter(GL_NEAREST);
-	t_character_selection_target.loadFromFile("images/character_selection_target.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	t_character_selection_target.setMagFilter(GL_NEAREST);
 
 	camera_movement = 0.0f;
 	currentLevel = -1;
@@ -171,14 +122,15 @@ void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	if (currentLevel >= 0) {
 		if(level->complete()) {
-			updateLevel(-1);
-			/*if (level->getLevelNum() < max_level) {
-				updateLevel(level->getLevelNum() + 1);
+			if (currentLevel + 1 < NUM_LEVELS) {
+				// updateLevel(-1); Que pasa amb el lvl actual? Gestio mem?
+				updateLevel(currentLevel + 1);
 			}
-			else {*/
+			else {
+				updateLevel(-1);
 				Game::instance().setEndGameState(true);
 				Game::instance().setRenderScene(5);
-			//}
+			}
 		}
 		else {
 		level->update(deltaTime);
