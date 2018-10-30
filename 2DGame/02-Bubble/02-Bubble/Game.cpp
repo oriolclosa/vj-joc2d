@@ -11,13 +11,12 @@ void Game::init() {
 	selected_main_button = 0;
 	render_walkable = false;
 	global_score = 0;
-	setEndGameState(false);
+	win = false;
 	character = 0;
 }
 
 bool Game::update(int deltaTime) {
 	scene.update(deltaTime);
-	
 	return bPlay;
 }
 
@@ -29,66 +28,94 @@ void Game::render() {
 void Game::keyPressed(int key) {
 	//printf("%d\n",Game::instance().getRenderScene());
 	//printf("%d",key);
-	if (key == 27) // Escape code
-		bPlay = false;
-	else if (key == 102 && Game::instance().getRenderScene() == 0) {
-		render_scene = 1;
-		scene.render();
-	}
-	else if (key == 119 && Game::instance().getRenderScene() == 1) {
-		changeSelectMainButton(false);
-		render();
-	}
-	else if (key == 115 && Game::instance().getRenderScene() == 1) {
-		changeSelectMainButton(true);
-		render();
-	}
-	else if (key == 112) //p
-		render_walkable = !render_walkable;
-	else if (key == 110) //n
-		scene.setCameraMovement(scene.getCameraMovement() - 10.0f);
-	else if (key == 109) //m
-		scene.setCameraMovement(scene.getCameraMovement() + 10.0f);
-	else if (key == 13) {
-		if (getRenderScene() == 1) {
-			switch(getSelectedMainButton()) {
-				case 0:
-					character = 0;
-					render_scene = 6;
-					break;
-				case 1: 
-					render_scene = 3;
-					break;
-				case 2: 
-					render_scene = 4;
-					break;
-				case 3: 
+	switch(render_scene) {
+		case 0: if (key == 102 || key == 70) { // f F
+					render_scene = 1;
+					render();
+				}
+				else if (key == 27) { // Esc
 					bPlay = false;
-					break;
-			}
-		}
-		else if (getRenderScene() == 3 || getRenderScene() == 4) {
-			render_scene = 1;
-		}
-		else if (getRenderScene() == 5) {
-			render_scene = 1;
-			global_score = 0;
-		}
-		else if (getRenderScene() == 6) {
-			setEndGameState(false);
-			scene.updateLevel(0);
-			render_scene = 2;
-		}
-		//else setEndGameState(true); debug
-		render();
-	}
-	else if (key == 97 && getRenderScene() == 6) {
-		changeCharacterSelected(false);
-		render();
-	}
-	else if (key == 100 && getRenderScene() == 6) {
-		changeCharacterSelected(true);
-		render();
+				}
+				break;
+		case 1: if (key == 27) { // Esc
+					render_scene = 0;
+					render();
+				}
+				else if (key == 119 || key == 87) { // w W
+					changeSelectMainButton(false);
+					render();
+				}
+				else if (key == 115 || key == 83) { // s S
+					changeSelectMainButton(true);
+					render();
+				}
+				else if (key == 32 || key == 13) { // SPACE ENTER
+					switch(selected_main_button) {
+						case 0:
+							character = 0;
+							render_scene = 6;
+							break;
+						case 1: 
+							render_scene = 3;
+							break;
+						case 2: 
+							render_scene = 4;
+							break;
+						case 3: 
+							bPlay = false;
+							break;
+					}
+					render();
+				}
+				break;
+		case 2: if (key == 27) { // Esc
+					scene.updateLevel(-1);
+					render_scene = 1;
+					render();
+				}
+				else if (key == 112) //p
+					render_walkable = !render_walkable;
+				else if (key == 110) //n
+					scene.setCameraMovement(scene.getCameraMovement() - 10.0f);
+				else if (key == 109) //m
+					scene.setCameraMovement(scene.getCameraMovement() + 10.0f);
+				break;
+		case 3: if (key == 32 || key == 13 || key == 27) { // SPACE ENTER Esc
+					render_scene = 1;
+					render();
+				}
+				break;
+		case 4: if (key == 32 || key == 13 || key == 27) { // SPACE ENTER Esc
+					render_scene = 1;
+					render();
+				}
+				break;
+		case 5: if (key == 32 || key == 13) { // SPACE ENTER
+					render_scene = 1;
+					render();
+				}
+				break;
+		case 6: if (key == 97 || key == 65) { //a A
+					changeCharacterSelected(false);
+					render();
+				}
+				else if (key == 100 || key == 68) { // d D
+					changeCharacterSelected(true);
+					render();
+				}
+				else if (key == 32 || key == 13) { // SPACE ENTER
+					win = false;
+					global_score = 0;
+					scene.updateLevel(0);
+					// scene.setCharacter(character)
+					render_scene = 2;
+					render();
+				}
+				else if (key == 27) { // Esc
+					render_scene = 1;
+					render();
+				}
+				break;
 	}
 	keys[key] = true;
 }
