@@ -38,6 +38,7 @@ public:
 	void lookRight(bool right);
 
 	void resetToAnimation(float timeToIni, float timeTo, int animTo);
+	void moveToAt(float timeToIni, float timeTo, glm::vec2 positionTo);
 
 private:
 	Texture *texture;
@@ -46,9 +47,9 @@ private:
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
 	glm::vec2 position;
-	int currentAnimation, currentKeyframe, resetToAnim, resetToTimeIni;
-	float timeAnimation, resetToTime;
-	glm::vec2 texCoordDispl;
+	int currentAnimation, currentKeyframe, resetToAnim;
+	float timeAnimation, resetToTime, resetToTimeIni, moveToTime, moveToTimeIni;
+	glm::vec2 texCoordDispl, moveTo;
 	vector<AnimKeyframes> animations;
 
 	bool right;

@@ -383,6 +383,10 @@ glm::vec2 Level::getPlayerPos() {
 	return player->getCentralPosition();
 }
 
+void Level::setPlayerPos(glm::vec2 positionAux) {
+	player->setPosition(positionAux);
+}
+
 void Level::updateInfoHealth(float health) {
 	int healthAux = int(52.0f*(health / 100.f));
 	if (healthAux < 0) {

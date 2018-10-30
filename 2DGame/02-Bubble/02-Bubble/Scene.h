@@ -42,6 +42,8 @@ public:
 	void updateLevel(int levelAux);
 	void restartLevel();
 
+	void setPlayerPos(glm::vec2 positionAux);
+
 private:
 	void initShaders();
 

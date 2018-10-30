@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Sprite.h"
+#include "Game.h"
 
 
 Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program)
@@ -33,6 +34,8 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	currentAnimation = -1;
 	resetToAnim = -1;
 	resetToTime = 0.0f;
+	moveToTime = -1.0f;
+	moveTo = glm::vec2(0, 0);
 	position = glm::vec2(0.f);
 
 	right = true;
@@ -42,6 +45,12 @@ void Sprite::update(float totalTime, int deltaTime){
 	if ((resetToAnim >= 0) && ((totalTime - resetToTimeIni) >= resetToTime)) {
 		changeAnimation(resetToAnim);
 		resetToAnim = -1;
+	}
+	else if ((moveToTime >= 0.0f) && ((totalTime - moveToTimeIni) >= moveToTime)) {
+		moveToTime = -1.0f;
+		position += moveTo;
+		Game::instance().getScene().setPlayerPos(position);
+		moveTo = glm::vec2(0, 0);
 	}
 	else if (currentAnimation >= 0) {
 		timeAnimation += deltaTime;
@@ -138,6 +147,12 @@ void Sprite::resetToAnimation(float timeToIni, float timeTo, int animTo) {
 	resetToTimeIni = timeToIni;
 	resetToTime = timeTo;
 	resetToAnim = animTo;
+}
+
+void Sprite::moveToAt(float timeToIni, float timeTo, glm::vec2 positionTo) {
+	moveToTimeIni = timeToIni;
+	moveToTime = timeTo;
+	moveTo = positionTo;
 }
 
 

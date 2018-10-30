@@ -33,6 +33,7 @@ public:
 	void render(ShaderProgram &texProgramAux);
 
 	glm::vec2 getPlayerPos();
+	void setPlayerPos(glm::vec2 positionAux);
 
 	void updateInfoHealth(float health);
 	int getPlayerLifes();

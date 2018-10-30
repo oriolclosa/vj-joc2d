@@ -130,7 +130,7 @@ void Player::update(float totalTime, int deltaTime){
 		int attack3 = 56;
 		if (currentCharacter == 2) {
 			attack3 = 19;
-			sprite->pauseAndMove(totalTime, 1000.0f*(10.0f / 24.0f), 1000.0f);
+			sprite->moveToAt(totalTime, 1000.0f*(10.0f / 24.0f), glm::vec2(100, 0));
 		}
 		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack3) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_3);
