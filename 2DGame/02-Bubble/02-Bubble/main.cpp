@@ -84,6 +84,9 @@ int main(int argc, char **argv) {
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
+	// Game instance preinitialization (show loading)
+	Game::instance().preInit();
+
 	// Game instance initialization
 	Game::instance().init();
 	prevTime = glutGet(GLUT_ELAPSED_TIME);

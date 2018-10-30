@@ -3,9 +3,14 @@
 #include "Game.h"
 
 
-void Game::init() {
+void Game::preInit() {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	scene.preInit();
+}
+
+
+void Game::init() {
 	scene.init();
 	render_scene = 0;
 	selected_main_button = 0;

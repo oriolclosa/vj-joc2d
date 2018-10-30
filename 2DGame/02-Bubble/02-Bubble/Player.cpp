@@ -126,6 +126,7 @@ void Player::update(float totalTime, int deltaTime){
 		}
 	}
 	else if (Game::instance().getKey(119) || Game::instance().getKey(87)){ // w W
+		--health;
 		posPlayer.y -= WALK_SPEED;
 		if (map->collisionMoveUp(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.y += WALK_SPEED;

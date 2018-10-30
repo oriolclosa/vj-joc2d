@@ -31,6 +31,7 @@ public:
 	Scene();
 	~Scene();
 
+	void preInit();
 	void init();
 	void update(int deltaTime);
 	void render();
@@ -80,6 +81,8 @@ private:
 	TexturedQuad *teqMenuCharacter;
 	Texture texMenuCredits;
 	Texture texMenuInstructions;
+	Texture texMenuScore[2];
+	Texture texMenuLoading[5];
 
 	float camera_movement;
 	

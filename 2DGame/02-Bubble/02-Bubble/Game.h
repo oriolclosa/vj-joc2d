@@ -20,6 +20,7 @@ public:
 	}
 	
 	// Basic actions
+	void preInit();
 	void init();
 	bool update(int deltaTime);
 	void render();

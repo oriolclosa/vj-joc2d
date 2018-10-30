@@ -19,8 +19,34 @@ enum scene {
 	PRE, MENU, GAME, INSTRUCTIONS, CREDITS, END, CHARACTER
 };
 
-void Scene::init() {
+void Scene::preInit() {
 	initShaders();
+
+	// Loding
+	glm::vec2 geom[2];
+	glm::vec2 texCoords[2];
+
+	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
+
+	teqMenuBack = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+
+	for (int i = 0; i < 5; ++i) {
+		texMenuLoading[i].loadFromFile("images/menu-loading.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	}
+	
+	// Pre_Menu
+	texProgram.use();
+	texProgram.setUniformMatrix4f("projection", projection);
+	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+
+	glm::mat4 modelview = glm::mat4(1.0f);
+	texProgram.setUniformMatrix4f("modelview", modelview);
+	teqMenuBack->render(texMenuLoading[0]);
+	cout << "HMMMMMM" << endl;
+}
+
+void Scene::init() {
 
 	// Pre_Menu
 	glm::vec2 geom[2];
@@ -29,7 +55,6 @@ void Scene::init() {
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	teqMenuPre = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	teqMenuBack = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	teqMenuButtons[0] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	teqMenuButtons[1] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	teqMenuButtons[2] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
@@ -71,6 +96,8 @@ void Scene::init() {
 	texMenuCharacter[2].loadFromFile("images/menu-character-2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texMenuCredits.loadFromFile("images/menu-credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texMenuInstructions.loadFromFile("images/menu-instructions.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuScore[0].loadFromFile("images/menu-score-lost.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texMenuScore[1].loadFromFile("images/menu-score-won.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	for (int i = 0; i < 3; ++i) {
 		texCharacters[i].loadFromFile("images/0/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -237,13 +264,9 @@ void Scene::render() {
 			texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 
 			modelview = glm::mat4(1.0f);
-			texProgram.setUniformMatrix4f("modelview", modelview);
-			if (Game::instance().getEndGameState()) tq_wp_main_menu->render(t_wp_game_win);
-			else tq_wp_main_menu->render(t_wp_game_over);
 
-			modelview = glm::translate(glm::mat4(1.0f), glm::vec3(SCREEN_WIDTH * 0.5f - (SCREEN_WIDTH * 0.2f) / 2.f, SCREEN_HEIGHT * 0.30f + SCREEN_HEIGHT * 0.495f, 0.f));
 			texProgram.setUniformMatrix4f("modelview", modelview);
-			tq_button_1_main_menu->render(texs[3]);
+			teqMenuBack->render(texMenuScore[Game::instance().getEndGameState()]);
 
 			char str[12];
 			sprintf(str, "Score: %d", Game::instance().getScore());
