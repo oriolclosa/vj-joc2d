@@ -29,7 +29,7 @@ void Game::keyPressed(int key) {
 	//printf("%d\n",Game::instance().getRenderScene());
 	//printf("%d",key);
 	switch(render_scene) {
-		case 0: if (key == 32 || key == 13) { // SPACE ENTER
+		case 0: if (key == 102 || key == 70) { // f F
 					render_scene = 1;
 					render();
 				}
@@ -95,11 +95,11 @@ void Game::keyPressed(int key) {
 					render();
 				}
 				break;
-		case 6: if (key == 97 || key == 65) {
+		case 6: if (key == 97 || key == 65) { //a A
 					changeCharacterSelected(false);
 					render();
 				}
-				else if (key == 100 || key == 68) {
+				else if (key == 100 || key == 68) { // d D
 					changeCharacterSelected(true);
 					render();
 				}

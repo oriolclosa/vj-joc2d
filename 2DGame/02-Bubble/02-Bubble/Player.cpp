@@ -26,7 +26,7 @@
 #define COOLDOWN_START_RECUPERATION 600
 #define COOLDOWN_BETWEEN_RECUPERATIONS 100
 
-#define SAFE_TIME_BETWEEN_HITS 120
+#define SAFE_TIME_BETWEEN_HITS 30
 
 enum PlayerAnimations{
 	WALK, ATTACK_1, ATTACK_2, ATTACK_3
@@ -91,13 +91,13 @@ void Player::update(float totalTime, int deltaTime){
 	if (coolDownA2 > 0) --coolDownA2;
 	if (coolDownA3 > 0) --coolDownA3;
 	if (health <= 0) death();
-	if (Game::instance().getKey(101) && coolDownA1 == 0) { // e, Attack 1
+	if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
 		sprite->changeAnimation(ATTACK_1);
 		sprite->resetToAnimation(totalTime, 1000.0f*(16.0f / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_1);
 		coolDownA1 = COOLDOWN_ATTACK_1;
 	}
-	else if (Game::instance().getKey(102) && coolDownA2 == 0) { // f, Attack 2
+	else if ((Game::instance().getKey(102) || Game::instance().getKey(70)) && coolDownA2 == 0) { // f F, Attack 2
 		sprite->changeAnimation(ATTACK_2);
 		sprite->resetToAnimation(totalTime, 1000.0f*(25.0f / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_2);
@@ -109,7 +109,7 @@ void Player::update(float totalTime, int deltaTime){
 		doDamage(DAMAGE_ATTACK_3);
 		coolDownA3 = COOLDOWN_ATTACK_3;
 	}
-	else if(Game::instance().getKey(97)){ // a
+	else if(Game::instance().getKey(97) || Game::instance().getKey(65)){ // a A
 		posPlayer.x -= WALK_SPEED;
 		right = true;
 		sprite->lookRight(right);
@@ -117,7 +117,7 @@ void Player::update(float totalTime, int deltaTime){
 			posPlayer.x += WALK_SPEED;
 		}
 	}
-	else if(Game::instance().getKey(100)){ // d
+	else if(Game::instance().getKey(100) || Game::instance().getKey(68)){ // d D
 		posPlayer.x += WALK_SPEED;
 		right = false;
 		sprite->lookRight(right);
@@ -125,13 +125,13 @@ void Player::update(float totalTime, int deltaTime){
 			posPlayer.x -= WALK_SPEED;
 		}
 	}
-	else if (Game::instance().getKey(119)){ // w
+	else if (Game::instance().getKey(119) || Game::instance().getKey(87)){ // w W
 		posPlayer.y -= WALK_SPEED;
 		if (map->collisionMoveUp(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.y += WALK_SPEED;
 		}
 	}
-	else if (Game::instance().getKey(115)) { // s
+	else if (Game::instance().getKey(115) || Game::instance().getKey(83)) { // s S
 		posPlayer.y += WALK_SPEED;
 		if (map->collisionMoveDown(getCornerPosition(), getInnerSize(), false)) {
 			posPlayer.y -= WALK_SPEED;
