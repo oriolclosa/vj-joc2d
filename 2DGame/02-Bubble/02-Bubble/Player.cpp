@@ -63,6 +63,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 
 	sprite->changeAnimation(WALK);
 
+	freez = 0;
+
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	lifes = LIFES;
@@ -91,23 +93,27 @@ void Player::update(float totalTime, int deltaTime){
 	if (coolDownA2 > 0) --coolDownA2;
 	if (coolDownA3 > 0) --coolDownA3;
 	if (health <= 0) death();
-	if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
+	if (freez > 0) --freez;
+	else if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
 		sprite->changeAnimation(ATTACK_1);
 		sprite->resetToAnimation(totalTime, 1000.0f*(16.0f / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_1);
 		coolDownA1 = COOLDOWN_ATTACK_1;
+		freez = 36;
 	}
 	else if ((Game::instance().getKey(102) || Game::instance().getKey(70)) && coolDownA2 == 0) { // f F, Attack 2
 		sprite->changeAnimation(ATTACK_2);
 		sprite->resetToAnimation(totalTime, 1000.0f*(25.0f / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_2);
 		coolDownA2 = COOLDOWN_ATTACK_2;
+		freez = 58;
 	}
 	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
 		sprite->changeAnimation(ATTACK_3);
 		sprite->resetToAnimation(totalTime, 1000.0f*(56.0f / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_3);
 		coolDownA3 = COOLDOWN_ATTACK_3;
+		freez = 150;
 	}
 	else if(Game::instance().getKey(97) || Game::instance().getKey(65)){ // a A
 		posPlayer.x -= WALK_SPEED;
