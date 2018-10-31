@@ -12,7 +12,8 @@ class Boss: public Enemy {
 public:
 
 private:
-	int state;
+	int fase;
+	float health;
 };
 
 

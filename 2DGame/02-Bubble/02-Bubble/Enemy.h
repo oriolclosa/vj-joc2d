@@ -14,7 +14,7 @@
 class Enemy{
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos, int enemyType);
 	void update(int deltaTime);
 	void render();
 	

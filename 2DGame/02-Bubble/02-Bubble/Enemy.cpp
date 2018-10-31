@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <sstream>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Enemy.h"
@@ -19,24 +20,47 @@
 #define HEALTH 100
 
 
-void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos){
-	spritesheet.loadFromFile("images/0/enemy1.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &spritesheet, &shaderProgram);
+enum EnemyAnims
+{
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT
+};
+
+void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos, int enemyType) {
+	type = enemyType;
+
 	tileMapDispl = tileMapPos;
 	iniPosition = pos;
 	posPlayer = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
+	// Vida diferent per tipus enemic
 	health = HEALTH;
-	type = 1;
+	if (type == 0) health *= 0.5f;
+	else if (type == 2)  health *= 0.5f;
+
+	// Sprites del enemic
+	ostringstream path;
+	path << "images/0/enemy" << type << ".png";
+	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.setMagFilter(GL_NEAREST);
+	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(2);
+	sprite->setAnimationSpeed(STAND_LEFT, 8);
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.f));
+	sprite->setAnimationSpeed(STAND_RIGHT, 8);
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, -1.f));
+	sprite->changeAnimation(0);
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x - tileMapDispl.x ), float(tileMapDispl.y - tileMapDispl.y)));
 }
 
 void Enemy::update(int deltaTime){
 	sprite->update(deltaTime);
-	float distance = sqrt(pow(playerPos.x - posPlayer.x, 2) + pow(playerPos.y - posPlayer.y, 2));
-	if (distance < DETECT_DISTANCE && distance > 32) {
+	float distance = sqrt(pow(playerPos.x - posPlayer.x, 2) + pow(playerPos.y + 16 - posPlayer.y, 2));
+	bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
+	bool ySpace = playerPos.y > posPlayer.y || playerPos.y + 64 < posPlayer.y;
+	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 32) {
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > posPlayer.x) {
+			sprite->changeAnimation(STAND_LEFT);
 			if (playerPos.y != posPlayer.y) {
 				incX = WALK_SPEED/2;
 			}
@@ -45,6 +69,7 @@ void Enemy::update(int deltaTime){
 			}
 		}
 		else if (playerPos.x < posPlayer.x) {
+			sprite->changeAnimation(STAND_RIGHT);
 			if (playerPos.y != posPlayer.y) {
 				incX = -WALK_SPEED / 2;
 			}
