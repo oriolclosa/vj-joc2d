@@ -310,23 +310,24 @@ void Level::render(ShaderProgram &texProgram) {
 			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 				tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
 				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-				if ((playerPosX == (i) || playerPosX == (i - 1)) && playerPosY == (j)) {
+				if (playerPosX == (spriteMap->getMapSize().x-1) && playerPosY == (i+1)) {
+					cout << "Pinta a " << j << " " << i << endl;
 					player->render();
 					playerRendered = true;
 				}
 				if (tile >= '1' && tile <= ':') {
 					int tileAux = tile - int('1');
-					sprWall[tileAux]->setPosition(posTile);
+					sprWall[tileAux]->setBottomPosition(posTile);
 					sprWall[tileAux]->render();
 				}
 				else if (tile >= 'a' && tile <= 'h') {
 					int tileAux = tile - int('a');
-					sprObject[tileAux]->setPosition(posTile);
+					sprObject[tileAux]->setBottomPosition(posTile);
 					sprObject[tileAux]->render();
 				}
 				else if (tile >= 'A' && tile <= 'E') {
 					int tileAux = tile - int('A');
-					sprBuildings[tileAux]->setPosition(posTile);
+					sprBuildings[tileAux]->setBottomPosition(posTile);
 					sprBuildings[tileAux]->render();
 				}
 			}

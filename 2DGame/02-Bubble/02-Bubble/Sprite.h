@@ -40,6 +40,8 @@ public:
 	void resetToAnimation(float timeToIni, float timeTo, int animTo);
 	void moveToAt(float timeToIni, float timeTo, glm::vec2 positionTo);
 
+	void setBottomPosition(glm::vec2 positionAux);
+
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
