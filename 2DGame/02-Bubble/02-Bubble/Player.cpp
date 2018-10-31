@@ -35,7 +35,7 @@ enum PlayerAnimations{
 
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
-	int currentCharacter = Game::instance().getSelectedCharacter();
+	currentCharacter = Game::instance().getSelectedCharacter();
 	cout << currentCharacter << endl;
 	if (currentCharacter == NULL) currentCharacter = 0;
 	ostringstream path;
@@ -54,17 +54,23 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	}
 
 	sprite->setAnimationSpeed(ATTACK_1, 24);
-	for (int i = 0; i < 16; ++i) {
+	int attack1 = 16;
+	if (currentCharacter == 2) attack1 = 25;
+	for (int i = 0; i < attack1; ++i) {
 		sprite->addKeyframe(ATTACK_1, glm::vec2(float(i) / 56.0f, 1.0f / 4.0f));
 	}
 
 	sprite->setAnimationSpeed(ATTACK_2, 24);
-	for (int i = 0; i < 25; ++i) {
+	int attack2 = 25;
+	if (currentCharacter == 2) attack2 = 56;
+	for (int i = 0; i < attack2; ++i) {
 		sprite->addKeyframe(ATTACK_2, glm::vec2(float(i) / 56.0f, 2.0f / 4.0f));
 	}
 
 	sprite->setAnimationSpeed(ATTACK_3, 24);
-	for (int i = 0; i < 56; ++i) {
+	int attack3 = 56;
+	if (currentCharacter == 2) attack3 = 19;
+	for (int i = 0; i < attack3; ++i) {
 		sprite->addKeyframe(ATTACK_3, glm::vec2(float(i) / 56.0f, 3.0f / 4.0f));
 	}
 
@@ -103,21 +109,32 @@ void Player::update(float totalTime, int deltaTime){
 	if (freez > 0) --freez;
 	else if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
 		sprite->changeAnimation(ATTACK_1);
-		sprite->resetToAnimation(totalTime, 1000.0f*(16.0f / 24.0f), WALK);
+		int attack1 = 16;
+		if (currentCharacter == 2) attack1 = 25;
+		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack1) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_1);
 		coolDownA1 = COOLDOWN_ATTACK_1;
 		freez = 36;
 	}
 	else if ((Game::instance().getKey(102) || Game::instance().getKey(70)) && coolDownA2 == 0) { // f F, Attack 2
 		sprite->changeAnimation(ATTACK_2);
-		sprite->resetToAnimation(totalTime, 1000.0f*(25.0f / 24.0f), WALK);
+		int attack2 = 25;
+		if (currentCharacter == 2) attack2 = 56;
+		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack2) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_2);
 		coolDownA2 = COOLDOWN_ATTACK_2;
 		freez = 58;
 	}
 	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
 		sprite->changeAnimation(ATTACK_3);
-		sprite->resetToAnimation(totalTime, 1000.0f*(56.0f / 24.0f), WALK);
+		int attack3 = 56;
+		if (currentCharacter == 2) {
+			attack3 = 19;
+			int movementX = 100;
+			if (right) movementX = -movementX;
+			sprite->moveToAt(totalTime, 1000.0f*(10.0f / 24.0f), glm::vec2(movementX, 0));
+		}
+		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack3) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_3);
 		coolDownA3 = COOLDOWN_ATTACK_3;
 		freez = 150;

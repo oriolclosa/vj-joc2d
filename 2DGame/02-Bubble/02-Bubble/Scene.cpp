@@ -306,4 +306,7 @@ void Scene::restartLevel() {
 	level->restart();
 }
 
+void Scene::setPlayerPos(glm::vec2 positionAux) {
+	level->setPlayerPos(positionAux);
+}
 

@@ -50,6 +50,8 @@ private:
 	int coolDownRec1, coolDownRec2;
 	int coolDownDamage;
 	int freez;
+
+	int currentCharacter;
 };
 
 
