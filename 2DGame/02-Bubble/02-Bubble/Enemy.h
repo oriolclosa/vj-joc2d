@@ -27,10 +27,10 @@ public:
 	void takeDamage(float damage);
 	float getHealth();	
 	int getScore();
-
+	glm::vec2 getCentralPosition();
 	void restart();
 	
-private:
+protected:
 	glm::ivec2 tileMapDispl, posPlayer, iniPosition;
 	int jumpAngle, startY;
 	Texture spritesheet;

@@ -9,10 +9,6 @@
 #include "Boss.h"
 
 
-#define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
-#define FALL_STEP 4
-
 #define WALK_SPEED 2
 #define DETECT_DISTANCE 350
 
@@ -155,35 +151,10 @@ void Boss::update(int deltaTime) {
 	}
 }
 
-void Boss::render(){
-	sprite->render();
-}
-
-void Boss::setTileMap(TileMap *tileMap){
-	map = tileMap;
-}
-
-void Boss::setPosition(const glm::vec2 &pos){
-	posPlayer = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-}
-
-glm::vec2 Boss::getPosition() {
-	return posPlayer;
-}
-
-void Boss::setPlayerPos(glm::vec2 &playerPosAux) {
-	playerPos = playerPosAux;
-}
-
 void Boss::attackPlayer(float damage) {
 	if (abs(playerPos.x - posPlayer.x) <= 64)
 		if (abs(playerPos.y - posPlayer.y) <= 64)
 			player->takeDamage(damage);
-}
-
-void Boss::setPlayer(Player *playerAux) {
-	player = playerAux;
 }
 
 void Boss::takeDamage(float damage) {
@@ -193,15 +164,6 @@ void Boss::takeDamage(float damage) {
 		health = HEALTH - (3 - fase) * 10;
 		restart();
 	}
-}
-
-void Boss::restart() {
-	posPlayer = iniPosition;
-	sprite->setPosition(posPlayer);
-}
-
-float Boss::getHealth() {
-	return health;
 }
 
 int Boss::getScore() {
