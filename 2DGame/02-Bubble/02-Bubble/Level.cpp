@@ -201,7 +201,7 @@ void Level::init(ShaderProgram &texProgram){
 			if (tile == '_') {
 				blockObject = new Blocking();
 				blockObject->init(texProgram, posTile);
-				blockObject->setPosition(posTile - glm::vec2(0.0f, 608.0f));
+				blockObject->setPosition(posTile);// -glm::vec2(0.0f, 608.0f));
 			}
 			else if (tile == '`') {
 				boss = new Boss();
@@ -305,7 +305,6 @@ void Level::render(ShaderProgram &texProgram) {
 		glm::vec2 playerPos = player->getBottomPosition();
 		int playerPosX = (playerPos.x / 32.0f);
 		int playerPosY = (playerPos.y / 32.0f) - 3;
-		cout << playerPos.x << " " << playerPos.y << " - " << playerPosX << " " << playerPosY << endl;
 		for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 				tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
