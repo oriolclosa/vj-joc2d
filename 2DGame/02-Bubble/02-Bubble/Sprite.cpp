@@ -37,7 +37,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	moveToTime = -1.0f;
 	moveTo = glm::vec2(0, 0);
 	position = glm::vec2(0.f);
-
+	size = quadSize;
 	right = true;
 }
 
@@ -155,4 +155,6 @@ void Sprite::moveToAt(float timeToIni, float timeTo, glm::vec2 positionTo) {
 	moveTo = positionTo;
 }
 
-
+void Sprite::setBottomPosition(glm::vec2 positionAux) {
+	position = positionAux - glm::vec2(0, size.y);
+}

@@ -126,27 +126,20 @@ void Player::update(float totalTime, int deltaTime){
 		freez = attack2;
 	}
 	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
+		sprite->changeAnimation(ATTACK_3);
+		int attack3 = 56;
 		if (currentCharacter == 2) {
-			int movementX = 100;
+			attack3 = 19;
+			int movementX = 150;
+			if (right) movementX = -movementX;
 			if (!map->collisionMoveDown(getCornerPosition() + glm::vec2(movementX, 0), getInnerSize(), false)) {
-				sprite->changeAnimation(ATTACK_3);
-				int attack3 = 19;
-				if (right) movementX = -movementX;
 				sprite->moveToAt(totalTime, 1000.0f*(10.0f / 24.0f), glm::vec2(movementX, 0));
-				sprite->resetToAnimation(totalTime, 1000.0f*(float(attack3) / 24.0f), WALK);
-				doDamage(DAMAGE_ATTACK_3);
-				coolDownA3 = COOLDOWN_ATTACK_3;
-				freez = attack3;
 			}
 		}
-		else {
-			sprite->changeAnimation(ATTACK_3);
-			int attack3 = 56;
-			sprite->resetToAnimation(totalTime, 1000.0f*(float(attack3) / 24.0f), WALK);
-			doDamage(DAMAGE_ATTACK_3);
-			coolDownA3 = COOLDOWN_ATTACK_3;
-			freez = attack3;
-		}
+		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack3) / 24.0f), WALK);
+		doDamage(DAMAGE_ATTACK_3);
+		coolDownA3 = COOLDOWN_ATTACK_3;
+		freez = attack3;
 	}
 	else if(Game::instance().getKey(97) || Game::instance().getKey(65)){ // a A
 		posPlayer.x -= WALK_SPEED;
