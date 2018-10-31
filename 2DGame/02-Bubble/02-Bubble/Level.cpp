@@ -310,11 +310,8 @@ void Level::render(ShaderProgram &texProgram) {
 				tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
 				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 				if (0 == i && playerPosY == j) {
-					cout << "Pinta a " << i << " " << j << endl;
 					player->render();
 				}
-				if (tile == 'c') cout << "CADIRA 1 A " << i << " " << j << endl;
-				if (tile == 'd') cout << "CADIRA 2 A " << i << " " << j << endl;
 				if (tile >= '1' && tile <= ':') {
 					int tileAux = tile - int('1');
 					sprWall[tileAux]->setBottomPosition(posTile);

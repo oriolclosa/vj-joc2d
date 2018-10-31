@@ -17,9 +17,8 @@
 #define HEALTH 100
 
 
-enum EnemyAnims
-{
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT,  ATTACK_LEFT, ATTACK_RIGHT
+enum EnemyAnims{
+	STAND, WALK, ATTACK
 };
 
 void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos, int enemyType) {
@@ -36,37 +35,26 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	// Sprites del enemic
 	ostringstream path;
 	//path << "images/0/enemy" << type << ".png";
-	path << "images/0/boss" << 0 << ".png";
+	path << "images/0/enemy0.png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(6);
+	sprite = Sprite::createSprite(glm::ivec2(138, 171), glm::vec2((1.0f / 8.0f), 0.5f), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(2);
 
-	sprite->setAnimationSpeed(STAND_LEFT, 8);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.5f));
+	sprite->setAnimationSpeed(STAND, 1);
+	sprite->addKeyframe(STAND, glm::vec2(0.0f, 0.0f));
 
-	sprite->setAnimationSpeed(STAND_RIGHT, 8);
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.75f, 0.75f));
+	sprite->setAnimationSpeed(WALK, 8);
+	for (int i = 0; i < 7; ++i) {
+		sprite->addKeyframe(WALK, glm::vec2((float(i) / 8.0f), 0.0f));
+	}
 
-	sprite->setAnimationSpeed(MOVE_LEFT, 8);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.75f, 0.5f));
+	sprite->setAnimationSpeed(ATTACK, 8);
+	for (int i = 0; i < 8; ++i) {
+		sprite->addKeyframe(WALK, glm::vec2((float(i) / 8.0f), 0.5f));
+	}
 
-	sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.75f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.75f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5f, 0.75f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.75f, 0.75f));
-
-	sprite->setAnimationSpeed(ATTACK_LEFT, 8);
-	sprite->addKeyframe(ATTACK_LEFT, glm::vec2(0.f, 0.f));
-
-	sprite->setAnimationSpeed(ATTACK_RIGHT, 8);
-	sprite->addKeyframe(ATTACK_RIGHT, glm::vec2(0.f, 0.25f));
-
-	sprite->changeAnimation(rand() % 2);
+	sprite->changeAnimation(STAND);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
@@ -79,12 +67,18 @@ void Enemy::update(int deltaTime){
 	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 32) {
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > getCentralPosition().x) {
-			if(sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
+			sprite->lookRight(false);
+			if (sprite->animation() != WALK) {
+				sprite->changeAnimation(WALK);
+			}
 			if (playerPos.y != posPlayer.y) incX = WALK_SPEED/2;
 			else incX = WALK_SPEED; 
 		}
 		else if (playerPos.x < getCentralPosition().x) {
-			if(sprite->animation() != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
+			sprite->lookRight(true);
+			if (sprite->animation() != WALK) {
+				sprite->changeAnimation(WALK);
+			}
 			if (playerPos.y != posPlayer.y) incX = -WALK_SPEED / 2;
 			else incX = -WALK_SPEED;
 		}
@@ -96,18 +90,18 @@ void Enemy::update(int deltaTime){
 			if (playerPos.x != posPlayer.x) incY = -WALK_SPEED / 2;
 			else incY = -WALK_SPEED;
 		}
-		if (incX < 0 && map->collisionMoveLeft(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
-			if(sprite->animation() != STAND_LEFT) sprite->changeAnimation(STAND_LEFT);
+		if (incX < 0 && map->collisionMoveLeft(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
+			sprite->changeAnimation(STAND);
 			incX = 0;
 		}
-		else if (incX > 0 && map->collisionMoveRight(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
-			if(sprite->animation() != STAND_RIGHT) sprite->changeAnimation(STAND_RIGHT);
+		else if (incX > 0 && map->collisionMoveRight(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
+			sprite->changeAnimation(STAND);
 			incX = 0;
 		}
-		if (incY < 0 && map->collisionMoveDown(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
+		if (incY < 0 && map->collisionMoveDown(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
 			incY = 0;
 		}
-		else if (incY > 0 && map->collisionMoveUp(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(32, 32), true)) {
+		else if (incY > 0 && map->collisionMoveUp(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
 			incY = 0;
 		}
 		posPlayer.x += incX;
@@ -115,11 +109,8 @@ void Enemy::update(int deltaTime){
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
 	else if (distance <= 32) {
-		if ((sprite->animation() == STAND_LEFT || sprite->animation() == MOVE_LEFT) && sprite->animation() != ATTACK_LEFT) {
-			sprite->changeAnimation(ATTACK_LEFT);
-		}
-		else if ((sprite->animation() == STAND_RIGHT || sprite->animation() == MOVE_RIGHT) && sprite->animation() != ATTACK_RIGHT) {
-			sprite->changeAnimation(ATTACK_RIGHT);
+		if ((sprite->animation() == STAND || sprite->animation() == WALK) && sprite->animation() != ATTACK) {
+			sprite->changeAnimation(ATTACK);
 		}
 		attackPlayer(PLAYER_DAMAGE * type);
 	}
@@ -174,5 +165,13 @@ int Enemy::getScore() {
 }
 
 glm::vec2 Enemy::getCentralPosition() {
-	return posPlayer + glm::ivec2(16.f,16.f);
+	return posPlayer + glm::ivec2(64, 88);
+}
+
+glm::vec2 Enemy::getInnerSize() {
+	return glm::ivec2(36, 78);
+}
+
+glm::vec2 Enemy::getCornerPosition() {
+	return posPlayer + glm::ivec2(45, 47);
 }
