@@ -139,7 +139,7 @@ void Level::init(ShaderProgram &texProgram){
 				if (enemy <= PROB_ENEMIES) {
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 					enemies[num_enemies] = new Enemy();
-					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
+					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile, 1);
 					enemies[num_enemies]->setTileMap(map);
 					enemies[num_enemies]->setPlayer(player);
 					enemies[num_enemies]->setPlayerPos(player->getCentralPosition());
@@ -205,7 +205,7 @@ void Level::init(ShaderProgram &texProgram){
 			}
 			else if (tile == '`') {
 				boss = new Boss();
-				boss->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
+				boss->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile, 1);
 				boss->setTileMap(map);
 				boss->setPlayer(player);
 				boss->setPlayerPos(player->getCentralPosition());
