@@ -301,19 +301,20 @@ void Level::render(ShaderProgram &texProgram) {
 		if (blockObject != NULL) {
 			blockObject->render();
 		}
-		bool playerRendered = false;
 		glm::vec2 playerPos = player->getBottomPosition();
 		int playerPosX = (playerPos.x / 32.0f);
-		int playerPosY = (playerPos.y / 32.0f) - 3;
-		for (int i = 0; i < spriteMap->getMapSize().x; i++) {
-			for (int j = 0; j < spriteMap->getMapSize().y; j++) {
+		int playerPosY = ((playerPos.y + 6.0f) / 32.0f);
+		cout << playerPos.x << " " << playerPos.y << " - " << playerPosX << " " << playerPosY << endl;
+		for (int j = 0; j < spriteMap->getMapSize().y; j++) {
+			for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 				tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
 				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
-				if (playerPosX == (spriteMap->getMapSize().x-1) && playerPosY == (i+1)) {
-					cout << "Pinta a " << j << " " << i << endl;
+				if (0 == i && playerPosY == j) {
+					cout << "Pinta a " << i << " " << j << endl;
 					player->render();
-					playerRendered = true;
 				}
+				if (tile == 'c') cout << "CADIRA 1 A " << i << " " << j << endl;
+				if (tile == 'd') cout << "CADIRA 2 A " << i << " " << j << endl;
 				if (tile >= '1' && tile <= ':') {
 					int tileAux = tile - int('1');
 					sprWall[tileAux]->setBottomPosition(posTile);
@@ -330,9 +331,6 @@ void Level::render(ShaderProgram &texProgram) {
 					sprBuildings[tileAux]->render();
 				}
 			}
-		}
-		if (!playerRendered) {
-			player->render();
 		}
 		for (int j = 0; j < overgroundMap->getMapSize().y; j++) {
 			for (int i = 0; i < overgroundMap->getMapSize().x; i++) {
