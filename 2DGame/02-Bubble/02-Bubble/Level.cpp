@@ -205,7 +205,7 @@ void Level::init(ShaderProgram &texProgram){
 			}
 			else if (tile == '`') {
 				boss = new Boss();
-				boss->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile, 1);
+				boss->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
 				boss->setTileMap(map);
 				boss->setPlayer(player);
 				boss->setPlayerPos(player->getCentralPosition());
@@ -490,7 +490,7 @@ void Level::updateEnemiesAlive() {
 			enemies[i] = NULL;
 		}
 	}
-	if (boss != NULL && boss->getHealth() < 1) {
+	if (boss != NULL && boss->getFase() < 1) {
 		score += boss->getScore();
 		boss = NULL;
 		level_complete = true;

@@ -18,6 +18,7 @@ void Game::init() {
 	global_score = 0;
 	win = false;
 	character = 0;
+	currentLevel = -1;
 }
 
 bool Game::update(int deltaTime) {
@@ -111,6 +112,7 @@ void Game::keyPressed(int key) {
 				else if (key == 32 || key == 13) { // SPACE ENTER
 					win = false;
 					global_score = 0;
+					currentLevel = 0;
 					scene.updateLevel(0);
 					render_scene = 2;
 					render();
@@ -221,4 +223,12 @@ void Game::changeCharacterSelected(bool right) {
 		--character;
 		if (character < 0) character = 2;
 	}
+}
+
+int Game:: getCurrentLevel() {
+	return currentLevel;
+}
+
+void Game::setCurrentLevel(int level) {
+	currentLevel = level;
 }

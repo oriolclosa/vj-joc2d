@@ -124,12 +124,14 @@ void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	if (currentLevel >= 0) {
 		if(level->complete()) {
-			if (currentLevel + 1 < NUM_LEVELS) {
+			int lvl = Game::instance().getCurrentLevel();
+			updateLevel(-1);
+			if (lvl + 1 < NUM_LEVELS) {
 				// updateLevel(-1); Que pasa amb el lvl actual? Gestio mem?
-				updateLevel(currentLevel + 1);
+				Game::instance().setCurrentLevel(lvl + 1);
+				updateLevel(lvl + 1);
 			}
 			else {
-				updateLevel(-1);
 				Game::instance().setEndGameState(true);
 				Game::instance().setRenderScene(5);
 			}

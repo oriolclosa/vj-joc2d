@@ -70,6 +70,10 @@ public:
 	int getSelectedCharacter();
 	void changeCharacterSelected(bool right);
 
+	//Level management for the current playthrough
+	int getCurrentLevel();
+	void setCurrentLevel(int level);
+
 private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
@@ -82,6 +86,7 @@ private:
 	bool win;						  // The playthrough ends with a win?
 	int character;					  // Character of the current playthrough
 	Sound sound;					  // Sound to play
+	int currentLevel;				  // Current level in the playthrough
 
 };
 
