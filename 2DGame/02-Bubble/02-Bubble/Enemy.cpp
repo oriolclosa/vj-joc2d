@@ -34,7 +34,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 
 	// Sprites del enemic
 	ostringstream path;
-    path << "images/0/enemy" << type << ".png";
+    path << "images/" << Game::instance().getSelectedCharacter() << "/enemy" << type << ".png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(138, 171), glm::vec2((1.0f / 8.0f), 0.5f), &spritesheet, &shaderProgram);
