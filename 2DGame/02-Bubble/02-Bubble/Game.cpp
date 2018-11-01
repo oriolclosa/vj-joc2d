@@ -131,6 +131,24 @@ void Game::keyReleased(int key) {
 }
 
 void Game::specialKeyPressed(int key) {
+	switch(render_scene) {
+		case 1: if (key == GLUT_KEY_UP) { // up
+					changeSelectMainButton(false);
+					render();
+				}
+				else if (key == GLUT_KEY_DOWN) { // down
+					changeSelectMainButton(true);
+					render();
+				}
+		case 6: if (key == GLUT_KEY_LEFT) { // left
+					changeCharacterSelected(false);
+					render();
+				}
+				else if (key == GLUT_KEY_RIGHT) { // right
+					changeCharacterSelected(true);
+					render();
+				}
+	}
 	specialKeys[key] = true;
 }
 
