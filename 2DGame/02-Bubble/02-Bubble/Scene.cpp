@@ -7,6 +7,7 @@
 #include <set>
 #include <algorithm>
 #include <sstream>
+#include <GL/glut.h>
 
 #define NUM_LEVELS 2
 
@@ -44,7 +45,6 @@ void Scene::preInit() {
 	glm::mat4 modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	teqMenuBack->render(texMenuLoading[0]);
-	cout << "HMMMMMM" << endl;
 }
 
 void Scene::init() {
@@ -86,7 +86,7 @@ void Scene::init() {
 
 	for (int i = 0; i < 3; ++i) {
 		ostringstream path;
-		path << "images/" << i << "/character.png";
+		path << "images/" << i << "/characterNo.png";
 		texCharacters[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		texCharacters[i].setMagFilter(GL_NEAREST);
 		sprCharacters[i] = Sprite::createSprite(glm::ivec2(256, 352), glm::vec2(1.0f / 56.0f, 1.0f / 4.0f), &texCharacters[i], &texProgram);
@@ -94,10 +94,10 @@ void Scene::init() {
 	}
 
 	// Select which font you want to use
-	if(!text.init("fonts/OpenSans-Regular.ttf"))
-		if(!text.init("fonts/OpenSans-Bold.ttf"))
+	if(!text.init("fonts/ScienceFair.ttf"))
+		if(!text.init("fonts/OpenSans.ttf"))
 			if(!text.init("fonts/DroidSerif.ttf"))
-				cout << "Could not load font!!!" << endl;
+				cout << "Could not load font!" << endl;
 	// Main_Menu
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
@@ -147,6 +147,10 @@ void Scene::render() {
 	glm::mat4 modelview;
 	// TODO: crear metodes per cada scena
 	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+
+	ostringstream textScore;
+	textScore << "Score: " << Game::instance().getScore();
+
 	switch(Game::instance().getRenderScene()) {
 		case PRE:
 			// Pre_Menu
@@ -224,9 +228,8 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			teqMenuBack->render(texMenuScore[Game::instance().getEndGameState()]);
 
-			char str[12];
-			sprintf(str, "Score: %d", Game::instance().getScore());
-			text.render(str, glm::vec2(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT * 0.7f), 32, glm::vec4(1, 1, 1, 1));
+			text.render(textScore.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.5f + 2.0f - ((float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f)*textScore.str().length()/4.65f), glutGet(GLUT_WINDOW_HEIGHT) * 0.55f + 2.0f), float(glutGet(GLUT_WINDOW_WIDTH))/25.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
+			text.render(textScore.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.5f - ((float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f)*textScore.str().length()/4.65f), glutGet(GLUT_WINDOW_HEIGHT) * 0.55f), float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f, glm::vec4(0.91015625, 0.65625, 0.375, 1));
 			break;
 		case CHARACTER:
 			// Character_Selection

@@ -214,7 +214,7 @@ void Player::death() {
 	}
 	else {
 		sprite->changeAnimation(WALK);
-		Game::instance().getScene().restartLevel();
+		Game::instance().restartLevel();
 	}
 }
 

@@ -214,10 +214,10 @@ void Level::init(ShaderProgram &texProgram){
 	}
 
 	//Text
-	if (!text.init("fonts/OpenSans-Regular.ttf"))
-		if (!text.init("fonts/OpenSans-Bold.ttf"))
-			if (!text.init("fonts/DroidSerif.ttf"))
-				cout << "Could not load font!!!" << endl;
+	if (!textScore.init("fonts/ScienceFair.ttf"))
+		if (!textScore.init("fonts/OpenSans.ttf"))
+			if (!textScore.init("fonts/DroidSerif.ttf"))
+				cout << "Could not load font!" << endl;
 	score = 0;
 	active = true;
 	currentTime = 0.0f;
@@ -357,9 +357,7 @@ void Level::render(ShaderProgram &texProgram) {
 		sprInfoLifes[((player->getLifes()) - 1)]->render();
 		ostringstream scoreText;
 		scoreText << "Score: " << score;
-		if(text.init()){
-			//text.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
-		}
+		textScore.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
 		
 		float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
 		if (posAux < 0.0f) {
@@ -463,10 +461,11 @@ void Level::restart() {
 	sprInfoLifes[2]->setPosition(glm::vec2(SCREEN_X + POS_INFO_X, SCREEN_Y + POS_INFO_Y));
 
 	//Text
-	if (!text.init("fonts/OpenSans-Regular.ttf"))
-		if (!text.init("fonts/OpenSans-Bold.ttf"))
-			if (!text.init("fonts/DroidSerif.ttf"))
-				cout << "Could not load font!!!" << endl;
+	textScore.destroy();
+	if (!textScore.init("fonts/ScienceFair.ttf"))
+		if (!textScore.init("fonts/OpenSans.ttf"))
+			if (!textScore.init("fonts/DroidSerif.ttf"))
+				cout << "Could not load font!" << endl;
 
 	//Blocking object
 	int tile;
