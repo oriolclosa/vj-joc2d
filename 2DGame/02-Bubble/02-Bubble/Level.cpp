@@ -7,6 +7,7 @@
 #include <set>
 #include <algorithm>
 #include <sstream>
+#include <GL/glut.h>
 
 
 #define INIT_PLAYER_X_TILES 4
@@ -357,8 +358,19 @@ void Level::render(ShaderProgram &texProgram) {
 		sprInfoLifes[((player->getLifes()) - 1)]->render();
 		ostringstream scoreText;
 		scoreText << "Score: " << score;
-		textScore.render(scoreText.str(), glm::vec2(POS_INFO_X + 35.0f, SCREEN_Y + POS_INFO_Y + 8.0f), 12, glm::vec4(1, 1, 1, 1));
+		textScore.render(scoreText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f + 1.0f, glutGet(GLUT_WINDOW_HEIGHT) * 0.88f) + 1.0f, float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
+		textScore.render(scoreText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f, glutGet(GLUT_WINDOW_HEIGHT) * 0.88f), float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.91015625, 0.65625, 0.375, 1));
 		
+		ostringstream timeText;
+		long milli = currentTime;
+		long min = milli / 60000;
+		milli = milli - 60000 * min;
+		long sec = milli / 1000;
+		milli = milli - 1000 * sec;
+		timeText << "Time: " << min << "' " << sec << "''";
+		textScore.render(timeText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f + 1.0f, glutGet(GLUT_WINDOW_HEIGHT) * 0.9425f) + 1.0f, float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
+		textScore.render(timeText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f, glutGet(GLUT_WINDOW_HEIGHT) * 0.9425f), float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.91015625, 0.65625, 0.375, 1));
+
 		float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
 		if (posAux < 0.0f) {
 			posAux = 0.0f;
