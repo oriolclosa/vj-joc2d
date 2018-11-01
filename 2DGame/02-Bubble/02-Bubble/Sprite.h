@@ -42,6 +42,9 @@ public:
 
 	void setBottomPosition(glm::vec2 positionAux);
 
+	void setHit(bool activate);
+
+
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
@@ -56,6 +59,8 @@ private:
 
 	bool right;
 	glm::vec2 size;
+	bool hit;
+	int hit_time;
 };
 
 

@@ -124,6 +124,7 @@ void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
 	if (currentLevel >= 0) {
 		if(level->complete()) {
+			Game::instance().setScore(Game::instance().getScore() - (3 - level->getPlayerLifes()) * 500);
 			int lvl = Game::instance().getCurrentLevel();
 			updateLevel(-1);
 			if (lvl + 1 < NUM_LEVELS) {

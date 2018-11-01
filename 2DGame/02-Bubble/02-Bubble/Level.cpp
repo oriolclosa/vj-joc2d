@@ -13,7 +13,7 @@
 #define INIT_PLAYER_Y_TILES 8
 
 #define PROB_ENEMIES 50 //For 100
-#define MAX_ENEMIES 100
+#define MAX_ENEMIES 1//100
 
 #define PROB_COINS 10 //For 1.000
 
@@ -408,10 +408,10 @@ void Level::updatePlayerAttack(float damage) {
 			float y_enemy = enemies[i]->getCentralPosition().y;
 			float dif_x = abs(x_player - x_enemy);
 			float dif_y = abs(y_player - y_enemy);
-			if (!right && x_enemy >= x_player && dif_x <= 90 && dif_y <= 88) {
+			if (!right && x_enemy >= x_player && dif_x <= 75 && dif_y <= 88) {
 				enemies[i]->takeDamage(damage);
 			}
-			else if (right && x_enemy <= x_player && dif_x <= 90 && dif_y <= 88) {
+			else if (right && x_enemy <= x_player && dif_x <= 75 && dif_y <= 88) {
 				enemies[i]->takeDamage(damage);
 			}
 		}

@@ -39,9 +39,13 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	position = glm::vec2(0.f);
 	size = quadSize;
 	right = true;
+	hit = false;
+	hit_time = 0;
 }
 
 void Sprite::update(float totalTime, int deltaTime){
+	if (hit_time > 0) --hit_time;
+	else hit = false;
 	if ((resetToAnim >= 0) && ((totalTime - resetToTimeIni) >= resetToTime)) {
 		changeAnimation(resetToAnim);
 		resetToAnim = -1;
@@ -65,6 +69,8 @@ void Sprite::update(float totalTime, int deltaTime){
 
 void Sprite::update(int deltaTime) {
 	if (currentAnimation >= 0) {
+		if (hit_time > 0) --hit_time;
+		else hit = false;
 		timeAnimation += deltaTime;
 		while (timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
 		{
@@ -82,6 +88,8 @@ void Sprite::render() const{
 	}
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
+	if (hit) shaderProgram->setUniform4f("color", 1.0f, .0f, .0f, 1.0f);
+	else shaderProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 	texture->use();
 	glBindVertexArray(vao);
@@ -157,4 +165,15 @@ void Sprite::moveToAt(float timeToIni, float timeTo, glm::vec2 positionTo) {
 
 void Sprite::setBottomPosition(glm::vec2 positionAux) {
 	position = positionAux - glm::vec2(0, size.y);
+}
+
+void Sprite::setHit(bool activate) {
+	if (activate) {
+		hit = true;
+		hit_time = 24;
+	}
+	else {
+		hit = false;
+		hit_time = 0;
+	}
 }
