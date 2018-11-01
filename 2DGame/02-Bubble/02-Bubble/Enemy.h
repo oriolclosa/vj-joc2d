@@ -29,6 +29,9 @@ public:
 	int getScore();
 	glm::vec2 getCentralPosition();
 	void restart();
+
+	glm::vec2 getInnerSize();
+	glm::vec2 getCornerPosition();
 	
 protected:
 	glm::ivec2 tileMapDispl, posPlayer, iniPosition;
