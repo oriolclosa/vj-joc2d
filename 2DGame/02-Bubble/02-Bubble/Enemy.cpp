@@ -34,8 +34,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 
 	// Sprites del enemic
 	ostringstream path;
-	//path << "images/0/enemy" << type << ".png";
-	path << "images/0/enemy0.png";
+    path << "images/0/enemy" << type << ".png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(138, 171), glm::vec2((1.0f / 8.0f), 0.5f), &spritesheet, &shaderProgram);
@@ -50,7 +49,8 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	}
 
 	sprite->setAnimationSpeed(ATTACK, 8);
-	for (int i = 0; i < 8; ++i) {
+	int framesAttack[3] = {8, 6, 7};
+	for (int i = 0; i < framesAttack[type]; ++i) {
 		sprite->addKeyframe(WALK, glm::vec2((float(i) / 8.0f), 0.5f));
 	}
 
