@@ -59,7 +59,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
-void Enemy::update(int deltaTime){
+void Enemy::update(int deltaTime, glm::vec2 *pos_enemies, int n){
 	sprite->update(deltaTime);
 	float distance = sqrt(pow(playerPos.x - getCentralPosition().x, 2) + pow(playerPos.y - getCentralPosition().y, 2));
 	bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
@@ -104,6 +104,12 @@ void Enemy::update(int deltaTime){
 		else if (incY > 0 && map->collisionMoveUp(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
 			incY = 0;
 		}
+		int i = 0;
+		while (i < n && pos_enemies[i] != glm::vec2(-1,-1)) {
+			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 30) incX = 0;
+			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 40) incY = 0;
+			++i;
+		}
 		posPlayer.x += incX;
 		posPlayer.y += incY;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -115,6 +121,9 @@ void Enemy::update(int deltaTime){
 		attackPlayer(PLAYER_DAMAGE * (3 - type));
 	}
 	else sprite->changeAnimation(STAND);
+	int i = 0;
+	while (pos_enemies[i] != glm::vec2(-1,-1)) ++i;
+	pos_enemies[i] = glm::vec2(getCentralPosition().x,getCentralPosition().y);
 }
 
 void Enemy::render(){

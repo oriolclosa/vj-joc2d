@@ -13,7 +13,7 @@
 #define INIT_PLAYER_Y_TILES 8
 
 #define PROB_ENEMIES 50 //For 100
-#define MAX_ENEMIES 1//100
+#define MAX_ENEMIES 100
 
 #define PROB_COINS 10 //For 1.000
 
@@ -229,6 +229,8 @@ void Level::update(int deltaTime) {
 		currentTime += deltaTime;
 		player->update(currentTime, deltaTime);
 		if (active) {
+			glm::vec2 pos_enemies[MAX_ENEMIES+1];
+			for (int i = 0; i < MAX_ENEMIES+1; ++i) pos_enemies[i] = glm::vec2(-1,-1);
 			if (boss != NULL) {
 				boss->setPlayerPos(player->getCentralPosition());
 				boss->update(deltaTime);
@@ -236,7 +238,7 @@ void Level::update(int deltaTime) {
 			for (int i = 0; i < num_enemies; ++i) {
 				if (enemies[i] != NULL) {
 					enemies[i]->setPlayerPos(player->getCentralPosition());
-					enemies[i]->update(deltaTime);
+					enemies[i]->update(deltaTime, pos_enemies, MAX_ENEMIES+1);
 				}
 			}
 			for (int i = 0; i < num_coins; ++i) {

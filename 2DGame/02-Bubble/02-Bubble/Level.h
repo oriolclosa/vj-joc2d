@@ -98,6 +98,7 @@ private:
 
 	int currentCharacter;
 	bool level_complete;
+	glm::vec2 pos_anteriors[];
 };
 
 
