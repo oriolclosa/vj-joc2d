@@ -53,6 +53,7 @@ glm::vec2 Blocking::getPosition() {
 void Blocking::restart() {
 	posPlayer = iniPosition;
 	sprite->setPosition(posPlayer);
+	status = 0;
 }
 
 void Blocking::setPlayerPos(glm::vec2 &playerPosAux) {

@@ -55,20 +55,22 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 
 	sprite->setAnimationSpeed(ATTACK_1, 24);
 	int attack1 = 16;
+	if (currentCharacter == 1) attack1 = 18;
 	if (currentCharacter == 2) attack1 = 25;
 	for (int i = 0; i < attack1; ++i) {
 		sprite->addKeyframe(ATTACK_1, glm::vec2(float(i) / 56.0f, 1.0f / 4.0f));
 	}
 
 	sprite->setAnimationSpeed(ATTACK_2, 24);
-	int attack2 = 25;
-	if (currentCharacter == 2) attack2 = 56;
+	int attack2 = 56;
+	if (currentCharacter == 0) attack2 = 25;
 	for (int i = 0; i < attack2; ++i) {
 		sprite->addKeyframe(ATTACK_2, glm::vec2(float(i) / 56.0f, 2.0f / 4.0f));
 	}
 
 	sprite->setAnimationSpeed(ATTACK_3, 24);
 	int attack3 = 56;
+	if (currentCharacter == 1) attack3 = 42;
 	if (currentCharacter == 2) attack3 = 19;
 	for (int i = 0; i < attack3; ++i) {
 		sprite->addKeyframe(ATTACK_3, glm::vec2(float(i) / 56.0f, 3.0f / 4.0f));
@@ -110,6 +112,7 @@ void Player::update(float totalTime, int deltaTime){
 	else if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
 		sprite->changeAnimation(ATTACK_1);
 		int attack1 = 16;
+		if (currentCharacter == 1) attack1 = 18;
 		if (currentCharacter == 2) attack1 = 25;
 		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack1) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_1);
@@ -118,8 +121,8 @@ void Player::update(float totalTime, int deltaTime){
 	}
 	else if ((Game::instance().getKey(102) || Game::instance().getKey(70)) && coolDownA2 == 0) { // f F, Attack 2
 		sprite->changeAnimation(ATTACK_2);
-		int attack2 = 25;
-		if (currentCharacter == 2) attack2 = 56;
+		int attack2 = 56;
+		if (currentCharacter == 0) attack2 = 25;
 		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack2) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_2);
 		coolDownA2 = COOLDOWN_ATTACK_2;
@@ -128,7 +131,8 @@ void Player::update(float totalTime, int deltaTime){
 	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
 		sprite->changeAnimation(ATTACK_3);
 		int attack3 = 56;
-		if (currentCharacter == 2) {
+		if (currentCharacter == 1) attack3 = 42;
+		else if (currentCharacter == 2) {
 			attack3 = 19;
 			int movementX = 150;
 			if (right) movementX = -movementX;
