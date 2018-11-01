@@ -12,7 +12,7 @@
 #define WALK_SPEED 4
 #define DETECT_DISTANCE 350
 
-#define PLAYER_DAMAGE 5
+#define PLAYER_DAMAGE 15
 
 #define HEALTH 100
 
@@ -64,7 +64,7 @@ void Enemy::update(int deltaTime){
 	float distance = sqrt(pow(playerPos.x - getCentralPosition().x, 2) + pow(playerPos.y - getCentralPosition().y, 2));
 	bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
 	bool ySpace = playerPos.y > posPlayer.y || playerPos.y + 64 < posPlayer.y;
-	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 32) {
+	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 46) {
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > getCentralPosition().x) {
 			sprite->lookRight(false);
@@ -108,11 +108,11 @@ void Enemy::update(int deltaTime){
 		posPlayer.y += incY;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	else if (distance <= 32) {
+	else if (distance <= 46) {
 		if ((sprite->animation() == STAND || sprite->animation() == WALK) && sprite->animation() != ATTACK) {
 			sprite->changeAnimation(ATTACK);
 		}
-		attackPlayer(PLAYER_DAMAGE * type);
+		attackPlayer(PLAYER_DAMAGE * (type + 1));
 	}
 }
 
@@ -138,8 +138,8 @@ void Enemy::setPlayerPos(glm::vec2 &playerPosAux) {
 }
 
 void Enemy::attackPlayer(float damage) {
-	if (abs(playerPos.x - getCentralPosition().x) <= 64)
-		if (abs(playerPos.y - getCentralPosition().y) <= 64)
+	if (abs(playerPos.x - getCentralPosition().x) <= 166)
+		if (abs(playerPos.y - getCentralPosition().y) <= 88)
 			player->takeDamage(damage);
 }
 
@@ -148,6 +148,7 @@ void Enemy::setPlayer(Player *playerAux) {
 }
 
 void Enemy::takeDamage(float damage) {
+	sprite->setHit();
 	health -= damage;
 }
 

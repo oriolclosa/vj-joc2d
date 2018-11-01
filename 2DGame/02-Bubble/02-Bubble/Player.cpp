@@ -193,6 +193,7 @@ glm::vec2 Player::getPosition() {
 
 void Player::takeDamage(float damage) {
 	if (coolDownDamage == 0) {
+		sprite->setHit();
 		health -= damage;
 		coolDownRec1 = COOLDOWN_START_RECUPERATION;
 		coolDownRec2 = 0;
@@ -234,7 +235,7 @@ bool Player::getDirection() {
 	return right;
 }
 
-glm::vec2 Player::getCentralPosition() {
+glm::vec2 Player::getCentralPosition() {  // 64+64  88+88
 	return posPlayer + glm::ivec2(64, 88);
 }
 
