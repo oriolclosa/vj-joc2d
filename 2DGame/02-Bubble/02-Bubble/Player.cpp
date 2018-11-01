@@ -141,7 +141,7 @@ void Player::update(float totalTime, int deltaTime){
 		coolDownA3 = COOLDOWN_ATTACK_3;
 		freez = attack3;
 	}
-	else if(Game::instance().getKey(97) || Game::instance().getKey(65)){ // a A
+	else if(Game::instance().getKey(97) || Game::instance().getKey(65) || Game::instance().getSpecialKey(GLUT_KEY_LEFT)){ // a A
 		posPlayer.x -= WALK_SPEED;
 		right = true;
 		sprite->lookRight(right);
@@ -149,7 +149,7 @@ void Player::update(float totalTime, int deltaTime){
 			posPlayer.x += WALK_SPEED;
 		}
 	}
-	else if(Game::instance().getKey(100) || Game::instance().getKey(68)){ // d D
+	else if(Game::instance().getKey(100) || Game::instance().getKey(68) || Game::instance().getSpecialKey(GLUT_KEY_RIGHT)){ // d D
 		posPlayer.x += WALK_SPEED;
 		right = false;
 		sprite->lookRight(right);
@@ -157,14 +157,14 @@ void Player::update(float totalTime, int deltaTime){
 			posPlayer.x -= WALK_SPEED;
 		}
 	}
-	else if (Game::instance().getKey(119) || Game::instance().getKey(87)){ // w W
+	else if (Game::instance().getKey(119) || Game::instance().getKey(87) || Game::instance().getSpecialKey(GLUT_KEY_UP)){ // w W
 		--health;
 		posPlayer.y -= WALK_SPEED;
 		if (map->collisionMoveUp(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.y += WALK_SPEED;
 		}
 	}
-	else if (Game::instance().getKey(115) || Game::instance().getKey(83)) { // s S
+	else if (Game::instance().getKey(115) || Game::instance().getKey(83) || Game::instance().getSpecialKey(GLUT_KEY_DOWN)) { // s S
 		posPlayer.y += WALK_SPEED;
 		if (map->collisionMoveDown(getCornerPosition(), getInnerSize(), false)) {
 			posPlayer.y -= WALK_SPEED;

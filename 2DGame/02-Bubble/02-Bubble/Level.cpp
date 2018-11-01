@@ -139,7 +139,7 @@ void Level::init(ShaderProgram &texProgram){
 				if (enemy <= PROB_ENEMIES) {
 					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
 					enemies[num_enemies] = new Enemy();
-					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile, 1);
+					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile, rand() % 3);
 					enemies[num_enemies]->setTileMap(map);
 					enemies[num_enemies]->setPlayer(player);
 					enemies[num_enemies]->setPlayerPos(player->getCentralPosition());
@@ -405,15 +405,18 @@ void Level::updateInfoHealth(float health) {
 void Level::updatePlayerAttack(float damage) {
 	if (damage == 0) return;
 	bool right = player->getDirection();
-	float x_player = getPlayerPos().x;
+	float x_player = player->getCentralPosition().x;
+	float y_player = player->getCentralPosition().y;
 	for (int i = 0; i < num_enemies; ++i) {
-		if (enemies[i] != NULL) { //classe boos, matar enemics suma punts
-			float x_enemy = enemies[i]->getPosition().x;
-			float dif = abs(x_player - x_enemy);
-			if (!right && x_enemy >= x_player && dif <= 64) {
+		if (enemies[i] != NULL) {
+			float x_enemy = enemies[i]->getCentralPosition().x;
+			float y_enemy = enemies[i]->getCentralPosition().y;
+			float dif_x = abs(x_player - x_enemy);
+			float dif_y = abs(y_player - y_enemy);
+			if (!right && x_enemy >= x_player && dif_x <= 90 && dif_y <= 88) {
 				enemies[i]->takeDamage(damage);
 			}
-			else if (right && x_enemy <= x_player && dif <= 64) {
+			else if (right && x_enemy <= x_player && dif_x <= 90 && dif_y <= 88) {
 				enemies[i]->takeDamage(damage);
 			}
 		}

@@ -167,7 +167,7 @@ void Boss::takeDamage(float damage) {
 }
 
 int Boss::getScore() {
-	return 1000;
+	return 2100;
 }
 
 int Boss::getFase() {
