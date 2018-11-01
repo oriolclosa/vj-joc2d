@@ -9,10 +9,10 @@
 #include "Level.h"
 
 
-#define WALK_SPEED 4
+#define WALK_SPEED 3
 #define DETECT_DISTANCE 350
 
-#define PLAYER_DAMAGE 15
+#define PLAYER_DAMAGE 8
 
 #define HEALTH 100
 
@@ -112,8 +112,9 @@ void Enemy::update(int deltaTime){
 		if ((sprite->animation() == STAND || sprite->animation() == WALK) && sprite->animation() != ATTACK) {
 			sprite->changeAnimation(ATTACK);
 		}
-		attackPlayer(PLAYER_DAMAGE * (type + 1));
+		attackPlayer(PLAYER_DAMAGE * (3 - type));
 	}
+	else sprite->changeAnimation(STAND);
 }
 
 void Enemy::render(){
@@ -148,11 +149,15 @@ void Enemy::setPlayer(Player *playerAux) {
 }
 
 void Enemy::takeDamage(float damage) {
-	sprite->setHit();
+	sprite->setHit(true);
 	health -= damage;
 }
 
 void Enemy::restart() {
+	health = HEALTH;
+	if (type == 0) health *= 0.75f;
+	else if (type == 2)  health *= 1.25f;
+	sprite->setHit(false);
 	posPlayer = iniPosition;
 	sprite->setPosition(posPlayer);
 }

@@ -42,7 +42,7 @@ public:
 
 	void setBottomPosition(glm::vec2 positionAux);
 
-	void setHit();
+	void setHit(bool activate);
 
 
 private:

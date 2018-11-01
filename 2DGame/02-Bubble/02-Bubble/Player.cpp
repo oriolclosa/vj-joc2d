@@ -7,10 +7,6 @@
 #include <sstream>
 
 
-#define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
-#define FALL_STEP 4
-
 #define WALK_SPEED 5
 
 #define HEALTH 100
@@ -24,8 +20,8 @@
 #define COOLDOWN_ATTACK_2 85 
 #define COOLDOWN_ATTACK_3 210
 
-#define COOLDOWN_START_RECUPERATION 600
-#define COOLDOWN_BETWEEN_RECUPERATIONS 100
+#define COOLDOWN_START_RECUPERATION 300
+#define COOLDOWN_BETWEEN_RECUPERATIONS 50
 
 #define SAFE_TIME_BETWEEN_HITS 30
 
@@ -197,7 +193,7 @@ glm::vec2 Player::getPosition() {
 
 void Player::takeDamage(float damage) {
 	if (coolDownDamage == 0) {
-		sprite->setHit();
+		sprite->setHit(true);
 		health -= damage;
 		coolDownRec1 = COOLDOWN_START_RECUPERATION;
 		coolDownRec2 = 0;
@@ -215,6 +211,12 @@ void Player::death() {
 	}
 	else {
 		sprite->changeAnimation(WALK);
+		sprite->setHit(false);
+		coolDownA1 = coolDownA2 = coolDownA3 = 0;
+		damageDone = 0;
+		coolDownRec1 = coolDownRec2 = 0;
+		coolDownDamage = 0;
+		coolDownRec2 = 0;
 		Game::instance().getScene().restartLevel();
 	}
 }

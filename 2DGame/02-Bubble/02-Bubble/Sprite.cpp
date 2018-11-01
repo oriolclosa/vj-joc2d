@@ -167,7 +167,13 @@ void Sprite::setBottomPosition(glm::vec2 positionAux) {
 	position = positionAux - glm::vec2(0, size.y);
 }
 
-void Sprite::setHit() {
-	hit = true;
-	hit_time = 24;
+void Sprite::setHit(bool activate) {
+	if (activate) {
+		hit = true;
+		hit_time = 24;
+	}
+	else {
+		hit = false;
+		hit_time = 0;
+	}
 }
