@@ -217,7 +217,7 @@ void Player::death() {
 		coolDownRec1 = coolDownRec2 = 0;
 		coolDownDamage = 0;
 		coolDownRec2 = 0;
-		Game::instance().getScene().restartLevel();
+		Game::instance().restartLevel();
 	}
 }
 

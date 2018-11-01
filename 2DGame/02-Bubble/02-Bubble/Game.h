@@ -74,6 +74,8 @@ public:
 	int getCurrentLevel();
 	void setCurrentLevel(int level);
 
+	void restartLevel();
+
 private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render

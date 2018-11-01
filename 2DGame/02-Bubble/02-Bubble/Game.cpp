@@ -250,3 +250,7 @@ int Game:: getCurrentLevel() {
 void Game::setCurrentLevel(int level) {
 	currentLevel = level;
 }
+
+void Game::restartLevel() {
+	scene.restartLevel();
+}
