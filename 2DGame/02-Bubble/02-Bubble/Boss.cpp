@@ -27,7 +27,7 @@
 
 enum BossAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, ATTACK_1, ATTACK_2
+	STAND, WALK, ATTACK1, ATTACK2
 };
 
 void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos) {
@@ -43,37 +43,31 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 
 	// Sprites del enemic
 	ostringstream path;
-	path << "images/0/boss" << type << ".png";
+	path << "images/" << Game::instance().getSelectedCharacter() << "/boss.png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(glm::ivec2(96, 96), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(6);
+	sprite = Sprite::createSprite(glm::ivec2(96, 96), glm::vec2(1.0f/14.0f, 1.0f/3.0f), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(3);
 
-	sprite->setAnimationSpeed(STAND_LEFT, 8);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.5f));
+	sprite->setAnimationSpeed(STAND, 1);
+	sprite->addKeyframe(STAND, glm::vec2(0.0f, 0.0f));
 
-	sprite->setAnimationSpeed(STAND_RIGHT, 8);
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.75f, 0.75f));
+	sprite->setAnimationSpeed(WALK, 12);
+	for (int i = 0; i < 10; ++i) {
+		sprite->addKeyframe(WALK, glm::vec2((float(i) / 14.0f), 0.0f));
+	}
 
-	sprite->setAnimationSpeed(MOVE_LEFT, 8);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.75f, 0.5f));
+	sprite->setAnimationSpeed(ATTACK1, 12);
+	for (int i = 0; i < 13; ++i) {
+		sprite->addKeyframe(ATTACK1, glm::vec2((float(i) / 14.0f), 1.0f/3.0f));
+	}
 
-	sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.75f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.75f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5f, 0.75f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.75f, 0.75f));
+	sprite->setAnimationSpeed(ATTACK2, 24);
+	for (int i = 0; i < 14; ++i) {
+		sprite->addKeyframe(ATTACK2, glm::vec2((float(i) / 14.0f), 2.0f / 3.0f));
+	}
 
-	sprite->setAnimationSpeed(ATTACK_1, 8);
-	sprite->addKeyframe(ATTACK_1, glm::vec2(0.f, 0.f));
-
-	sprite->setAnimationSpeed(ATTACK_2, 8);
-	sprite->addKeyframe(ATTACK_2, glm::vec2(0.f, 0.25f));
-
-	sprite->changeAnimation(STAND_LEFT);
+	sprite->changeAnimation(STAND);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x - tileMapDispl.x ), float(tileMapDispl.y - tileMapDispl.y)));
 }
@@ -87,7 +81,10 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 		focus = true;
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > posPlayer.x) {
-			if(sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
+			sprite->lookRight(false);
+			if (sprite->animation() != WALK) {
+				sprite->changeAnimation(WALK);
+			}
 			if (playerPos.y != posPlayer.y) {
 				incX = WALK_SPEED/2;
 			}
@@ -96,7 +93,10 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 			}
 		}
 		else if (playerPos.x < posPlayer.x) {
-			if(sprite->animation() != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
+			sprite->lookRight(true);
+			if (sprite->animation() != WALK) {
+				sprite->changeAnimation(WALK);
+			}
 			if (playerPos.y != posPlayer.y) {
 				incX = -WALK_SPEED / 2;
 			}
@@ -121,11 +121,11 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 			}
 		}
 		if (incX < 0 && map->collisionMoveLeft(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
-			if(sprite->animation() != STAND_LEFT) sprite->changeAnimation(STAND_LEFT);
+			if(sprite->animation() != STAND) sprite->changeAnimation(STAND);
 			incX = 0;
 		}
 		else if (incX > 0 && map->collisionMoveRight(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
-			if(sprite->animation() != STAND_RIGHT) sprite->changeAnimation(STAND_RIGHT);
+			if(sprite->animation() != STAND) sprite->changeAnimation(STAND);
 			incX = 0;
 		}
 		if (incY < 0 && map->collisionMoveDown(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
@@ -146,27 +146,23 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 	}
 	else if (distance <= 66) {
 		if(fase == 3) {
-			sprite->changeAnimation(ATTACK_1);
+			sprite->changeAnimation(ATTACK1);
 			attackPlayer(PLAYER_DAMAGE);
 		}
 		else if (fase == 2) {
-			sprite->changeAnimation(ATTACK_2);
+			sprite->changeAnimation(ATTACK2);
 			attackPlayer(PLAYER_DAMAGE * 0.2);
 		}
 		else {
 			if (rand() % 2 == 0) {
-				sprite->changeAnimation(ATTACK_1);
+				sprite->changeAnimation(ATTACK1);
 				attackPlayer(PLAYER_DAMAGE * 0.2);
 			}
 			else
 				attackPlayer(PLAYER_DAMAGE * 0.6);
 		}
 	}
-	else {
-		if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
-			sprite->changeAnimation(STAND_RIGHT);
-		else sprite->changeAnimation(STAND_LEFT);
-	}
+	else sprite->changeAnimation(STAND);
 	int i = 0;
 	while (pos_enemies[i] != glm::vec2(-1,-1)) ++i;
 	pos_enemies[i] = glm::vec2(getCentralPosition().x,getCentralPosition().y);
