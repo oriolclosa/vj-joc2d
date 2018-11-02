@@ -146,7 +146,7 @@ void Level::init(ShaderProgram &texProgram, int lvl){
 			if ((tile == '3') && (num_enemies < MAX_ENEMIES)) {
 				int enemy = rand() % 100;
 				if (enemy <= PROB_ENEMIES) {
-					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16);
+					glm::vec2 posTile = glm::vec2(SCREEN_X + i * 16, SCREEN_Y + j * 16 - 96);
 					enemies[num_enemies] = new Enemy();
 					enemies[num_enemies]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile, rand() % 3);
 					enemies[num_enemies]->setTileMap(map);
