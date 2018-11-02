@@ -9,7 +9,7 @@
 
 #define WALK_SPEED 5
 
-#define HEALTH 100
+#define HEALTH 10000
 #define LIFES 3
 
 #define DAMAGE_ATTACK_1 30
@@ -21,7 +21,7 @@
 #define COOLDOWN_ATTACK_3 210
 
 #define COOLDOWN_START_RECUPERATION 300
-#define COOLDOWN_BETWEEN_RECUPERATIONS 50
+#define COOLDOWN_BETWEEN_RECUPERATIONS 30
 
 #define SAFE_TIME_BETWEEN_HITS 30
 
@@ -94,7 +94,7 @@ void Player::update(float totalTime, int deltaTime){
 	if (health < HEALTH && coolDownRec1 == 0) {
 		if (coolDownRec2 > 0) --coolDownRec2;
 		if (coolDownRec2 == 0) {
-			health += 1;
+			health += 4;
 			coolDownRec2 = 100;
 		}
 	}
@@ -158,7 +158,7 @@ void Player::update(float totalTime, int deltaTime){
 		}
 	}
 	else if (Game::instance().getKey(119) || Game::instance().getKey(87) || Game::instance().getSpecialKey(GLUT_KEY_UP)){ // w W
-		--health;
+		//--health;
 		posPlayer.y -= WALK_SPEED;
 		if (map->collisionMoveUp(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.y += WALK_SPEED;

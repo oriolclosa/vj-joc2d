@@ -10,15 +10,18 @@ class Boss: public Enemy {
 	
 public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm::vec2 pos);
-	void update(int deltaTime);
+	void update(int deltaTime, glm::vec2 *pos_enemies, int n);
 	
 	void attackPlayer(float damage);
 	void takeDamage(float damage);
 	float getHealth();	
 	int getScore();
+	
+	void restart();
 
 	int getFase();
 	bool getFocus();
+	
 
 private:
 	int fase;

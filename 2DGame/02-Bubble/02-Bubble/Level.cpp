@@ -234,7 +234,7 @@ void Level::update(int deltaTime) {
 			for (int i = 0; i < MAX_ENEMIES+1; ++i) pos_enemies[i] = glm::vec2(-1,-1);
 			if (boss != NULL) {
 				boss->setPlayerPos(player->getCentralPosition());
-				boss->update(deltaTime);
+				boss->update(deltaTime, pos_enemies, MAX_ENEMIES+1);
 			}
 			for (int i = 0; i < num_enemies; ++i) {
 				if (enemies[i] != NULL) {
@@ -358,6 +358,18 @@ void Level::render(ShaderProgram &texProgram) {
 
 		sprInfoHealth->render();
 		sprInfoLifes[((player->getLifes()) - 1)]->render();
+
+		float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
+		if (posAux < 0.0f) {
+			posAux = 0.0f;
+		}
+		for(int i = 0; i < 4; ++i) {
+			if (player->activeCooldownI(i)) {
+				spr_info_cooldown[i]->setPosition(glm::vec2(posAux + POS_INFO_X + 126 + 32 * i, POS_INFO_Y + 8));
+				spr_info_cooldown[i]->render();
+			}
+		}
+
 		ostringstream scoreText;
 		scoreText << "Score: " << score;
 		textScore.render(scoreText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f + 1.0f, glutGet(GLUT_WINDOW_HEIGHT) * 0.88f) + 1.0f, float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
@@ -372,17 +384,6 @@ void Level::render(ShaderProgram &texProgram) {
 		timeText << "Time: " << min << "' " << sec << "''";
 		textScore.render(timeText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f + 1.0f, glutGet(GLUT_WINDOW_HEIGHT) * 0.9425f) + 1.0f, float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
 		textScore.render(timeText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f, glutGet(GLUT_WINDOW_HEIGHT) * 0.9425f), float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.91015625, 0.65625, 0.375, 1));
-
-		float posAux = (getPlayerPos().x - SCREEN_WIDTH / 2);
-		if (posAux < 0.0f) {
-			posAux = 0.0f;
-		}
-		for(int i = 0; i < 4; ++i) {
-			if (player->activeCooldownI(i)) {
-				spr_info_cooldown[i]->setPosition(glm::vec2(posAux + POS_INFO_X + 126 + 32 * i, POS_INFO_Y + 8));
-				spr_info_cooldown[i]->render();
-			}
-		}
 	}
 }
 
@@ -430,13 +431,15 @@ void Level::updatePlayerAttack(float damage) {
 			}
 		}
 	}
-	if (boss != NULL) { //classe boos, matar enemics suma punts
-		float x_enemy = boss->getPosition().x;
-		float dif = abs(x_player - x_enemy);
-		if (!right && x_enemy >= x_player && dif <= 64) {
+	if (boss != NULL) {
+		float x_boss = boss->getCentralPosition().x;
+		float y_boss = boss->getCentralPosition().y;
+		float dif_x = abs(x_player - x_boss);
+		float dif_y = abs(x_player - y_boss);
+		if (!right && x_boss >= x_player && dif_x <= 85 && dif_y <= 98) {
 			boss->takeDamage(damage);
 		}
-		else if (right && x_enemy <= x_player && dif <= 64) {
+		else if (right && x_boss < x_player && dif_x <= 85 && dif_y <= 98) {
 			boss->takeDamage(damage);
 		}
 	}

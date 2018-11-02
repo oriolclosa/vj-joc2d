@@ -12,9 +12,16 @@
 #define WALK_SPEED 3
 #define DETECT_DISTANCE 350
 
-#define PLAYER_DAMAGE 8
+#define PLAYER_DAMAGE 4
 
 #define HEALTH 100
+
+#define CENTRAL_X 64
+#define CENTRAL_Y 88
+#define INNER_X 36
+#define INNER_Y 78
+#define CORNER_X 45
+#define CORNER_Y 47
 
 
 enum EnemyAnims{
@@ -38,7 +45,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(138, 171), glm::vec2((1.0f / 8.0f), 0.5f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(2);
+	sprite->setNumberAnimations(2); //WTF?
 
 	sprite->setAnimationSpeed(STAND, 1);
 	sprite->addKeyframe(STAND, glm::vec2(0.0f, 0.0f));
@@ -106,8 +113,8 @@ void Enemy::update(int deltaTime, glm::vec2 *pos_enemies, int n){
 		}
 		int i = 0;
 		while (i < n && pos_enemies[i] != glm::vec2(-1,-1)) {
-			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 30) incX = 0;
-			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 40) incY = 0;
+			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 22) incX = 0;
+			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 32) incY = 0;
 			++i;
 		}
 		posPlayer.x += incX;
@@ -180,13 +187,13 @@ int Enemy::getScore() {
 }
 
 glm::vec2 Enemy::getCentralPosition() {
-	return posPlayer + glm::ivec2(64, 88);
+	return posPlayer + glm::ivec2(CENTRAL_X, CENTRAL_Y);
 }
 
 glm::vec2 Enemy::getInnerSize() {
-	return glm::ivec2(36, 78);
+	return glm::ivec2(INNER_X, INNER_Y);
 }
 
 glm::vec2 Enemy::getCornerPosition() {
-	return posPlayer + glm::ivec2(45, 47);
+	return posPlayer + glm::ivec2(CORNER_X, CORNER_Y);
 }
