@@ -150,9 +150,6 @@ void Scene::render() {
 	// TODO: crear metodes per cada scena
 	projection = glm::ortho(0.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
-	ostringstream textScore;
-	textScore << "Score: " << Game::instance().getScore();
-
 	switch(Game::instance().getRenderScene()) {
 		case PRE:
 			// Pre_Menu
@@ -230,7 +227,7 @@ void Scene::render() {
 				}
 			}
 			break;
-		case END:
+		case END: {
 			// Game_Over or WIN
 			texProgram.use();
 			texProgram.setUniformMatrix4f("projection", projection);
@@ -241,9 +238,12 @@ void Scene::render() {
 			texProgram.setUniformMatrix4f("modelview", modelview);
 			teqMenuBack->render(texMenuScore[Game::instance().getEndGameState()]);
 
-			text.render(textScore.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.5f + 2.0f - ((float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f)*textScore.str().length()/4.65f), glutGet(GLUT_WINDOW_HEIGHT) * 0.55f + 2.0f), float(glutGet(GLUT_WINDOW_WIDTH))/25.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
-			text.render(textScore.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.5f - ((float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f)*textScore.str().length()/4.65f), glutGet(GLUT_WINDOW_HEIGHT) * 0.55f), float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f, glm::vec4(0.91015625, 0.65625, 0.375, 1));
-			break;
+			ostringstream textScore;
+			textScore << "Score: " << Game::instance().getScore();
+
+			text.render(textScore.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.5f + 2.0f - ((float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f)*textScore.str().length() / 4.65f), glutGet(GLUT_WINDOW_HEIGHT) * 0.55f + 2.0f), float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
+			text.render(textScore.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.5f - ((float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f)*textScore.str().length() / 4.65f), glutGet(GLUT_WINDOW_HEIGHT) * 0.55f), float(glutGet(GLUT_WINDOW_WIDTH)) / 25.f, glm::vec4(0.91015625, 0.65625, 0.375, 1));
+			break; }
 		case CHARACTER:
 			// Character_Selection
 			texProgram.use();

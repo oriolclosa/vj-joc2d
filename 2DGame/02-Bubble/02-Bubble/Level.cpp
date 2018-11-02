@@ -276,7 +276,7 @@ void Level::update(int deltaTime) {
 
 void Level::render(ShaderProgram &texProgram) {
 	if (active) {
-		////cout << "Score I: " << score << endl;
+		score = Game::instance().getScore();
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
 		skySprite->render();
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 1024, POS_SKY_Y * 32));
@@ -419,6 +419,7 @@ void Level::render(ShaderProgram &texProgram) {
 		timeText << "Time: " << min << "' " << sec << "''";
 		textScore.render(timeText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f + 1.0f, glutGet(GLUT_WINDOW_HEIGHT) * 0.9425f) + 1.0f, float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.14453125, 0.15625, 0.15234375, 1));
 		textScore.render(timeText.str(), glm::vec2(glutGet(GLUT_WINDOW_WIDTH) * 0.0775f, glutGet(GLUT_WINDOW_HEIGHT) * 0.9425f), float(glutGet(GLUT_WINDOW_WIDTH)) / 80.f, glm::vec4(0.91015625, 0.65625, 0.375, 1));
+		Game::instance().setScore(score);
 	}
 }
 
@@ -490,6 +491,8 @@ void Level::setActive(bool activeAux) {
 }
 
 void Level::restart() {
+	score = 0;
+
 	skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
@@ -526,9 +529,6 @@ void Level::restart() {
 		blockObject->restart();
 	}
 
-	Game::instance().setScore(Game::instance().getScore() + score);
-
-	score = 0;
 	active = true;
 	currentTime = 0.0f;
 }
