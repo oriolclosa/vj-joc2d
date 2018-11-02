@@ -103,7 +103,10 @@ void Player::update(float totalTime, int deltaTime, glm::vec2 *pos_enemies, int 
 	if (coolDownA1 > 0) --coolDownA1;
 	if (coolDownA2 > 0) --coolDownA2;
 	if (coolDownA3 > 0) --coolDownA3;
-	//glm::ivec2 posPlayer_old = posPlayer;
+	glm::ivec2 posPlayer_old;
+	posPlayer_old.x = posPlayer.x;
+	posPlayer_old.y = posPlayer.y;
+	bool ent = false;
 	if (health <= 0) death();
 	if (freez > 0) --freez;
 	else if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
@@ -167,39 +170,53 @@ void Player::update(float totalTime, int deltaTime, glm::vec2 *pos_enemies, int 
 	}
 	else if(Game::instance().getKey(97) || Game::instance().getKey(65) || Game::instance().getSpecialKey(GLUT_KEY_LEFT)){ // a A
 		posPlayer.x -= WALK_SPEED;
+		ent = true;
 		right = true;
 		sprite->lookRight(right);
 		if(map->collisionMoveLeft(getCornerPosition(), getInnerSize(), false)){
+			ent = false;
 			posPlayer.x += WALK_SPEED;
 		}
 	}
 	else if(Game::instance().getKey(100) || Game::instance().getKey(68) || Game::instance().getSpecialKey(GLUT_KEY_RIGHT)){ // d D
 		posPlayer.x += WALK_SPEED;
 		right = false;
+		ent = true;
 		sprite->lookRight(right);
 		if(map->collisionMoveRight(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.x -= WALK_SPEED;
+			ent = false;
 		}
 	}
 	else if (Game::instance().getKey(119) || Game::instance().getKey(87) || Game::instance().getSpecialKey(GLUT_KEY_UP)){ // w W
 		//--health;
 		posPlayer.y -= WALK_SPEED;
+		ent = true;
 		if (map->collisionMoveUp(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.y += WALK_SPEED;
+			ent = false;
 		}
 	}
 	else if (Game::instance().getKey(115) || Game::instance().getKey(83) || Game::instance().getSpecialKey(GLUT_KEY_DOWN)) { // s S
 		posPlayer.y += WALK_SPEED;
+		ent = true;
 		if (map->collisionMoveDown(getCornerPosition(), getInnerSize(), false)) {
 			posPlayer.y -= WALK_SPEED;
+			ent = false;
 		}
 	}
-	/*int i = 0;
-	while (i < n && pos_enemies[i] != glm::vec2(-1, -1)) {
-		cout << i << endl;
-		if (abs(pos_enemies[i].x - getCentralPosition().x) < 80) posPlayer.x = posPlayer_old.x;
-		if (abs(pos_enemies[i].y - getCentralPosition().y) < 80) posPlayer.y = posPlayer_old.y;
-		++i;
+	/*if (ent) {
+		int i = 0;
+		bool b = true;
+		while (b && i < n && pos_enemies[i] != glm::vec2(-1, -1)) {
+			cout << i << endl;
+			if (abs(pos_enemies[i].x - getCentralPosition().x) < 30 && abs(pos_enemies[i].y - getCentralPosition().y) < 20) {
+				posPlayer.x = posPlayer_old.x;
+				posPlayer.y = posPlayer_old.y;
+				b = false;
+			}
+			++i;
+		}
 	}*/
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));

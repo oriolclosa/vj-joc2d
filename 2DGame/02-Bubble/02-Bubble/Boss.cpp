@@ -69,7 +69,7 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 
 	sprite->changeAnimation(STAND);
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x - tileMapDispl.x ), float(tileMapDispl.y - tileMapDispl.y)));
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {

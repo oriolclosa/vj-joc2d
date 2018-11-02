@@ -113,8 +113,10 @@ void Enemy::update(int deltaTime, glm::vec2 *pos_enemies, int n){
 		}
 		int i = 0;
 		while (i < n && pos_enemies[i] != glm::vec2(-1,-1)) {
-			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 22) incX = 0;
-			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 32) incY = 0;
+			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 22 && abs(pos_enemies[i].y - getCentralPosition().y + incY) < 32) {
+				incX = 0;
+				incY = 0;
+			}
 			++i;
 		}
 		posPlayer.x += int(incX);
