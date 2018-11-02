@@ -460,10 +460,11 @@ void Level::updatePlayerAttack(float damage) {
 		float y_boss = boss->getCentralPosition().y;
 		float dif_x = abs(x_player - x_boss);
 		float dif_y = abs(x_player - y_boss);
-		if (!right && x_boss >= x_player && dif_x <= 85 && dif_y <= 98) {
+		cout << "Holita " << dif_x << ' ' << dif_y << ' ' << player->getCentralPosition().x << player->getCentralPosition().y << ' ' << boss->getCentralPosition().x << boss->getCentralPosition().y << endl;
+		if (!right && x_boss >= x_player && dif_x <= 120 && dif_y <= 18000) {
 			boss->takeDamage(damage);
 		}
-		else if (right && x_boss < x_player && dif_x <= 85 && dif_y <= 98) {
+		else if (right && x_boss < x_player && dif_x <= 120 && dif_y <= 10300) {
 			boss->takeDamage(damage);
 		}
 	}
