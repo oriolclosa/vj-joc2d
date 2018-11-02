@@ -13,7 +13,7 @@
 #define INIT_PLAYER_X_TILES 4
 #define INIT_PLAYER_Y_TILES 8
 
-#define PROB_ENEMIES 50 //For 100
+#define PROB_ENEMIES 25 //For 100
 #define MAX_ENEMIES 100
 
 #define PROB_COINS 10 //For 1.000
