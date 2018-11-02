@@ -43,7 +43,7 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 
 	// Sprites del enemic
 	ostringstream path;
-	path << "images/" << Game::instance().getSelectedCharacter()+1 << "/boss.png";
+	path << "images/" << Game::instance().getSelectedCharacter() << "/boss.png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(150, 150), glm::vec2(1.0f/14.0f, 1.0f/3.0f), &spritesheet, &shaderProgram);
