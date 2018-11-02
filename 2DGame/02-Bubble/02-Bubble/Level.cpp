@@ -230,7 +230,7 @@ void Level::update(int deltaTime) {
 		currentTime += deltaTime;
 		player->update(currentTime, deltaTime);
 		if (active) {
-			glm::vec2 pos_enemies[MAX_ENEMIES+1];
+			glm::vec2 pos_enemies[MAX_ENEMIES + 1];
 			for (int i = 0; i < MAX_ENEMIES+1; ++i) pos_enemies[i] = glm::vec2(-1,-1);
 			if (boss != NULL) {
 				boss->setPlayerPos(player->getCentralPosition());
@@ -298,22 +298,33 @@ void Level::render(ShaderProgram &texProgram) {
 			}
 		}
 		if (boss != NULL) boss->render();
-		for (int i = 0; i < num_enemies; ++i) {
+		/*for (int i = 0; i < num_enemies; ++i) {
 			if (enemies[i] != NULL) enemies[i]->render();
-		}
+		}*/
 		if (blockObject != NULL) {
 			blockObject->render();
 		}
 		glm::vec2 playerPos = player->getBottomPosition();
 		int playerPosX = (playerPos.x / 32.0f);
 		int playerPosY = ((playerPos.y + 6.0f) / 32.0f);
-		cout << playerPos.x << " " << playerPos.y << " - " << playerPosX << " " << playerPosY << endl;
+		glm::ivec2 enemiesPos[MAX_ENEMIES];
+		for (int i = 0; i < num_enemies; ++i) {
+			if (enemies[i] != NULL) {
+				enemiesPos[i] = glm::ivec2(enemies[i]->getBottomPosition().x / 32.0f, (enemies[i]->getBottomPosition().y + 6.0f) / 32.0f);
+			}
+		}
+
 		for (int j = 0; j < spriteMap->getMapSize().y; j++) {
 			for (int i = 0; i < spriteMap->getMapSize().x; i++) {
 				tile = spriteMap->getMap()[j * spriteMap->getMapSize().x + i];
 				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 				if (0 == i && playerPosY == j) {
 					player->render();
+				}
+				if (0 == i) {
+					for (int k = 0; k < num_enemies; ++k) {
+						if (enemies[k] != NULL && enemiesPos[k].y == j) enemies[k]->render();
+					}
 				}
 				if (tile >= '1' && tile <= ':') {
 					int tileAux = tile - int('1');

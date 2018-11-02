@@ -32,6 +32,7 @@ public:
 
 	glm::vec2 getInnerSize();
 	glm::vec2 getCornerPosition();
+	glm::vec2 getBottomPosition();
 	
 protected:
 	glm::ivec2 tileMapDispl, posPlayer, iniPosition;

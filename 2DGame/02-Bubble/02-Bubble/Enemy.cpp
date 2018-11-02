@@ -197,3 +197,7 @@ glm::vec2 Enemy::getInnerSize() {
 glm::vec2 Enemy::getCornerPosition() {
 	return posPlayer + glm::ivec2(CORNER_X, CORNER_Y);
 }
+
+glm::vec2 Enemy::getBottomPosition() {
+	return posPlayer + glm::ivec2(69, 171);
+}
