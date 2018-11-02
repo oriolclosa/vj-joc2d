@@ -7,7 +7,7 @@
 #include <sstream>
 
 
-#define WALK_SPEED 50
+#define WALK_SPEED 5
 
 #define HEALTH 100
 #define LIFES 3
