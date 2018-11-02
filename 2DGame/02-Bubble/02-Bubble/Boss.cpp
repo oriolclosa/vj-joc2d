@@ -17,6 +17,13 @@
 #define HEALTH 100
 #define FASE 3
 
+#define CENTRAL_X 40
+#define CENTRAL_Y 48
+#define INNER_X 36  // NPI
+#define INNER_Y 78  // NPI
+#define CORNER_X 45 // NPI
+#define CORNER_Y 47 // NPI
+
 
 enum BossAnims
 {
@@ -39,7 +46,7 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 	path << "images/0/boss" << type << ".png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(glm::ivec2(64, 96), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(96, 96), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(6);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
@@ -66,17 +73,17 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 	sprite->setAnimationSpeed(ATTACK_2, 8);
 	sprite->addKeyframe(ATTACK_2, glm::vec2(0.f, 0.25f));
 
-	sprite->changeAnimation(0);
+	sprite->changeAnimation(STAND_LEFT);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x - tileMapDispl.x ), float(tileMapDispl.y - tileMapDispl.y)));
 }
 
-void Boss::update(int deltaTime) {
+void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 	sprite->update(deltaTime);
-	float distance = sqrt(pow(playerPos.x - posPlayer.x, 2) + pow(playerPos.y + 16 - posPlayer.y, 2));
+	float distance = sqrt(pow(playerPos.x - getCentralPosition().x, 2) + pow(playerPos.y - getCentralPosition().y, 2));
 	bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
 	bool ySpace = playerPos.y > posPlayer.y || playerPos.y + 64 < posPlayer.y;
-	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 32) {
+	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 56) {
 		focus = true;
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > posPlayer.x) {
@@ -127,41 +134,55 @@ void Boss::update(int deltaTime) {
 		else if (incY > 0 && map->collisionMoveUp(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
 			incY = 0;
 		}
+		int i = 0;
+		while (i < n && pos_enemies[i] != glm::vec2(-1,-1)) {
+			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 42) incX = 0;
+			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 62) incY = 0;
+			++i;
+		}
 		posPlayer.x += incX;
 		posPlayer.y += incY;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	else if (distance <= 32) {
-		if(fase == 3 && sprite->animation() != ATTACK_1) {
+	else if (distance <= 66) {
+		if(fase == 3) {
 			sprite->changeAnimation(ATTACK_1);
 			attackPlayer(PLAYER_DAMAGE);
 		}
-		else if (fase == 2 && sprite->animation() != ATTACK_2) {
+		else if (fase == 2) {
 			sprite->changeAnimation(ATTACK_2);
 			attackPlayer(PLAYER_DAMAGE * 0.2);
 		}
 		else {
-			if (rand() % 2 == 0 && sprite->animation() != ATTACK_1) {
+			if (rand() % 2 == 0) {
 				sprite->changeAnimation(ATTACK_1);
 				attackPlayer(PLAYER_DAMAGE * 0.2);
 			}
-			else if (sprite->animation() != ATTACK_2)
+			else
 				attackPlayer(PLAYER_DAMAGE * 0.6);
 		}
 	}
+	else {
+		if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+			sprite->changeAnimation(STAND_RIGHT);
+		else sprite->changeAnimation(STAND_LEFT);
+	}
+	int i = 0;
+	while (pos_enemies[i] != glm::vec2(-1,-1)) ++i;
+	pos_enemies[i] = glm::vec2(getCentralPosition().x,getCentralPosition().y);
 }
 
 void Boss::attackPlayer(float damage) {
-	if (abs(playerPos.x - posPlayer.x) <= 64)
-		if (abs(playerPos.y - posPlayer.y) <= 64)
+	if (abs(playerPos.x - getCentralPosition().x) <= 132)
+		if (abs(playerPos.y - getCentralPosition().y) <= 56)
 			player->takeDamage(damage);
 }
 
 void Boss::takeDamage(float damage) {
+	sprite->setHit(true);
 	health -= damage;
 	if (health < 1) {
 		--fase;
-		health = HEALTH - (3 - fase) * 10;
 		restart();
 	}
 }
@@ -176,4 +197,11 @@ int Boss::getFase() {
 
 bool Boss::getFocus() { // Fer barra de vida?
 	return focus;
+}
+
+void Boss::restart() {
+	health = HEALTH - (3 - fase) * 10;
+	sprite->setHit(false);
+	posPlayer = iniPosition;
+	sprite->setPosition(posPlayer);
 }
