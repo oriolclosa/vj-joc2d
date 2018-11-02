@@ -129,6 +129,7 @@ void Scene::update(int deltaTime) {
 			updateLevel(-1);
 			if (lvl + 1 < NUM_LEVELS) {
 				// updateLevel(-1); Que pasa amb el lvl actual? Gestio mem?
+				cout << lvl << endl;
 				Game::instance().setCurrentLevel(lvl + 1);
 				updateLevel(lvl + 1);
 			}
@@ -304,7 +305,7 @@ void Scene::updateLevel(int levelAux) {
 	else {
 		currentLevel = levelAux;
 		level = new Level();
-		level->init(texProgram);
+		level->init(texProgram, currentLevel+1);
 	}
 }
 

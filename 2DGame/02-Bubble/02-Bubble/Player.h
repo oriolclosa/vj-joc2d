@@ -15,7 +15,7 @@ class Player
 
 public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
-	void update(float totalTime, int deltaTime);
+	void update(float totalTime, int deltaTime, glm::vec2 *pos_enemies, int n);
 	void render();
 	
 	void setTileMap(TileMap *tileMap);

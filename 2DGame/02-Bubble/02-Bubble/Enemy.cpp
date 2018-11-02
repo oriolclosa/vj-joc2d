@@ -71,7 +71,7 @@ void Enemy::update(int deltaTime, glm::vec2 *pos_enemies, int n){
 	float distance = sqrt(pow(playerPos.x - getCentralPosition().x, 2) + pow(playerPos.y - getCentralPosition().y, 2));
 	bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
 	bool ySpace = playerPos.y > posPlayer.y || playerPos.y + 64 < posPlayer.y;
-	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 46) {
+	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 56) {
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > getCentralPosition().x) {
 			sprite->lookRight(false);
@@ -113,19 +113,21 @@ void Enemy::update(int deltaTime, glm::vec2 *pos_enemies, int n){
 		}
 		int i = 0;
 		while (i < n && pos_enemies[i] != glm::vec2(-1,-1)) {
-			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 22) incX = 0;
-			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 32) incY = 0;
+			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 22 && abs(pos_enemies[i].y - getCentralPosition().y + incY) < 32) {
+				incX = 0;
+				incY = 0;
+			}
 			++i;
 		}
-		posPlayer.x += incX;
-		posPlayer.y += incY;
+		posPlayer.x += int(incX);
+		posPlayer.y += int(incY);
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	else if (distance <= 46) {
+	else if (distance <= 56) {
 		if ((sprite->animation() == STAND || sprite->animation() == WALK) && sprite->animation() != ATTACK) {
 			sprite->changeAnimation(ATTACK);
 		}
-		attackPlayer(PLAYER_DAMAGE * (3 - type));
+		attackPlayer(float(PLAYER_DAMAGE * (3 - type)));
 	}
 	else sprite->changeAnimation(STAND);
 	int i = 0;

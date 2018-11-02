@@ -69,7 +69,7 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 
 	sprite->changeAnimation(STAND);
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x - tileMapDispl.x ), float(tileMapDispl.y - tileMapDispl.y)));
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
@@ -140,8 +140,8 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 62) incY = 0;
 			++i;
 		}
-		posPlayer.x += incX;
-		posPlayer.y += incY;
+		posPlayer.x += int(incX);
+		posPlayer.y += int(incY);
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
 	else if (distance <= 66) {
@@ -196,7 +196,7 @@ bool Boss::getFocus() { // Fer barra de vida?
 }
 
 void Boss::restart() {
-	health = HEALTH - (3 - fase) * 10;
+	health = HEALTH - (3 - fase) * 10.f;
 	sprite->setHit(false);
 	posPlayer = iniPosition;
 	sprite->setPosition(posPlayer);
