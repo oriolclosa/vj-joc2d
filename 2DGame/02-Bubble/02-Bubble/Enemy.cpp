@@ -45,7 +45,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(138, 171), glm::vec2((1.0f / 8.0f), 0.5f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(2); //WTF?
+	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(STAND, 1);
 	sprite->addKeyframe(STAND, glm::vec2(0.0f, 0.0f));
