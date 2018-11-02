@@ -17,12 +17,12 @@
 #define HEALTH 100
 #define FASE 3
 
-#define CENTRAL_X 40
-#define CENTRAL_Y 48
-#define INNER_X 36  // NPI
-#define INNER_Y 78  // NPI
-#define CORNER_X 45 // NPI
-#define CORNER_Y 47 // NPI
+#define CENTRAL_X 150
+#define CENTRAL_Y 150
+#define INNER_X 150  // NPI
+#define INNER_Y 150  // NPI
+#define CORNER_X 62 // NPI
+#define CORNER_Y 62 // NPI
 
 
 enum BossAnims
@@ -43,10 +43,10 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 
 	// Sprites del enemic
 	ostringstream path;
-	path << "images/" << Game::instance().getSelectedCharacter() << "/boss.png";
+	path << "images/" << Game::instance().getSelectedCharacter()+1 << "/boss.png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(glm::ivec2(96, 96), glm::vec2(1.0f/14.0f, 1.0f/3.0f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(300, 300), glm::vec2(1.0f/14.0f, 1.0f/3.0f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(STAND, 1);
@@ -75,9 +75,10 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 	sprite->update(deltaTime);
 	float distance = sqrt(pow(playerPos.x - getCentralPosition().x, 2) + pow(playerPos.y - getCentralPosition().y, 2));
-	bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
-	bool ySpace = playerPos.y > posPlayer.y || playerPos.y + 64 < posPlayer.y;
-	if (distance < DETECT_DISTANCE && (xSpace || ySpace) && distance > 56) {
+	//bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
+	//bool ySpace = playerPos.y > posPlayer.y || playerPos.y + 64 < posPlayer.y;
+	if (distance < DETECT_DISTANCE &&  distance > 100) {
+		cout << "YES" << endl;
 		focus = true;
 		float incX = 0.0f, incY = 0.0f;
 		if (playerPos.x > posPlayer.x) {
@@ -120,31 +121,34 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 				incY = -WALK_SPEED;
 			}
 		}
-		if (incX < 0 && map->collisionMoveLeft(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
-			if(sprite->animation() != STAND) sprite->changeAnimation(STAND);
+		if (incX < 0 && map->collisionMoveLeft(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
+			sprite->changeAnimation(STAND);
 			incX = 0;
 		}
-		else if (incX > 0 && map->collisionMoveRight(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
-			if(sprite->animation() != STAND) sprite->changeAnimation(STAND);
+		else if (incX > 0 && map->collisionMoveRight(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
+			sprite->changeAnimation(STAND);
 			incX = 0;
 		}
-		if (incY < 0 && map->collisionMoveDown(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
+		if (incY < 0 && map->collisionMoveDown(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
 			incY = 0;
 		}
-		else if (incY > 0 && map->collisionMoveUp(glm::vec2(posPlayer.x + incX, posPlayer.y + incY), glm::ivec2(64, 96), true)) {
+		else if (incY > 0 && map->collisionMoveUp(getCornerPosition() + glm::vec2(incX, incY), getInnerSize(), true)) {
 			incY = 0;
 		}
 		int i = 0;
 		while (i < n && pos_enemies[i] != glm::vec2(-1,-1)) {
-			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 42) incX = 0;
-			if (abs(pos_enemies[i].y - getCentralPosition().y + incY) < 62) incY = 0;
+			if (abs(pos_enemies[i].x - getCentralPosition().x + incX) < 42 && abs(pos_enemies[i].y - getCentralPosition().y + incY) < 62) {
+				incX = 0;
+				incY = 0;
+			}
 			++i;
 		}
 		posPlayer.x += int(incX);
 		posPlayer.y += int(incY);
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	else if (distance <= 66) {
+	else if (distance <= 100) {
+		cout << "NO" << endl;
 		if(fase == 3) {
 			sprite->changeAnimation(ATTACK1);
 			attackPlayer(PLAYER_DAMAGE);
@@ -162,15 +166,18 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 				attackPlayer(PLAYER_DAMAGE * 0.6);
 		}
 	}
-	else sprite->changeAnimation(STAND);
+	else {
+		sprite->changeAnimation(STAND);
+		cout << "XD" << endl;
+	}
 	int i = 0;
 	while (pos_enemies[i] != glm::vec2(-1,-1)) ++i;
 	pos_enemies[i] = glm::vec2(getCentralPosition().x,getCentralPosition().y);
 }
 
 void Boss::attackPlayer(float damage) {
-	if (abs(playerPos.x - getCentralPosition().x) <= 132)
-		if (abs(playerPos.y - getCentralPosition().y) <= 56)
+	if (abs(playerPos.x - getCentralPosition().x) <= 240)
+		if (abs(playerPos.y - getCentralPosition().y) <= 165)
 			player->takeDamage(damage);
 }
 
