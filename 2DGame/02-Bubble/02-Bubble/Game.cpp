@@ -19,6 +19,8 @@ void Game::init() {
 	win = false;
 	character = 0;
 	currentLevel = -1;
+	Sound::instance().init();
+	Sound::instance().playMenu();
 }
 
 bool Game::update(int deltaTime) {
@@ -38,6 +40,7 @@ void Game::keyPressed(int key) {
 		case 0: if (key == 102 || key == 70) { // f F
 					render_scene = 1;
 					render();
+					Sound::instance().playMenu();
 				}
 				else if (key == 27) { // Esc
 					bPlay = false;
@@ -46,6 +49,7 @@ void Game::keyPressed(int key) {
 		case 1: if (key == 27) { // Esc
 					render_scene = 0;
 					render();
+					Sound::instance().playMenu();
 				}
 				else if (key == 119 || key == 87) { // w W
 					changeSelectMainButton(false);
@@ -78,6 +82,8 @@ void Game::keyPressed(int key) {
 					scene.updateLevel(-1);
 					render_scene = 1;
 					render();
+					Sound::instance().stopLevel();
+					Sound::instance().playMenu();
 				}
 				else if (key == 112) //p
 					render_walkable = !render_walkable;
@@ -116,6 +122,8 @@ void Game::keyPressed(int key) {
 					scene.updateLevel(0);
 					render_scene = 2;
 					render();
+					Sound::instance().stopMenu();
+					Sound::instance().playLevel();
 				}
 				else if (key == 27) { // Esc
 					render_scene = 1;

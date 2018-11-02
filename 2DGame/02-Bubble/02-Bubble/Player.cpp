@@ -108,8 +108,15 @@ void Player::update(float totalTime, int deltaTime){
 	else if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
 		sprite->changeAnimation(ATTACK_1);
 		int attack1 = 16;
-		if (currentCharacter == 1) attack1 = 18;
-		if (currentCharacter == 2) attack1 = 25;
+		if (currentCharacter == 1) {
+			attack1 = 18;
+			Sound::instance().playPlayer(3);
+		}
+		if (currentCharacter == 2) {
+			attack1 = 25;
+			Sound::instance().playPlayer(7);
+		}
+		else Sound::instance().playPlayer(2);
 		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack1) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_1);
 		coolDownA1 = COOLDOWN_ATTACK_1;
@@ -118,7 +125,16 @@ void Player::update(float totalTime, int deltaTime){
 	else if ((Game::instance().getKey(102) || Game::instance().getKey(70)) && coolDownA2 == 0) { // f F, Attack 2
 		sprite->changeAnimation(ATTACK_2);
 		int attack2 = 56;
-		if (currentCharacter == 0) attack2 = 25;
+		if (currentCharacter == 0) {
+			attack2 = 25;
+			Sound::instance().playPlayer(2);
+		}
+		if (currentCharacter == 1) {
+			Sound::instance().playPlayer(6);
+		}
+		else {
+			Sound::instance().playPlayer(6);
+		}
 		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack2) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_2);
 		coolDownA2 = COOLDOWN_ATTACK_2;
@@ -127,14 +143,21 @@ void Player::update(float totalTime, int deltaTime){
 	else if (Game::instance().getKey(32) && coolDownA3 == 0) { // SPACE, Attack 3
 		sprite->changeAnimation(ATTACK_3);
 		int attack3 = 56;
-		if (currentCharacter == 1) attack3 = 42;
+		if (currentCharacter == 1) {
+			attack3 = 42;
+			Sound::instance().playPlayer(7);
+		}
 		else if (currentCharacter == 2) {
 			attack3 = 19;
+			Sound::instance().playPlayer(1);
 			int movementX = 150;
 			if (right) movementX = -movementX;
 			if (!map->collisionMoveDown(getCornerPosition() + glm::vec2(movementX, 0), getInnerSize(), false)) {
 				sprite->moveToAt(totalTime, 1000.0f*(10.0f / 24.0f), glm::vec2(movementX, 0));
 			}
+		}
+		else {
+			Sound::instance().playPlayer(6);
 		}
 		sprite->resetToAnimation(totalTime, 1000.0f*(float(attack3) / 24.0f), WALK);
 		doDamage(DAMAGE_ATTACK_3);
@@ -198,6 +221,7 @@ void Player::takeDamage(float damage) {
 		coolDownRec1 = COOLDOWN_START_RECUPERATION;
 		coolDownRec2 = 0;
 		coolDownDamage = SAFE_TIME_BETWEEN_HITS;
+		Sound::instance().playPlayer(1);
 	}
 }
 
