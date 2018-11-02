@@ -21,6 +21,11 @@ public:
 
 	int getFase();
 	bool getFocus();
+
+	glm::vec2 getCentralPosition();
+	glm::vec2 getInnerSize();
+	glm::vec2 getCornerPosition();
+	glm::vec2 getBottomPosition();
 	
 
 private:

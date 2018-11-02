@@ -17,10 +17,10 @@
 #define HEALTH 100
 #define FASE 3
 
-#define CENTRAL_X 150
-#define CENTRAL_Y 150
-#define INNER_X 150  // NPI
-#define INNER_Y 150  // NPI
+#define CENTRAL_X 100
+#define CENTRAL_Y 100
+#define INNER_X 100  // NPI
+#define INNER_Y 100  // NPI
 #define CORNER_X 62 // NPI
 #define CORNER_Y 62 // NPI
 
@@ -46,7 +46,7 @@ void Boss::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 	path << "images/" << Game::instance().getSelectedCharacter()+1 << "/boss.png";
 	spritesheet.loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(glm::ivec2(300, 300), glm::vec2(1.0f/14.0f, 1.0f/3.0f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(200, 200), glm::vec2(1.0f/14.0f, 1.0f/3.0f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(STAND, 1);
@@ -77,6 +77,7 @@ void Boss::update(int deltaTime, glm::vec2 *pos_enemies, int n) {
 	float distance = sqrt(pow(playerPos.x - getCentralPosition().x, 2) + pow(playerPos.y - getCentralPosition().y, 2));
 	//bool xSpace = playerPos.x > posPlayer.x || playerPos.x + 32 < posPlayer.x;
 	//bool ySpace = playerPos.y > posPlayer.y || playerPos.y + 64 < posPlayer.y;
+	cout << "POS: " << posPlayer.x << ' ' << posPlayer.y << ' ' << getCentralPosition().x << ' ' << getCentralPosition().y << endl;
 	if (distance < DETECT_DISTANCE &&  distance > 100) {
 		cout << "YES" << endl;
 		focus = true;
@@ -207,4 +208,20 @@ void Boss::restart() {
 	sprite->setHit(false);
 	posPlayer = iniPosition;
 	sprite->setPosition(posPlayer);
+}
+
+glm::vec2 Boss::getCentralPosition() {
+	return posPlayer + glm::ivec2(CENTRAL_X, CENTRAL_Y);
+}
+
+glm::vec2 Boss::getInnerSize() {
+	return glm::ivec2(INNER_X, INNER_Y);
+}
+
+glm::vec2 Boss::getCornerPosition() {
+	return posPlayer + glm::ivec2(CORNER_X, CORNER_Y);
+}
+
+glm::vec2 Boss::getBottomPosition() {
+	return posPlayer + glm::ivec2(100, 200);
 }

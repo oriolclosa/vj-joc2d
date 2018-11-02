@@ -135,7 +135,7 @@ void Enemy::update(int deltaTime, glm::vec2 *pos_enemies, int n){
 	pos_enemies[i] = glm::vec2(getCentralPosition().x,getCentralPosition().y);
 }
 
-void Enemy::render(){
+void Enemy::render() {
 	sprite->render();
 }
 
