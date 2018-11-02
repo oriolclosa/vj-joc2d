@@ -28,7 +28,7 @@ public:
 	Level();
 	~Level();
 
-	void init(ShaderProgram &texProgramAux);
+	void init(ShaderProgram &texProgramAux, int lvl);
 	void update(int deltaTime);
 	void render(ShaderProgram &texProgramAux);
 
@@ -98,7 +98,7 @@ private:
 
 	int currentCharacter;
 	bool level_complete;
-	glm::vec2 pos_anteriors[];
+	glm::vec2 *pos_anteriors;
 };
 
 

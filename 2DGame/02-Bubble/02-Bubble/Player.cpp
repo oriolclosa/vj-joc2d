@@ -88,7 +88,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	coolDownDamage = 0;
 }
 
-void Player::update(float totalTime, int deltaTime){
+void Player::update(float totalTime, int deltaTime, glm::vec2 *pos_enemies, int n){
 	sprite->update(totalTime, deltaTime);
 	if (coolDownDamage > 0) --coolDownDamage;
 	if (health < HEALTH && coolDownRec1 == 0) {
@@ -103,6 +103,7 @@ void Player::update(float totalTime, int deltaTime){
 	if (coolDownA1 > 0) --coolDownA1;
 	if (coolDownA2 > 0) --coolDownA2;
 	if (coolDownA3 > 0) --coolDownA3;
+	//glm::ivec2 posPlayer_old = posPlayer;
 	if (health <= 0) death();
 	if (freez > 0) --freez;
 	else if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
@@ -193,6 +194,13 @@ void Player::update(float totalTime, int deltaTime){
 			posPlayer.y -= WALK_SPEED;
 		}
 	}
+	/*int i = 0;
+	while (i < n && pos_enemies[i] != glm::vec2(-1, -1)) {
+		cout << i << endl;
+		if (abs(pos_enemies[i].x - getCentralPosition().x) < 80) posPlayer.x = posPlayer_old.x;
+		if (abs(pos_enemies[i].y - getCentralPosition().y) < 80) posPlayer.y = posPlayer_old.y;
+		++i;
+	}*/
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }

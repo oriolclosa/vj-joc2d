@@ -18,13 +18,13 @@ void Coin::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm:
 	}
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
-	extraTime = rand() % 10;
+	extraTime = float(rand() % 10);
 	iniPosition = pos;
 	posPlayer = pos;
 }
 
 void Coin::update(int deltaTime) {
-	sprite->update(deltaTime + extraTime);
+	sprite->update(deltaTime + int(extraTime));
 }
 
 void Coin::render() {

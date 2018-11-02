@@ -42,14 +42,22 @@ Level::~Level() {
 }
 
 
-void Level::init(ShaderProgram &texProgram){
+void Level::init(ShaderProgram &texProgram, int lvl){
 	currentCharacter = Game::instance().getSelectedCharacter();
 	cout << currentCharacter << endl;
 
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	backgroundMap = TileMap::createTileMap("levels/level01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	spriteMap = TileMap::createTileMap("levels/level01-sprites.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	overgroundMap = TileMap::createTileMap("levels/level01-overground.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	ostringstream pathlvl1;
+	pathlvl1 << "levels/level0" << lvl << ".txt";
+	map = TileMap::createTileMap(pathlvl1.str(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	ostringstream pathlvl2;
+	pathlvl2 << "levels/level0" << lvl << "-background.txt";
+	backgroundMap = TileMap::createTileMap(pathlvl2.str(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	ostringstream pathlvl3;
+	pathlvl3 << "levels/level0" << lvl << "-sprites.txt";
+	spriteMap = TileMap::createTileMap(pathlvl3.str(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	ostringstream pathlvl4;
+	pathlvl4 << "levels/level0" << lvl << "-overground.txt";
+	overgroundMap = TileMap::createTileMap(pathlvl4.str(), glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	//Background
 	for (int i = 0; i < 10; ++i) {
@@ -223,12 +231,16 @@ void Level::init(ShaderProgram &texProgram){
 	active = true;
 	currentTime = 0.0f;
 	level_complete = false;
+
+	glm::vec2 pos_enemies[MAX_ENEMIES + 1];
+	for (int i = 0; i < MAX_ENEMIES + 1; ++i) pos_enemies[i] = glm::vec2(-1, -1);
+	pos_anteriors = pos_enemies;
 }
 
 void Level::update(int deltaTime) {
 	if (active) {
 		currentTime += deltaTime;
-		player->update(currentTime, deltaTime);
+		player->update(currentTime, deltaTime, pos_anteriors, MAX_ENEMIES + 1);
 		if (active) {
 			glm::vec2 pos_enemies[MAX_ENEMIES+1];
 			for (int i = 0; i < MAX_ENEMIES+1; ++i) pos_enemies[i] = glm::vec2(-1,-1);
@@ -242,6 +254,7 @@ void Level::update(int deltaTime) {
 					enemies[i]->update(deltaTime, pos_enemies, MAX_ENEMIES+1);
 				}
 			}
+			pos_anteriors = pos_enemies;
 			for (int i = 0; i < num_coins; ++i) {
 				if (coins[i] != NULL) {
 					coins[i]->update(deltaTime);
