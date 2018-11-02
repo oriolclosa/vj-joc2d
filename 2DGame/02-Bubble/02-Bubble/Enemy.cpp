@@ -58,7 +58,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, glm
 	sprite->setAnimationSpeed(ATTACK, 8);
 	int framesAttack[3] = {8, 6, 7};
 	for (int i = 0; i < framesAttack[type]; ++i) {
-		sprite->addKeyframe(WALK, glm::vec2((float(i) / 8.0f), 0.5f));
+		sprite->addKeyframe(ATTACK, glm::vec2((float(i) / 8.0f), 0.5f));
 	}
 
 	sprite->changeAnimation(STAND);
