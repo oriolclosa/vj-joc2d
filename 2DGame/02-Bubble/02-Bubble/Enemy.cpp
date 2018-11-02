@@ -201,5 +201,5 @@ glm::vec2 Enemy::getCornerPosition() {
 }
 
 glm::vec2 Enemy::getBottomPosition() {
-	return posPlayer + glm::ivec2(69, 171);
+	return posPlayer + glm::ivec2(64, 176);
 }
