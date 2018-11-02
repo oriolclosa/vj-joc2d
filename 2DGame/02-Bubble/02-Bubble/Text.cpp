@@ -130,7 +130,7 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 	projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
 	program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
-	cout << str << endl;
+	//cout << str << endl;
 
 	for(unsigned int i=0; i<str.length(); i++)
 	{
@@ -158,14 +158,14 @@ void Text::initShaders()
 	vShader.initFromFile(VERTEX_SHADER, "shaders/text.vert");
 	if(!vShader.isCompiled())
 	{
-		cout << "Vertex Shader Error" << endl;
-		cout << "" << vShader.log() << endl << endl;
+		//cout << "Vertex Shader Error" << endl;
+		//cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/text.frag");
 	if(!fShader.isCompiled())
 	{
-		cout << "Fragment Shader Error" << endl;
-		cout << "" << fShader.log() << endl << endl;
+		//cout << "Fragment Shader Error" << endl;
+		//cout << "" << fShader.log() << endl << endl;
 	}
 	program.init();
 	program.addShader(vShader);
@@ -173,8 +173,8 @@ void Text::initShaders()
 	program.link();
 	if(!program.isLinked())
 	{
-		cout << "Shader Linking Error" << endl;
-		cout << "" << program.log() << endl << endl;
+		//cout << "Shader Linking Error" << endl;
+		//cout << "" << program.log() << endl << endl;
 	}
 	program.bindFragmentOutput("outColor");
 }

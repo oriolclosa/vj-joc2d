@@ -7,9 +7,9 @@
 #include <sstream>
 
 
-#define WALK_SPEED 5
+#define WALK_SPEED 50
 
-#define HEALTH 10000
+#define HEALTH 100
 #define LIFES 3
 
 #define DAMAGE_ATTACK_1 30
@@ -32,7 +32,7 @@ enum PlayerAnimations{
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	currentCharacter = Game::instance().getSelectedCharacter();
-	cout << currentCharacter << endl;
+	//cout << currentCharacter << endl;
 	if (currentCharacter == NULL) currentCharacter = 0;
 	ostringstream path;
 	path << "images/" << currentCharacter << "/character.png";
@@ -88,7 +88,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram){
 	coolDownDamage = 0;
 }
 
-void Player::update(float totalTime, int deltaTime, glm::vec2 *pos_enemies, int n){
+void Player::update(float totalTime, int deltaTime){
 	sprite->update(totalTime, deltaTime);
 	if (coolDownDamage > 0) --coolDownDamage;
 	if (health < HEALTH && coolDownRec1 == 0) {
@@ -103,10 +103,6 @@ void Player::update(float totalTime, int deltaTime, glm::vec2 *pos_enemies, int 
 	if (coolDownA1 > 0) --coolDownA1;
 	if (coolDownA2 > 0) --coolDownA2;
 	if (coolDownA3 > 0) --coolDownA3;
-	glm::ivec2 posPlayer_old;
-	posPlayer_old.x = posPlayer.x;
-	posPlayer_old.y = posPlayer.y;
-	bool ent = false;
 	if (health <= 0) death();
 	if (freez > 0) --freez;
 	else if ((Game::instance().getKey(101) || Game::instance().getKey(69)) && coolDownA1 == 0) { // e E, Attack 1
@@ -170,54 +166,33 @@ void Player::update(float totalTime, int deltaTime, glm::vec2 *pos_enemies, int 
 	}
 	else if(Game::instance().getKey(97) || Game::instance().getKey(65) || Game::instance().getSpecialKey(GLUT_KEY_LEFT)){ // a A
 		posPlayer.x -= WALK_SPEED;
-		ent = true;
 		right = true;
 		sprite->lookRight(right);
 		if(map->collisionMoveLeft(getCornerPosition(), getInnerSize(), false)){
-			ent = false;
 			posPlayer.x += WALK_SPEED;
 		}
 	}
 	else if(Game::instance().getKey(100) || Game::instance().getKey(68) || Game::instance().getSpecialKey(GLUT_KEY_RIGHT)){ // d D
 		posPlayer.x += WALK_SPEED;
 		right = false;
-		ent = true;
 		sprite->lookRight(right);
 		if(map->collisionMoveRight(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.x -= WALK_SPEED;
-			ent = false;
 		}
 	}
 	else if (Game::instance().getKey(119) || Game::instance().getKey(87) || Game::instance().getSpecialKey(GLUT_KEY_UP)){ // w W
 		//--health;
 		posPlayer.y -= WALK_SPEED;
-		ent = true;
 		if (map->collisionMoveUp(getCornerPosition(), getInnerSize(), false)){
 			posPlayer.y += WALK_SPEED;
-			ent = false;
 		}
 	}
 	else if (Game::instance().getKey(115) || Game::instance().getKey(83) || Game::instance().getSpecialKey(GLUT_KEY_DOWN)) { // s S
 		posPlayer.y += WALK_SPEED;
-		ent = true;
 		if (map->collisionMoveDown(getCornerPosition(), getInnerSize(), false)) {
 			posPlayer.y -= WALK_SPEED;
-			ent = false;
 		}
 	}
-	/*if (ent) {
-		int i = 0;
-		bool b = true;
-		while (b && i < n && pos_enemies[i] != glm::vec2(-1, -1)) {
-			cout << i << endl;
-			if (abs(pos_enemies[i].x - getCentralPosition().x) < 30 && abs(pos_enemies[i].y - getCentralPosition().y) < 20) {
-				posPlayer.x = posPlayer_old.x;
-				posPlayer.y = posPlayer_old.y;
-				b = false;
-			}
-			++i;
-		}
-	}*/
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
@@ -256,7 +231,7 @@ void Player::death() {
 	if (lifes < 1) {
 		Game::instance().setRenderScene(5);
 		Game::instance().getScene().updateLevel(-1);
-		//cout << "Score: " << Game::instance().getScore() << endl;
+		////cout << "Score: " << Game::instance().getScore() << endl;
 	}
 	else {
 		sprite->changeAnimation(WALK);

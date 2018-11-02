@@ -20,7 +20,7 @@ void Blocking::init(ShaderProgram &shaderProgram, glm::vec2 pos) {
 
 void Blocking::update(int deltaTime) {
 	sprite->update(deltaTime);
-	cout << status << " " << moved << " " << posPlayer.x - playerPos.x << endl;
+	//cout << status << " " << moved << " " << posPlayer.x - playerPos.x << endl;
 	if (status == 0) {
 		if ((posPlayer.x - playerPos.x) < MOVE_DISTANCE) {
 			status = 1;

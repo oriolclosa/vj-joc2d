@@ -44,6 +44,8 @@ public:
 
 	void setPlayerPos(glm::vec2 positionAux);
 
+	bool getLoading();
+
 private:
 	void initShaders();
 
@@ -81,6 +83,8 @@ private:
 
 	Texture texCharacters[3];
 	Sprite *sprCharacters[3];
+
+	bool loading;
 };
 
 #endif _SCENE_INCLUDE

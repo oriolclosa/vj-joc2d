@@ -43,8 +43,9 @@ Level::~Level() {
 
 
 void Level::init(ShaderProgram &texProgram, int lvl){
+	loading = true;
+
 	currentCharacter = Game::instance().getSelectedCharacter();
-	cout << currentCharacter << endl;
 
 	ostringstream pathlvl1;
 	pathlvl1 << "levels/level0" << lvl << ".txt";
@@ -63,7 +64,7 @@ void Level::init(ShaderProgram &texProgram, int lvl){
 	for (int i = 0; i < 10; ++i) {
 		ostringstream path;
 		path << "images/" << currentCharacter << "/back" << (i + 1) << ".png";
-		cout << path.str() << endl;
+		//cout << path.str() << endl;
 		backTextures[i].loadFromFile(path.str(), TEXTURE_PIXEL_FORMAT_RGBA);
 		backTextures[i].setMagFilter(GL_NEAREST);
 		backSprites[i] = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1, 1), &backTextures[i], &texProgram);
@@ -210,11 +211,11 @@ void Level::init(ShaderProgram &texProgram, int lvl){
 			if (tile == '_') {
 				blockObject = new Blocking();
 				blockObject->init(texProgram, posTile);
-				blockObject->setPosition(posTile);// -glm::vec2(0.0f, 608.0f));
+				blockObject->setPosition(posTile - glm::vec2(0.0f, 608.0f));
 			}
 			else if (tile == '`') {
 				boss = new Boss();
-				boss->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile);
+				boss->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, posTile - glm::vec2(150, 150));
 				boss->setTileMap(map);
 				boss->setPlayer(player);
 				boss->setPlayerPos(player->getCentralPosition());
@@ -226,7 +227,7 @@ void Level::init(ShaderProgram &texProgram, int lvl){
 	if (!textScore.init("fonts/ScienceFair.ttf"))
 		if (!textScore.init("fonts/OpenSans.ttf"))
 			if (!textScore.init("fonts/DroidSerif.ttf"))
-				cout << "Could not load font!" << endl;
+				//cout << "Could not load font!" << endl;
 	score = 0;
 	active = true;
 	currentTime = 0.0f;
@@ -235,12 +236,14 @@ void Level::init(ShaderProgram &texProgram, int lvl){
 	glm::vec2 pos_enemies[MAX_ENEMIES + 1];
 	for (int i = 0; i < MAX_ENEMIES + 1; ++i) pos_enemies[i] = glm::vec2(-1, -1);
 	pos_anteriors = pos_enemies;
+
+	loading = false;
 }
 
 void Level::update(int deltaTime) {
 	if (active) {
 		currentTime += deltaTime;
-		player->update(currentTime, deltaTime, pos_anteriors, MAX_ENEMIES + 1);
+		player->update(currentTime, deltaTime);
 		if (active) {
 			glm::vec2 pos_enemies[MAX_ENEMIES + 1];
 			for (int i = 0; i < MAX_ENEMIES+1; ++i) pos_enemies[i] = glm::vec2(-1,-1);
@@ -273,7 +276,7 @@ void Level::update(int deltaTime) {
 
 void Level::render(ShaderProgram &texProgram) {
 	if (active) {
-		//cout << "Score I: " << score << endl;
+		////cout << "Score I: " << score << endl;
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32, POS_SKY_Y * 32));
 		skySprite->render();
 		skySprite->setPosition(glm::vec2(POS_SKY_X * 32 + 1024, POS_SKY_Y * 32));
@@ -310,13 +313,16 @@ void Level::render(ShaderProgram &texProgram) {
 				}
 			}
 		}
-		if (boss != NULL) boss->render();
 		/*for (int i = 0; i < num_enemies; ++i) {
 			if (enemies[i] != NULL) enemies[i]->render();
 		}*/
 		if (blockObject != NULL) {
 			blockObject->render();
 		}
+		glm::vec2 bossPos = glm::vec2(-1, -1);
+		if(boss != NULL) bossPos = boss->getBottomPosition();
+		int bossPosX = (bossPos.x / 32.0f);
+		int bossPosY = ((bossPos.y + 6.0f) / 32.0f);
 		glm::vec2 playerPos = player->getBottomPosition();
 		int playerPosX = (playerPos.x / 32.0f);
 		int playerPosY = ((playerPos.y + 6.0f) / 32.0f);
@@ -333,6 +339,11 @@ void Level::render(ShaderProgram &texProgram) {
 				glm::vec2 posTile = glm::vec2(SCREEN_X + i * 32, SCREEN_Y + j * 32);
 				if (0 == i && playerPosY == j) {
 					player->render();
+				}
+				if (0 == i && bossPosY == j) {
+					if (boss != NULL) {
+						boss->render();
+					}
 				}
 				if (0 == i) {
 					for (int k = 0; k < num_enemies; ++k) {
@@ -460,7 +471,7 @@ void Level::updatePlayerAttack(float damage) {
 		float y_boss = boss->getCentralPosition().y;
 		float dif_x = abs(x_player - x_boss);
 		float dif_y = abs(x_player - y_boss);
-		cout << "Holita " << dif_x << ' ' << dif_y << ' ' << player->getCentralPosition().x << player->getCentralPosition().y << ' ' << boss->getCentralPosition().x << boss->getCentralPosition().y << endl;
+		//cout << "Holita " << dif_x << ' ' << dif_y << ' ' << player->getCentralPosition().x << player->getCentralPosition().y << ' ' << boss->getCentralPosition().x << boss->getCentralPosition().y << endl;
 		if (!right && x_boss >= x_player && dif_x <= 120 && dif_y <= 18000) {
 			boss->takeDamage(damage);
 		}
@@ -507,7 +518,7 @@ void Level::restart() {
 	if (!textScore.init("fonts/ScienceFair.ttf"))
 		if (!textScore.init("fonts/OpenSans.ttf"))
 			if (!textScore.init("fonts/DroidSerif.ttf"))
-				cout << "Could not load font!" << endl;
+				//cout << "Could not load font!" << endl;
 
 	//Blocking object
 	int tile;
@@ -550,4 +561,8 @@ int Level::getCharacter() {
 
 bool Level::complete() {
 	return level_complete;
+}
+
+bool Level::getLoading() {
+	return loading;
 }

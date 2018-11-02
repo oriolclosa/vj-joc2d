@@ -18,7 +18,7 @@ Scene::~Scene(){
 }
 
 enum scene {
-	PRE, MENU, GAME, INSTRUCTIONS, CREDITS, END, CHARACTER
+	PRE, MENU, GAME, INSTRUCTIONS, CREDITS, END, CHARACTER, LOADING
 };
 
 void Scene::preInit() {
@@ -97,7 +97,7 @@ void Scene::init() {
 	if(!text.init("fonts/ScienceFair.ttf"))
 		if(!text.init("fonts/OpenSans.ttf"))
 			if(!text.init("fonts/DroidSerif.ttf"))
-				cout << "Could not load font!" << endl;
+				//cout << "Could not load font!" << endl;
 	// Main_Menu
 	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT * 0.15f);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
@@ -129,7 +129,7 @@ void Scene::update(int deltaTime) {
 			updateLevel(-1);
 			if (lvl + 1 < NUM_LEVELS) {
 				// updateLevel(-1); Que pasa amb el lvl actual? Gestio mem?
-				cout << lvl << endl;
+				//cout << lvl << endl;
 				Game::instance().setCurrentLevel(lvl + 1);
 				updateLevel(lvl + 1);
 			}
@@ -208,15 +208,26 @@ void Scene::render() {
 			break;
 		case GAME:
 			if (currentLevel >= 0) {
-				texProgram.use();
-				projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
-				texProgram.setUniformMatrix4f("projection", projection);
-				texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-				modelview = glm::mat4(1.0f);
-				texProgram.setUniformMatrix4f("modelview", modelview);
-				texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+				if(getLoading()){
+					texProgram.use();
+					texProgram.setUniformMatrix4f("projection", projection);
+					texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 
-				level->render(texProgram);
+					glm::mat4 modelview = glm::mat4(1.0f);
+					texProgram.setUniformMatrix4f("modelview", modelview);
+					teqMenuBack->render(texMenuLoading[0]);
+				}
+				else {
+					texProgram.use();
+					projection = glm::ortho(camera_movement, float(SCREEN_WIDTH - 1 + camera_movement), float(SCREEN_HEIGHT - 1), 0.f);
+					texProgram.setUniformMatrix4f("projection", projection);
+					texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+					modelview = glm::mat4(1.0f);
+					texProgram.setUniformMatrix4f("modelview", modelview);
+					texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
+					level->render(texProgram);
+				}
 			}
 			break;
 		case END:
@@ -257,14 +268,14 @@ void Scene::initShaders() {
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
 	if(!vShader.isCompiled())
 	{
-		cout << "Vertex Shader Error" << endl;
-		cout << "" << vShader.log() << endl << endl;
+		//cout << "Vertex Shader Error" << endl;
+		//cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
 	if(!fShader.isCompiled())
 	{
-		cout << "Fragment Shader Error" << endl;
-		cout << "" << fShader.log() << endl << endl;
+		//cout << "Fragment Shader Error" << endl;
+		//cout << "" << fShader.log() << endl << endl;
 	}
 	texProgram.init();
 	texProgram.addShader(vShader);
@@ -272,8 +283,8 @@ void Scene::initShaders() {
 	texProgram.link();
 	if(!texProgram.isLinked())
 	{
-		cout << "Shader Linking Error" << endl;
-		cout << "" << texProgram.log() << endl << endl;
+		//cout << "Shader Linking Error" << endl;
+		//cout << "" << texProgram.log() << endl << endl;
 	}
 	texProgram.bindFragmentOutput("outColor");
 	vShader.free();
@@ -317,3 +328,7 @@ void Scene::setPlayerPos(glm::vec2 positionAux) {
 	level->setPlayerPos(positionAux);
 }
 
+bool Scene::getLoading() {
+	if (level == NULL) return true;
+	return level->getLoading();
+}
