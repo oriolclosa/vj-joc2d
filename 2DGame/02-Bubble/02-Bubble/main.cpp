@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
 	Game::instance().init();
 	prevTime = glutGet(GLUT_ELAPSED_TIME);
 	// GLUT gains control of the application
-	//glutFullScreen();
+	glutFullScreen();
 	glutMainLoop();
 
 	return 0;
